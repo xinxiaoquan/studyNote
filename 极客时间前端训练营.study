@@ -1,0 +1,83 @@
+git的简单使用（交作业用）
+	git --version
+		查看git的版本
+	mkdir 目录名 
+		创建一个项目目录（项目相关的文件会放到这里）
+	cd 目录名
+		进入项目目录
+	ls -al
+		查看项目目录中的文件或目录
+	git init
+		初始化仓库（在项目目录中加入了.git目录）
+	git config --global user.name "耿康康"
+		配置用户名
+	git config --global user.email "3111381465@qq.com"
+		配置邮箱
+	git config --global --list
+		查看配置信息
+	git status
+		查看git仓库的状态
+	pwd 查看仓库的路径
+	git add 文件名
+		追踪文件（如果文件名是. 就代表所有已修改的文件）
+	git commit -m "注释内容"
+		提交文件
+	git log
+		显示历史所有的提交
+	git remote add github git@github.com:xinxiaoquan/homework.git
+		为本地仓库添加一个远程仓库（github） 注意：要在本地仓库的目录下运行
+	git remote
+		查看远程仓库
+	git push -u github main
+		把本地仓库推送到远程仓库
+	github ssh推送模式下要先配置公钥私钥
+		ssh-keygen -t rsa -C "3111381465@qq.com"
+		生成的id_rsa就是公钥，将它复制到github（头像下的settings->SSH and GPG key->new SSH KEY->title不用写）
+	
+	
+	
+	
+重学CSS
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,104 @@
+
+默认整数字面常亮是int，浮点数是double
+
+自动类型转换（容量小的向容量大的转换）：
+	int -> long
+	byte -> int short long
+	long -> float(可能损失精度)
+	long -> double
+	
+获得键盘输入
+	import java.util.Scanner;
+		Scanner s = new Scanner(System.in);
+		String str = s.nextLine();
+
+方法的重载(overload)：
+	一个类中有多个重名的方法
+	可以使用不用形参(类型，个数，顺序)方式进行重载
+	参数名不同和返回值不同不构成重载
+
+构造方法：
+	方法名必须和类名一致
+
+java程序内存结构
+	堆区，栈区，方法区
+
+this除了指代当前对象之外
+	还可以在构造方法中使用，表示用重载的构造方法初始化(必须在第一句)
+
+面向对象：
+	继承（实现了扩展和代码重用）
+		class A extends B {}
+		接口可以多继承，类是单继承
+		不写继承默认继承Object类
+	instanceof判断对象是否是类的实例（父类也算）
+		obj instanceof A
+	重写(override)
+		子类方法覆盖父类方法(方法名，形参列表相同)
+		返回对象时子类的类型小于等于父类(本类或子类的对象)
+		子类方法的访问权限要大于等于父类
+	super 指代父类，可以通过它调用父类的方法和属性（被覆盖的）
+	super() 调用父类构造器
+	封装：
+		高内聚：封装细节，便于修改内部代码，提高可维护性
+		低耦合：简化外部调用，便于使用者调用，便于扩展协作
+	访问控制符：
+		private 私有，本类可以访问
+		default 没有修饰符，一个包的类可以访问
+		protected 受保护的，同一个包以及不同包中的子类中可以访问
+		public 可以被所有包中所有类访问
+	多态：
+		父类引用指向子类对象
+	final：
+		修饰变量 不能改变值
+		修饰方法 不能重写，可以重载
+		修饰类 不能被继承
+			
+== 比较双方是否相等，基本数据类型比较值，引用数据类型比较地址
+equals 对象是否内容相等
+
+数组：
+	相同类型数据的有序集合
+	声明数组
+		int[] arr_name = new int[10];
+		int arr_name[] = new int[10];
+	静态初始化
+		int[] arr_name = {1,2,3};
+	默认初始化
+		int[] arr_name = new int[3]; //默认赋值
+	动态初始化
+		int[] arr_name = new int[3];
+		arr_name[0] = 1;
+	数组遍历：
+		for(String tmp : arr) {
+			System.out.println(tmp);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

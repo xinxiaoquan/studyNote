@@ -1,0 +1,4 @@
+安装electron：
+	1.下载git
+	2.进入cmd，选择要安装electron的目录，执行 git clone https://github.com/electron/electron-api-demos.git
+	3.

@@ -1,0 +1,327 @@
+虚拟机可以设置快照防止误操作
+配置linux网卡：
+	1.设置虚拟机网卡模式为桥接(bridges)模式
+	2.设置linux下网卡配置
+		vi /etc/sysconfig/network-scripts/ifcfg-eth0
+		BOOTPROTO=dhcp
+	3.重启网卡服务 service network restart
+测试环境下：
+	1.linux和win下把网卡模式都调成vmnet1
+	2.linux下网卡ip 192.168.0.1
+	3.win下网卡ip 192.168.0.2
+	BOOTPROTO=static
+	BROADCAST=192.168.163.255
+	IPADDR=192.168.163.2
+	NETWORK=192.168.163.0
+linux命令：
+查看ip地址：ifconfig
+两台电脑测通：ping 192.168.0.1
+这是linux启动级别(字符界面)
+vi /etc/inittab (配置文件)
+id:3:initdefault (修改配置文件，系统一启动就执行)
+	0 关机
+	3 字符界面
+	5 图形界面
+	6 重启
+系统关机：init 0
+系统重启：init 6
+强制终止程序：ctrl+c
+清除历史命令：history -c (clear)
+清空屏幕：clear (ctrl + l)
+删除整行：ctrl+u
+远程登录：putty
+远程传输：winscp
+查看文件夹和文件：
+查看当前目录所有文件(夹)：ls
+查看当前目录所有文件(夹)包括隐藏文件：ls -a
+查看当前目录所有文件(夹)基本信息：ls -l 简写：ll
+查看包括隐藏文件及基本信息：ls -la
+打开目录：cd abc
+查看当前文件夹的绝对路径：pwd
+打开上一级目录：cd ..
+回到根分区：cd /
+回到家目录：cd ~
+文件操作：
+创建文件：touch 1.txt
+创建多个文件：touch 1.txt 2.txt
+创建100个文件：touch file{1..100}
+删除当前目录文件：rm -rf 1.txt
+删除多个当前目录文件：rm -rf 1.txt 2.txt
+删除当前目录所有文件：rm -rf *
+写入文件：vi a.txt 或 echo "aaa" >> a.txt
+查看文件：
+	more a.txt 查看文件
+	cat a.txt 打印文件内容
+	tac a.txt 倒着打印文件内容
+	head a.txt 查看文件前10行数据
+	head -n 5 a.txt 查看文件前5行数据
+	tail a.txt 查看文件后10行数据
+	tail -n 5 a.txt 查看文件后5行数据
+复制文件：cp 1.txt 2.txt 把1的内容复制到2
+移动文件：mv 1.txt 2.txt 复制之后会把1.txt删掉
+搜索指定文件：find / -name abc
+搜索指定文件(不区分大小写)：find / -iname abc
+搜索指定文件(匹配到名字就显示)：locate abc 
+	需要用updatedb更新字典，因为它会把所有的文件名都缓存到一个位置
+搜索文件内容(区分大小写，匹配到输出一行内容)：grep "你好" a.txt
+目录相关操作：
+创建目录：mkdir girls
+创建多级目录：mkdir -p a/b/c
+打印目录树：tree girls (不写后面参数就打印当前目录)
+复制目录：cp -r girls person
+移动/重命名目录：mv girls person
+查看帮助手册：
+man mkdir 查看mkdir命令的帮助，按q退出
+mkdir --help
+查询命令的作用：whatis mkdir
+查询命令的位置：which mkdir
+创建命令别名：alias fhq="vi etc/selinux/config"
+删除命令别名：unalias fhq
+查看命令别名：alias
+用户管理：
+查看当前登录的用户：who 或 w
+切换用户：su xiaoming (超级管理员切换普通不需要密码)
+添加用户：useradd user1
+设置密码：passwd user1
+删除用户：userdel user1
+退出用户：logout
+超级用户家目录：/root
+普通用户家目录：/home/user1
+查看用户自己的名字：whoami
+超级管理员命令行标识是#
+普通用户命令行标识是$
+与用户有关的文件：
+/etc/passwd 用户信息
+/etc/group 用户组信息
+/etc/shadow 用户密码
+/home/user1 用户家目录
+系统运行情况：uptime
+根目录了解：
+1.root 超级用户家目录
+2.home 普通用户家目录
+3.bin 普通用户可以执行的命令
+4.sbin 超级用户可以执行的命令
+5.selinux 防火墙设置
+6.net 网卡
+7.etc 系统相关配置
+8.配置网卡：
+	1.修改配置文件：vi etc/sysconfig/network-scripts
+	2.使用setup命令
+	3.临时配置：ifconfig eth0 192.168.1.10
+9.重启网卡：service network restart
+10.配置防火墙：
+	1.iptables防火墙：
+		查看防火墙：iptables -L
+		清空防火墙：iptables -F
+		保存防火墙：service iptables save
+		关闭防火墙：service iptables stop
+		打开防火墙：service iptables start
+		修改配置文件：vi etc/sysconfig/selinux
+		使用setup命令修改配置
+	4.selinux防火墙：
+		查看防火墙规则：sestatus
+		修改配置文件：vi etc/selinux/config
+压缩包管理：
+压缩成zip文件：zip a.zip *(可以换成其他文件)
+查看zip压缩包：unzip -l a.zip
+解压zip压缩包：unzip a.zip
+压缩gz文件：tar -zcf a.tar.gz *
+查看gz文件：tar -tf a.tar.gz
+解压gz压缩包：tar -xvzf a.tar.gz
+shell技巧：	
+1.tab补全
+2.!s调用最后一次以s开头的命令
+3.|管道符号
+光盘挂载：
+查看是否有光盘挂载：df -TH
+挂载光盘：mount /dev/cdrom /media
+取消光盘挂载：umount /media
+RPM包：
+查看安装软件：rpm -qa
+查看名字包含特定字符的软件：rpm -qa | grep "a"
+卸载软件：rpm -e httpd --nodeps(忽略依赖关系)
+安装软件：rpm -ivh 1.rpm
+yum安装：
+1.光盘挂载(开机启动)
+2.cd /etc/yum.repos.d/
+	mv CentOS-Base.repo CentOS-Base.repo.bak
+3.修改光盘源
+	vi CentOS-Media.repo
+	[c5-media]
+	name=CentOS-$releasever-Media
+	baseurl=file:///media
+	#光盘挂载目的地
+		gpgcheck=0
+	#去官方更新签名关闭
+		enabled=1
+	#开启本光盘源
+		gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5
+4.查看所有软件：yum list
+5.安装软件：yum -y install php*
+6.卸载软件：yum -y remove php*
+安装和启动LAMP：
+1.yum -y install php* http* mysql*
+2.启动Apache：service httpd start
+3.启动mysql：service mysqld start (默认密码为空)
+4.网站根目录：cd /var/www/html
+文件权限管理：
+1.权限类型：
+	r read
+	w write
+	x 执行
+2.所有者、所属组、其他
+	所有者 文件和目录的创建者
+	所属组 文件创建者所属的组
+	其他 除了文件所属组以外的人
+3.权限详解：
+	drwxr-xr-x
+	d 区分目录和文件
+	rwx 所有者权限
+	r-x 所属组权限
+	r-x 其他人权限
+	文件的权限：
+		r (head tail more cat tac)
+		w (文件的写入和编辑与vi有关)
+		x (执行文件中的内容)
+	目录的权限：
+		r (tree ls)
+		w (touch mkdir mv cp rm)
+		x (cd)
+4.修改文件或目录权限
+	chmod 000 1.txt (去除所有用户所有权限)
+	chmod 700 1.txt (表示所有者添加所有权限)
+	chmod a-r 1.txt (表示所有用户不能读)
+	chmod a-r -R dir (表示dir目录下所有用户不能读)
+	chmod u-r 1.txt (表示所有者用户不能读)
+	chmod g-r 1.txt (表示所属组的用户不能读)
+	chmod o-r 1.txt (表示其他用户不能读)
+	chmod o+w 1.txt (表示其他用户可以写)
+	chmod o+w,g+w 1.txt (可以写多个)
+5.对用户的acl权限(acl授权)设置：
+	1.setfacl -m u:xiaoming:rwx /dir 给dir设置xiaoming用户的权限
+	2.getfacl /dir 查看权限
+	3.setfacl -x u:xiaoming /dir 删除xiaoming的所有权限
+	4.setfacl -b /dir 删除所有acl权限
+6.普通用户执行超级用户的命令：
+	普通用户只能执行普通命令(/bin/)
+	超级用户可以执行所有命令(/bin/ 或 /sbin/)
+	1.先用命令visudo打开授权文件
+	2.在最后一行(:1000)添加命令，比如xiaoming localhost=/usr/sbin/useradd
+	3.普通用户执行命令就可以了 sudo /usr/sbin/useradd xiaogou
+定时任务：
+显示时分秒：
+	date +%Y 年
+	date +%m 月
+	date +%d 日
+	date +%H 时
+	date +%M 分
+	date +%S 秒
+连着显示：date +%Y_%m_%d_%H_%M_%S
+1.应用：网站备份，API(接口开发)
+2.编辑定时任务：
+	crontab -e
+	* * * * * 1.sh
+	//上面的五个*代表着分，时，日，月，周，再打个空格输入命令
+	0 0 * * 5 //代表每周五0时0分执行脚本
+	*/1 * * * * //代表每分钟执行一次脚本
+3.查看定时任务：crontab -l
+4.定时备份网站脚本：
+	cd /var/www/html
+	date=`date +%Y_%m_%d_%H_%M_%S`
+	tar -zcf $date.tar.gz *
+lamp环境编译：
+1.yum安装lamp
+	优点：安装简洁，方便
+	缺点：软件版本比较低
+2.使用源代码编译lamp
+	优点：软件版本可控
+3.注意事项
+	1.需要卸载yum lamp环境
+	2.关闭防火墙
+4.必须含有gcc编译包，如果没有手动安装
+	libxml2
+		cd /lamp/libxml2
+		./configure --prefix=/usr/local/libxml2/ && make && make install
+	libmcrypt
+		cd /lamp/libmcrypt
+		./configure --prefix=/usr/local/libmcrypt/ && make && make install
+	libltdl
+		cd /lamp/libmcrypt/libltdl
+		./configure --enable-ltdl-install
+	zlib
+		cd /lamp/zlib
+		./configure && make && make install
+	libpng
+		cd /lamp/libpng
+		./configure --prefix=/usr/local/libpng/ && make && make install
+	jpeg6
+		mkdir /usr/local/jpeg6
+		mkdir /usr/local/jpeg6/bin
+		mkdir /usr/local/jpeg6/lib
+		mkdir /usr/local/jpeg6/include
+		mkdir -p /usr/local/jpeg6/man/man1
+		cd /lamp/jpeg-6b
+		./configure --prefix=/usr/local/jpeg6/ --enable-shared --enable-static && make && make install
+	freetype
+		cd /lamp/freetype
+		./configure --prefix=/usr/local/freetype/ && make && make install
+	autoconf
+		cd /lamp/autoconf-2.61
+		./configure && make && make install
+	GD库
+		mkdir /usr/local/gd2
+		cd /lamp/gd-2.0.35
+		#png错误，修改方法：
+		vi gd_png.c
+		把#include "png.h"替换为
+		#include "/usr/local/libpng/include/png.h"
+		./configure --prefix=/usr/local/gd2 --with-jpeg=/usr/local/jpeg6/ --with-freetype=/usr/local/freetype/ --with-png=/usr/local/libpng/ && make && make install
+		如果有错误，重新安装一下
+	Apache
+		cd /lamp/httpd-2.2.9
+		./configure --prefix=/usr/local/apache/ --sysconfdir=/usr/local/apache2/etc/ --with-included-apr --enable-dav --enable-so --enable-deflate=shared --enable-expires=shared --enable-rewrite=shared && make && make install
+		测试Apache
+			启动Apache：/usr/local/apache/bin/apachectl start
+			重启Apache：/usr/local/apache/bin/apachectl restart
+			停止Apache：/usr/local/apache/bin/apachectl stop
+			查看进程：ps -le | grep httpd
+		网站根目录：/usr/local/apache/htdocs
+		设置开机自动启动：
+			vi /etc/rc.local
+			把启动命令代码(可以写N多命令)写到里面
+			service iptables stop
+			/usr/local/apache/bin/apachectl restart
+	Mysql
+		yum -y install ncurses*
+		cd /lamp/mysql
+		./configure --prefix=/usr/local/mysql --without-debug --enable-thread-safe-client --with-pthread --enable-assembler --enable-profiling --with-mysqld-ldflags=-all-static --with-client-ldflags=-all-static --with-extra-charsets=all --with-plugins=all --with-mysqld-user=mysql --without-embedded-server --with-server-suffix=-communit --with-unix-socket-path=/tmp/mysql.sock && make && make install
+		创建mysql用户
+			useradd mysql
+			添加用户组mysql，将mysql用户默认组设置为mysql用户组
+		设置mysql对mysql目录的权限
+			setfacl -m u:mysql:rwx -R /usr/local/mysql
+			setfacl -m d:u:mysql:rwx -R /usr/local/mysql
+		配置mysql配置文件
+			cp /usr/local/mysql/share/mysql/my-medium.cnf /etc/my.cnf
+			[client]
+			default-character-set=utf8
+			[mysqld]
+			character-set-server=utf8
+			collation-server=utf8_general_ci
+		安装mysql和test数据库
+			/usr/local/mysql/bin/mysql_install_db --user=mysql
+		启动mysql数据库，创建数据库授权表(可以设置自启动)
+			/usr/local/mysql/bin/mysqld_safe --user=mysql &
+		修改mysql的登录密码
+			/usr/local/mysql/bin/mysqladmin -uroot password root1234
+		进入mysql数据库
+			/usr/local/mysql/bin/mysql -uroot -p
+	PHP
+		yum -y install libtool-ltdl*
+		cd /lamp/php
+		./configure --prefix=/usr/local/php/ --with-config-file-path=/usr/local/php/etc/ --with-apxs2=/usr/local/apache/bin/apxs --with-mysql=/usr/local/mysql/ --with-libxml-dir=/usr/ --with-jpeg-dir=/usr/local/jpeg6/ --with-png-dir=/usr/local/libpng/ --with-freetype-dir=/usr/local/freetype/ --with-gd=/usr/local/gd2/ --with-mcrypt=/usr/local/libmcrypt/ --with-mysqli=/usr/local/mysql/bin/mysql_config --enable-soap --enable-mbstring=all --enable-sockets && make && make install
+		生成php.ini文件
+			cp /lamp/php/php.ini-dist /usr/local/php/etc/php.ini
+5.Apache支持php拓展库
+	vi /usr/local/apache/etc/original/httpd.conf
+	AddType application/x-httpd-php .php .phps

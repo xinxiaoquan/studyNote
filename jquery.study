@@ -1,0 +1,257 @@
+CDN：根据客户端网络状况和访问量，选择最优的服务器下载资源
+jquery通用规律：
+	1. 自带遍历
+	2. 链式操作
+	3. 一个API两用（没给新值就读取）
+jq中的过滤器表示父元素下所有的子元素的过滤
+	基本过滤：
+		:first/:last
+		eq/gt/lt
+		only-child
+	内容过滤：
+		:parent //只要包含内容的任意父元素
+		:empty //没有内容的父元素
+		:contains(text) //选择内容中包含指定文本的父元素
+		:has(selector) //选择内容中包含选择器的父元素
+	可见性过滤：
+		:visible
+		:hidden（只能选择display:none和input type="hidden"）
+表单元素选择器：
+	:input //选择所有表单元素
+	根据type选择
+		:password :checkbox :radio :submit :reset :button :hidden :file :image
+	根据状态选择
+		:checked :disabled :enabled :selected
+按节点间的关系查找：
+	1. 父子：
+		$().parent()
+		$().children(selector) //获得直接子元素中符合selector条件的
+		$().find(selector) //查找所有子元素符合selector条件的
+		$().children().first() //第一个子元素
+		$().children().last() //最后一个子元素
+	2. 兄弟：
+		$().next(selector) //等于+selector
+		$().nextAll(selector) //等于~selector
+		$().prev(selector) //选择当前元素的前一个
+		$().prevAll(selector) //选择之前所有
+		$().siblings(selector) //选择除自己之外所有兄弟
+修改：
+	属性：$().attr();
+		三大状态不属于attribute 不能用attr()操作
+		解决 prop()
+	内容：
+		$().html() //innerHTML
+		$().text()	//textContent
+		$().val() //表单元素的值
+		$().empty() //清空元素的内容
+	样式：
+		直接修改Css属性：$().css()
+		同时修改多个Css属性：$().css({"a":"b","c":"d"});
+	修改class：
+		$().hasClass()
+		$().addClass()
+		$().removeClass()
+		$().toggleClass()
+添加元素：
+	1. 使用HTML代码片段创建新元素
+		var $elem=$("html代码片段");
+		如果代码片段中包含父元素，又包含子元素，则同时创建
+	2. 追加到DOM树
+		1. 向父元素下添加子元素：
+			$().append($elem) 末尾插入
+			$().prepend($elem) 开头插入
+		2. 子元素前后插入
+			$().after($elem) 之后
+			$().before($elem) 之前
+删除元素：
+	$().remove(selector);
+替换元素：
+	$().replaceWith(elem/html) //用右侧的元素或html代码替换左侧查找的元素
+	$().replaceAll(selector) //用左侧的片段替换selector选中的元素
+克隆元素：
+	$().clone(); //只复制样式属性，不会复制事件
+		复制事件，加true
+事件：
+	jq中有几种事件绑定方式：
+		1. bind/unbind
+			$().bind("事件名",fn);
+			$().unbind("事件名",fn); //移除元素上指定事件绑定的指定函数fn
+				$().unbind("事件名"); //移除元素上指定事件绑定的所有函数
+				$().unbind(); //移除所有事件
+		2. $().one() //只执行一次
+		3. 简写：jq对常用事件的绑定提供简写的函数：
+			$().事件名(fn);
+			区分：mouseover/out 触发子元素冒泡到父元素
+								mouseenter/leave 触发子元素不会冒泡父元素
+		4. 利用冒泡：
+			$(parent).delegate("selector",事件名,函数)
+				//委托，把父元素的事件给子元素，里面的this自动是event.target
+			$().undelegate()
+		5. 终极简化：
+			$().on("事件名",fn) -> bind
+			$().on("事件名","selector",fn) -> delegate
+			$().on("事件名","selector",data,fn) //data是一个对象，传数据到event.data中
+			$().off()
+		模拟触发：用代码模拟触发某个元素上绑定事件处理函数
+			$().trigger("事件名")
+		页面加载后自动执行：
+			DOMContentLoaded：DOM内容加载完成触发：
+				HTML和JS加载完成后，就提前触发
+					$(document).ready(fn)
+					$().ready(fn)
+					$(fn)
+					把script标签放在body结尾就可以表示为DOM完成后执行
+			windown.onload：整个页面加载完成才触发：
+				HTML,CSS,JS,图片全部完成才触发
+		特殊事件：hover（相当于Menter和Mleave）	
+			$().hover(fn1,fn2);
+动画：
+	简单动画：
+		1. 显示和隐藏
+			$().show/hide/toggle()
+			可给参数毫秒
+		2. 上滑和下滑
+			$().slideUP/slideDown/slideToggle()
+		3. 淡入和淡出
+			$().fadeIn/fadeOut/fadeToggle()
+		所有动画API都能指定回调函数，动画执行完就执行
+	自定义动画：
+		$().animate({
+			//动画截止状态的CSS样式
+		},时间,速率,fn)
+		强调：animate仅支持数值属性的渐变
+		动画：排队和并发
+			用链式操作多写animate实现排队
+			不同元素调用相同animate，实现排队
+			写在一起实现并发
+		停止动画：$().stop(true) //加true停止排队中的全部，否则只停止当前执行中的动画
+		:animated 匹配正在执行的动画
+		delay(ms) 延迟执行
+jQuery中的类数组操作：
+	JQuery为类数组对象添加了如下和数组对等的操作：
+		$().each(function(i){}) //对结果集合中每个元素执行相同操作
+		$().index($()) //在结果集中查找指定元素的下标
+		$().size() //获得结果集合中元素的个数（.length）
+		$().get(i) //获得结果集合中i位置的DOM元素
+jQuery UI：官方出的现成的UI效果功能集合
+	UI：User Interface
+	UI库：用HTML/CSS/JS已经实现现成的页面效果集合
+	一定要先引入jq.js才能引入jq_ui.js
+	新库或框架自学：1. 百科 2. 官网dome 3. 手册
+	问题：主题主体风格
+	解决：官网可以选
+	1. 效果（Effects）
+		1. 为add/remove/toggleClass添加了动画（还可以加时间）
+		2. show/hide/toggle添加了更多动画效果
+			$().toggle("blind",1000);
+			blind //遮蔽
+			bounce //弹跳
+			clip //缩短
+			explode //爆炸
+			drop //丢弃
+			fold //折叠
+			highlight //高亮
+			puff //膨胀
+			pulsate //心跳
+			scale //缩放
+			shake //震动
+			size //大小缩放
+			slide //推拉
+		3. 让animate支持颜色动画
+	2. 交互行为（Interations）
+		$().draggable() //让元素可拖拽
+		$().selectable() //多选菜单，用ul做。li可多选（颜色用class自己设置）
+		$().sortable() //让多个li拖拽，排序，ul做
+		$().menu() //菜单，html结构是ul
+		$().accordion() //手风琴组件
+			html结构：
+			<div id="a">
+				<h1></h1>
+				<div></div>
+				……
+			</div>
+		$().autocomplete({source:[]}) //input输入下拉列表提醒
+		$().datepicker() //在input显示日历
+			参数（对象）：{
+				dateFormat:"yy-mm-dd";
+			}
+		$().button() //可以改变元素为button样式
+		$().dialog() //对话框（标题是HTML的title）
+			参数1（对象）：{
+				autoOpen:false //默认不显示
+			}
+			参数1内的参数：设置显示和隐藏对话框用到的特效
+				show:{ effect:"blind",duration:1000 },
+				hide:{ effect:"exlode",duration:1000 }
+			参数1内的参数：显示警告框时不能点击操作页面
+				modal:true
+			参数1内的参数：显示按钮
+				buttons:{
+					"提交":function(){},
+					"取消":function(){}
+				}
+			参数："open" //显示
+			参数："close" //隐藏
+		$().tabs() //标签页
+			html结构：
+			<div id="main">
+				<ul>
+					<li><a href="#a"></a></li>
+					<li><a href="#b"></a></li>
+					<li><a href="#c"></a></li>
+				</ul>
+				<div id="a"></div>
+				<div id="b"></div>
+				<div id="c"></div>
+			</div>
+		$(document).tooltip() //鼠标放上提示title
+		$().progressbar({value:50}) //进度条
+			参数："value" //读取进度条进度
+			参数1（对象）:
+				value:50 //设置进度
+				change(){} //当数值改变执行函数
+				complete(){} //进度条结束执行函数
+		添加jquery全局函数：
+			$.each(数组/对象,fn);
+				直接定义在$构造对象上
+				可以对任意的数组或类数组使用
+			$().each(fn);
+				仅定义在jq返回结果的原型对象上
+				只能对jq返回结果使用
+			jquery函数分两种
+				1. 全局函数，直接定义在jq构造函数上的，所有对象都可以使用
+				2. 实例函数：定义在jQuery.fn原型对象上，只有jq查询结果对象才能使用
+				可以自己拓展自定义函数
+					如果仅让返回结果使用，可定义原型对象
+					如果让对象，数组都都能使用，定义在构造函数上
+封装自定义插件：
+	前提：用html,css,js已经实现了插件的功能
+	1. 将CSS保存到独立的CSS文件中
+	2. 新建独立的js文件
+		1. 检查是否引入了jq文件
+		2. 添加jq实例方法
+		3. 侵入class样式和自定义拓展样式
+		4. 查找元素绑定事件
+	3. 使用插件
+		1. head中引入插件CSS
+		2. body中定义HTML内容和结构
+		3. 引入jq.js和插件js
+		4. 找到父元素，调用API
+表单序列化：
+		$("#form").serialize();
+		可以把选定的表单中所有带name属性的输入域连同值转换为k=v的形式，组成一个大字符串，用于异步提交
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

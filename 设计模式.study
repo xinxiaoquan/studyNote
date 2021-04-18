@@ -1,0 +1,1417 @@
+
+设计模式七大原则
+单一职责
+	一个类只负责一项职责
+接口隔离
+	客户端不依赖它不需要的接口，一个类中对另一个类的依赖建立在最小接口上
+依赖倒转
+	高层模块不依赖底层模块，二者都应依赖其抽象
+	抽象不应该依赖细节，细节应依赖抽象
+	面向接口编程
+	基于这样的设计理念：
+		相对于细节的多变性，抽象要稳定的多
+		以抽象为基础的架构比以细节为基础的架构稳定的多
+		抽象指接口或抽象类，细节指具体的实现类
+	使用接口或抽象类目的是制定好规范，不涉及任何具体操作，把展现细节交给实现类完成
+里氏替换
+	子类尽量不要重写父类的方法
+	继承实际上让两个类耦合性增强了
+	解决办法是继承一个更基本的基类，通过聚合，组合，依赖解决问题
+开闭（ocp）
+	软件实体(类，模块，函数)应该对拓展开放(提供发)，修改关闭(使用方)
+	用抽象构建框架，用实现拓展细节
+	当软件变化时，通过扩展软件实体行为实现变化，不是通过修改已有代码实现
+迪米特法则
+	一个对象应该对其他对象保持最少的了解
+	类与类关系越密切，耦合度越大
+	迪米特法则又叫最少知道原则，一个类对自己依赖的类知道的越少越好
+		不管依赖的类多复杂，尽量将逻辑封装在类的内部，对外提供public方法，不泄露任何信息
+	只与直接的朋友通信
+		通过成员变量，方法参数，方法返回值使用的类是直接朋友
+		通过局部变量使用的类不是直接朋友（最好不要以局部变量方式使用）
+合成复用
+	尽量使用合成/聚合的方式，而不是继承
+设计原则的核心思想：
+	把可能变化的代码独立出来，不要与不需要变化的代码混在一起
+	针对接口编程，不是针对实现编程
+	为了交互对象之间的松耦合设计而努力
+
+设计模式让程序
+1. 代码重用性
+		相同功能的代码不用多次编写
+2. 可读性
+		编程规范性，便于其他程序员阅读和理解
+3. 可拓展性
+		增加新功能时非常方便
+4. 可靠性
+		增加新功能时对原有功能没有影响
+
+类图：描述类（对象）与类（对象）之间的静态关系
+	依赖：类中用到了对方（成员属性，方法返回类型，方法参数类型，方法中使用）
+	泛化：就是继承（A继承了B，A和B存在泛化关系），依赖关系的一种特例
+	实现：就是实现（A实现了B接口，A和B存在实现关系），依赖关系的一种特例
+	关联：类与类之间的联系（成员属性），具有导航性，依赖关系的特例
+	聚合：整体和部分的关系，可以分开，具有导航性和多重性，是关联关系的特例
+	组合：整体和部分的关系，不可以分开，具有导航性和多重性，是关联关系的特例
+	
+23中设计模式：某些问题通用的解决方案，代表最佳实践（角度是在软件系统和结构上）
+
+创建型模式：帮助创建对象
+	1.单例模式：保证一个类只有一个实例，并提供一个访问该实例的全局访问点
+		优点：只生成一个对象，减少系统性能开销。
+		/**** CODE *****/
+		class Singleton {
+			//这是懒汉式，调用静态方法再创建对象
+			private static Singleton obj = null;
+			public static Singleton getObj() {
+				if (obj == null)
+					obj = new Singleton();
+				return obj;
+			}
+			private Singleton () {} //构造器私有化
+			public void doSomething (String name) {
+				System.out.println("hello, my name is "+name);
+			}
+		}
+		/****************************************/
+		class Singleton {
+			//这是饿汉式，类一加载就创建了对象
+			private static Singleton obj = new Singleton();
+			public static Singleton getObj() {
+				return obj;
+			}
+			private Singleton () {} //构造器私有化
+			public void doSomething (String name) {
+				System.out.println("hello, my name is "+name);
+			}
+		}
+		
+	2.工厂模式：实现了创建者和调用者的分离
+		
+		简单工厂模式：用来生产同一等级结构中的任意产品（对于增加新的产品，需要修改已有代码）
+			interface Car {
+				void run();
+			}
+			class Bugatti implements Car {
+				public void run() {
+					System.out.println("布加迪在跑");
+				}
+			}
+			class Mercedes implements Car {
+				public void run() {
+					System.out.println("梅赛德斯在跑");
+				}
+			}
+			//简单工厂模式
+			class CarFactory {
+				public static Car createCar(String type) {
+					switch(type) {
+						case "布加迪":
+							return new Bugatti();
+						case "梅赛德斯":
+							return new Mercedes();
+						default:
+							return null;
+					}
+				}
+				private CarFactory() {} //不能实例化工厂类
+			}
+			/* 主函数 */
+			public class hello {
+				public static void main(String args[]) {
+					//批量生产汽车
+					Car myCar1 = CarFactory.createCar("布加迪");
+					Car myCar2 = CarFactory.createCar("梅赛德斯");
+					System.out.println(myCar1);
+					System.out.println(myCar2);
+				}
+			}
+			
+		工厂方法模式：解决简单工厂模式的缺点，实现开闭原则
+			interface Car {
+				void run();
+			}
+			class Bugatti implements Car {
+				public void run() {
+					System.out.println("布加迪在跑");
+				}
+			}
+			class Mercedes implements Car {
+				public void run() {
+					System.out.println("梅赛德斯在跑");
+				}
+			}
+			//工厂方法模式
+			interface CarFactory {
+				Car create();
+			}
+			class BugattiFactory implements CarFactory {
+				public Car create() {
+					return new Bugatti();
+				}
+			}
+			class MercedesFactory implements CarFactory {
+				public Car create() {
+					return new Mercedes();
+				}
+			}
+			public class hello {
+				/* 主函数 */
+				public static void main(String args[]) {
+					//批量生产汽车
+					Car myCar1 = new BugattiFactory().create();
+					Car myCar2 = new MercedesFactory().create();
+					System.out.println(myCar1);
+					System.out.println(myCar2);
+				}
+			}
+			
+		抽象工厂模式：用来生产不同产品族的全部产品（对于增加新的产品，无能为力）
+			interface Books { //书
+				void content();
+			}
+			class boyBooks implements Books { //男人爱看的书
+				public void content() {
+					System.out.println("如何造飞机");
+				}
+			}
+			class girlBooks implements Books { //女人爱看的书
+				public void content() {
+					System.out.println("美容方法大全");
+				}
+			}
+			interface Computer { //电脑
+				void play();
+			}
+			class boyComputer implements Computer { //男人用电脑
+				public void play() {
+					System.out.println("玩游戏");
+				}
+			}
+			class girlComputer implements Computer { //女人用电脑
+				public void play() {
+					System.out.println("看电视剧");
+				}
+			}
+			interface Person { //人
+				Books getBooks();
+				Computer getComputer();
+			}
+			class boy implements Person { //男
+				public Books getBooks() {
+					return new boyBooks();
+				}
+				public Computer getComputer() {
+					return new boyComputer();
+				}
+			}
+			class girl implements Person { //女
+				public Books getBooks() {
+					return new girlBooks();
+				}
+				public Computer getComputer() {
+					return new girlComputer();
+				}
+			}
+			public class hello {
+				/* 主函数 */
+				public static void main(String args[]) {
+					//男
+					Person b1 = new boy();
+					//男看的书
+					Books b1Books = b1.getBooks();
+					b1Books.content();
+					//男用电脑
+					Computer b1Computer = b1.getComputer();
+					b1Computer.play();
+					
+					//女
+					Person g1 = new girl();
+					//女看的书
+					Books g1Books = g1.getBooks();
+					g1Books.content();
+					//女用电脑
+					Computer g1Computer = g1.getComputer();
+					g1Computer.play();
+				}
+			}
+		
+	3.建造者模式：
+		某个对象的构建过程复杂的情况下使用
+		分离了对象子组件的单独构造（Builder来负责）和装配（Director负责），从而创建复杂的对象
+		实现了构建和装配的解耦
+			class AirShip { //飞船
+				private OrbitalModule orbitalModule; //轨道舱
+				private Engine engine; //发动机
+				private EscapeTower escapeTower; //逃逸塔
+				
+				public void setOrbitalModule (OrbitalModule o) {
+					this.orbitalModule = o;
+				}
+				public OrbitalModule getOrbitalModule () {
+					return this.orbitalModule;
+				}
+				
+				public void setEngine (Engine e) {
+					this.engine = e;
+				}
+				public Engine getEngine () {
+					return this.engine;
+				}
+				
+				public void setEscapeTower (EscapeTower e) {
+					this.escapeTower = e;
+				}
+				public EscapeTower getEscapeTower () {
+					return this.escapeTower;
+				}
+			}
+
+			class OrbitalModule { //轨道舱零件
+				private String name;
+				OrbitalModule (String name) {
+					this.name = name;
+				}
+				public void set(String name) {
+					this.name = name;
+				}
+				public String get() {
+					return this.name;
+				}
+			}
+			class Engine { //发动机零件
+				private String name;
+				Engine (String name) {
+					this.name = name;
+				}
+				public void set(String name) {
+					this.name = name;
+				}
+				public String get() {
+					return this.name;
+				}
+			}
+			class EscapeTower { //逃逸塔零件
+				private String name;
+				EscapeTower (String name) {
+					this.name = name;
+				}
+				public void set(String name) {
+					this.name = name;
+				}
+				public String get() {
+					return this.name;
+				}
+			}
+			//建造者
+			interface AirShipBuilder {
+				Engine builderEngine();
+				OrbitalModule builderOrbitalModule();
+				EscapeTower builderEscapeTower();
+			}
+			class myAirShipBuilder implements AirShipBuilder {
+				public Engine builderEngine () {
+					System.out.println("构建发动机！");
+					return new Engine("新小圈牌发动机");
+				}
+				public OrbitalModule builderOrbitalModule () {
+					System.out.println("构建轨道舱！");
+					return new OrbitalModule("新小圈牌轨道舱");
+				}
+				public EscapeTower builderEscapeTower () {
+					System.out.println("构建逃逸塔！");
+					return new EscapeTower("新小圈牌逃逸塔");
+				}
+			}
+			//装配者
+			interface AirShipDirector {
+				AirShip create();
+			}
+			class myAirShipDirector implements AirShipDirector {
+				private AirShipBuilder builder;
+				myAirShipDirector (AirShipBuilder b) {
+					this.builder = b;
+				}
+				
+				public AirShip create () {
+					Engine e = builder.builderEngine();
+					OrbitalModule o = builder.builderOrbitalModule();
+					EscapeTower et = builder.builderEscapeTower();
+					
+					AirShip s = new AirShip();
+					s.setEngine(e);
+					s.setOrbitalModule(o);
+					s.setEscapeTower(et);
+					
+					return s;
+				}
+			}
+			public class hello {
+				/* 主函数 */
+				public static void main (String args[]) {
+					//开始建造飞船
+					AirShipDirector d = new myAirShipDirector(
+						new myAirShipBuilder());
+					AirShip s = d.create();
+					System.out.println(s.getEngine().get());
+				}
+			}
+	4.原型模式：也叫克隆模式，克隆对象（浅拷贝 引用类型成员属性拷贝地址）
+		import java.util.Date;
+		class Sheep implements Cloneable{
+			private String name;
+			private Date birthday;
+			
+			Sheep(String name, Date birthday) {
+				this.name = name;
+				this.birthday = birthday;
+			}
+			
+			public String getName () {
+				return this.name;
+			}
+			public void setName (String name) {
+				this.name = name;
+			}
+			public Date getBirthday () {
+				return this.birthday;
+			}
+			public void setBirthday (Date birthday) {
+				this.birthday = birthday;
+			}
+			
+			protected Object clone ()
+					throws CloneNotSupportedException {
+				Object obj = super.clone();
+				//浅拷贝
+				return obj;
+			}
+		}
+		public class hello {
+			public static void main (String args[])
+						throws CloneNotSupportedException {
+				Date date = new Date(123456789L);
+				Sheep s1 = new Sheep("多莉", date);
+				Sheep s2 = (Sheep)s1.clone(true);
+			}
+		}
+		
+结构型模式：从程序结构上实现松耦合，扩大整体类结构
+	1.适配器模式：将一个类的接口换成希望的另一个接口，使得接口不兼容的类可以一起工作
+		//需要适配的类（Adaptee）
+		class Adaptee {
+			public void request() {
+				System.out.println("正在工作中……");
+			}
+		}
+		//目标接口（Target）：客户所期待的接口
+		interface Target {
+			void work();
+		}
+		//适配器（Adapter）：
+		//通过包装一个需要适配的对象，把原接口转为目标接口
+		class Adapter implements Target {
+			private Adaptee adaptee;
+			Adapter (Adaptee a) {
+				this.adaptee = a;
+			}
+			public void work() {
+				this.adaptee.request();
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Target t = new Adapter(new Adaptee());
+				t.work();
+			}
+		}
+	2.代理模式：控制对对象的访问。详细控制某个类或对象的方法，调用前后可以处理别的事情。
+		//明星接口
+		interface Star {
+			void sing();
+			void getMoney();
+		}
+		//代理经纪人
+		class proxy implements Star {
+			private Star star;
+			proxy(Star s) {
+				this.star = s;
+			}
+			public void sing() {
+				star.sing();
+			}
+			public void getMoney() {
+				System.out.println("经纪人收款");
+			}
+		}
+		//真实明星
+		class jay implements Star {
+			public void sing() {
+				System.out.println("jay在唱歌");
+			}
+			public void getMoney() {}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Star p = new proxy(new jay());
+				p.sing();
+				p.getMoney();
+			}
+		}
+	
+	3.桥接模式：基于类的最小设计原则，通过使用封装、聚合及继承等行为让不同的类承担不同的职责，从而可以保持各部分的独立性以及应对他们的功能扩展。
+							解决多重继承的问题。
+		//电脑的种类
+		interface Computer {
+			void sale();
+		}
+		class Desktop implements Computer {
+			private String brand;
+			public void sale() {
+				System.out.println("销售"+this.brand+"台式机");
+			}
+			Desktop(Brand b) {
+				this.brand = b.getName();
+			}
+		}
+		class Notebook implements Computer {
+			private String brand;
+			public void sale() {
+				System.out.println("销售"+this.brand+"笔记本");
+			}
+			Notebook(Brand b) {
+				this.brand = b.getName();
+			}
+		}
+		//品牌
+		interface Brand {
+			String getName();
+		}
+		class Dell implements Brand {
+			public String getName() {
+				return "戴尔";
+			}
+		}
+		class Samsung implements Brand {
+			public String getName() {
+				return "三星";
+			}
+		}
+		class Lenovo implements Brand {
+			public String getName() {
+				return "联想";
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Computer c = new Desktop(new Lenovo());
+				c.sale();
+			}
+		}
+	
+	4.组合模式：把部分和整体的关系用树形结构表示，从而可以使用同一的方式处理部分对象和整体对象
+		/*杀毒软件杀毒过程模拟*/
+		import java.util.List;
+		import java.util.ArrayList;
+		//抽象文件（夹）接口
+		interface AbstractFile {
+			//杀毒方法
+			void antiVirus();
+		}
+		//文件夹
+		class Folder implements AbstractFile {
+			private String name;
+			private List<AbstractFile> fileList = new ArrayList<AbstractFile>();
+			Folder(String name) {
+				this.name = name;
+			}
+			public void antiVirus() {
+				System.out.println("<文件夹>"+this.name+"正在杀毒……");
+				//杀毒代码
+				for (AbstractFile file : fileList)
+					file.antiVirus();
+			}
+			//添加文件或文件夹
+			public void add(AbstractFile file) {
+				this.fileList.add(file);
+			}
+		}
+		//图片文件
+		class ImageFile implements AbstractFile {
+			private String name;
+			ImageFile(String name) {
+				this.name = name;
+			}
+			public void antiVirus() {
+				System.out.println("<文件>"+this.name+"正在杀毒……");
+			}
+		}
+		//视频文件
+		class VideoFile implements AbstractFile {
+			private String name;
+			VideoFile(String name) {
+				this.name = name;
+			}
+			public void antiVirus() {
+				System.out.println("<文件>"+this.name+"正在杀毒……");
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Folder f1,f2;
+				AbstractFile f3,f4,f5,f6;
+				f1 = new Folder("我的图片");
+				f2 = new Folder("我的视频");
+				f3 = new ImageFile("宠物.jpg");
+				f4 = new ImageFile("美食.jpg");
+				f5 = new VideoFile("尖峰时刻.avi");
+				f6 = new VideoFile("猛龙过江.avi");
+				f1.add(f3);
+				f1.add(f4);
+				f2.add(f5);
+				f2.add(f6);
+				f1.antiVirus();
+				f2.antiVirus();
+			}
+		}
+
+	5.装饰器模式：动态为对象添加新功能。无需通过继承增加子类拓展对象，更灵活，避免类型体系的快速膨胀。
+		/*汽车（水上车，飞行车）*/
+		//汽车抽象组件
+		interface ICar {
+			void move();
+		}
+		//具体构件，真实对象
+		class Car implements ICar {
+			public void move() {
+				System.out.println("车在跑!");
+			}
+		}
+		//装饰器
+		class superCar implements ICar {
+			protected ICar car;
+			superCar(ICar car) {
+				this.car = car;
+			}
+			public void move() {
+				this.car.move();
+			}
+		}
+		//具体装饰角色
+		class flyCar extends superCar {
+			flyCar(ICar car) {
+				super(car);
+			}
+			public void move() {
+				this.car.move();
+				System.out.println("车在飞!");
+			}
+		}
+		class waterCar extends superCar {
+			waterCar(ICar car) {
+				super(car);
+			}
+			public void move() {
+				this.car.move();
+				System.out.println("车在游!");
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				flyCar c1 = new flyCar(new Car());
+				c1.move();
+				waterCar c2 = new waterCar(new Car());
+				c2.move();
+				flyCar c3 = new flyCar(c2);
+				c3.move();
+			}
+		}
+
+	6.外观模式：
+			迪米特法则（最少知识原则）。
+			一个软件实体应当尽可能少的与其他实体发生相互作用。
+			为子系统提供统一的入口。封装子系统的复杂性，便于调用。
+		/*饭店吃饭*/
+		//服务员
+		class Waiter {
+			public static void getMeal(String meal) {
+				new Cook(meal);
+				new Passer(meal);
+			}
+		}
+		//厨师
+		class Cook {
+			Cook(String meal) {
+				System.out.println("做菜："+meal);
+			}
+		}
+		//传菜员
+		class Passer {
+			Passer(String meal) {
+				System.out.println("送菜："+meal);
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Waiter.getMeal("鱼香肉丝");
+			}
+		}
+
+	7.享元模式：
+		如果存在很多相同或相似的对象，可以使用此模式。
+		以共享的方式支持大量细粒度对象重用。
+		内部状态：可以共享，不随环境变化而变化。
+		外部状态：不可以共享，随环境变化而变化。
+		import java.util.Map;
+		import java.util.HashMap;
+		//享元对象接口
+		interface FlyWeight {
+			void sayHi();
+			void sayBye();
+			void setName(String name);
+			String getName();
+		}
+		//具体享元类
+		class Person implements FlyWeight {
+			private String name;
+			Person(String name) {
+				this.name = name;
+			}
+			public void setName(String name) {
+				this.name = name;
+			}
+			public String getName() {
+				return this.name;
+			}
+			public void sayHi() {
+				System.out.println("HI, I AM "+this.name+", WELCOME!");
+			}
+			public void sayBye() {
+				System.out.println("HI, I AM "+this.name+", SAY YOU!");
+			}
+		}
+		//享元工厂
+		class Factory {
+			//享元池
+			private static Map<String,FlyWeight> map
+				= new HashMap<String,FlyWeight>();
+			public static FlyWeight getPerson(String name) {
+				if (map.get(name) != null)
+					return map.get(name);
+				else {
+					FlyWeight obj = new Person(name);
+					map.put(name, obj);
+					return obj;
+				}
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Person p1 = Factory.getPerson("李狗蛋");
+				Person p2 = Factory.getPerson("李狗蛋");
+				Person p3 = Factory.getPerson("李小花");
+				/*p1和p2是同一个对象*/
+			}
+		}
+
+行为型模式：关注系统中对象之间的相互交互，研究系统在运行时对象之间相互通信和协作。
+	1.责任链模式：
+		将能处理同一类请求的对象连成一条链，提交的请求沿着链传递。
+		链上的对象逐个判断是否有能力处理该请求，如果能就处理，不能就传递给链上下一个对象。
+		/*
+		模拟请假
+		当请假天数<3天，主任审批
+		当请假天数>=3<10，总经理审批
+		当请假天数>=10<30，总经理审批
+		当请假天数>=30，拒绝
+		*/
+		//请假条类
+		class LeaveRequest {
+			private String empName;
+			private int leaveDays;
+			private String reason;
+			LeaveRequest(String e, int l, String r) {
+				this.empName = e;
+				this.leaveDays = l;
+				this.reason = r;
+			}
+			String getEmpName() {
+				return this.empName;
+			}
+			int getLeaveDays() {
+				return this.leaveDays;
+			}
+			String getReason() {
+				return this.reason;
+			}
+		}
+		//领导抽象类
+		abstract class Leader {
+			protected String name;
+			//责任链的后继对象（下一个领导）
+			protected Leader nextLeader;
+			Leader(String name) {
+				this.name = name;
+			}
+			void setNextLeader(Leader p) {
+				this.nextLeader = p;
+			}
+			//处理请求抽象类（核心业务方法）
+			public abstract void handleRequest(LeaveRequest r);
+		}
+		//主任
+		class Director extends Leader {
+			Director(String n) {
+				super(n);
+			}
+			public void handleRequest(LeaveRequest r) {
+				if (r.getLeaveDays() < 3)
+					System.out.println("主任审批"
+					+r.getEmpName()
+					+"请假成功！天数："
+					+r.getLeaveDays()
+					+"，理由："+r.getReason()
+					+"，主任："+this.name);
+				else if (this.nextLeader != null)
+					this.nextLeader.handleRequest(r);
+				else System.out.println("主任不能处理"+r.getEmpName()+"请假！");
+			}
+		}
+		//经理
+		class Manager extends Leader {
+			Manager(String n) {
+				super(n);
+			}
+			public void handleRequest(LeaveRequest r) {
+				if (r.getLeaveDays() >= 3 && r.getLeaveDays() < 10)
+					System.out.println("经理审批"
+					+r.getEmpName()
+					+"请假成功！天数："
+					+r.getLeaveDays()
+					+"，理由："+r.getReason()
+					+"，经理："+this.name);
+				else if (this.nextLeader != null)
+					this.nextLeader.handleRequest(r);
+				else System.out.println("经理不能处理"+r.getEmpName()+"请假！");
+			}
+		}
+		//总经理
+		class GeneralManager extends Leader {
+			GeneralManager(String n) {
+				super(n);
+			}
+			public void handleRequest(LeaveRequest r) {
+				if (r.getLeaveDays() >= 10 && r.getLeaveDays() < 30)
+					System.out.println("总经理审批"
+					+r.getEmpName()
+					+"请假成功！天数："
+					+r.getLeaveDays()
+					+"，理由："+r.getReason()
+					+"，总经理："+this.name);
+				else System.out.println("总经理拒绝"+r.getEmpName()
+					+"，因为请假天数超过或等于30天！");
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Leader d = new Director("张三");
+				Leader m = new Manager("李四");
+				Leader g = new GeneralManager("王五");
+				//设置责任链对象的关系
+				d.setNextLeader(m);
+				m.setNextLeader(g);
+				//g.setNextLeader("我");
+				//请假条
+				LeaveRequest text1 = new LeaveRequest(
+					"李狗蛋",
+					2,
+					"感冒"
+				);
+				LeaveRequest text2 = new LeaveRequest(
+					"李小花",
+					5,
+					"回村种麦子"
+				);
+				LeaveRequest text3 = new LeaveRequest(
+					"张大庄",
+					25,
+					"搞互联网项目创业"
+				);
+				LeaveRequest text4 = new LeaveRequest(
+					"李大力",
+					35,
+					"再加班就不回来了！"
+				);
+				//开始请假操作
+				d.handleRequest(text1);
+				d.handleRequest(text2);
+				d.handleRequest(text3);
+				d.handleRequest(text4);
+				/*输出结果
+					主任审批李狗蛋请假成功！天数：2，理由：感冒，主任：张三
+					经理审批李小花请假成功！天数：5，理由：回村种麦子，经理：李四
+					总经理审批张大庄请假成功！天数：25，理由：搞互联网项目创业，总经理：王五
+					总经理拒绝李大力，因为请假天数超过或等于30天！
+				*/
+			}
+		}
+
+	2.迭代器模式：
+		提供一种可以遍历对象的方式。
+		聚合对象：存储数据。
+		迭代器：遍历数据。
+		import java.util.List;
+		import java.util.ArrayList;
+		//迭代器接口
+		interface Interator {
+			void first(); //将游标指向第一个元素
+			void last(); //将游标指向最后一个元素
+			void next(); //将游标指向下一个元素
+			boolean hasNext(); //判断是否存在下一个元素
+			boolean isFirst(); //判断是不是第一个元素
+			boolean isLast(); //判断是不是最后一个元素
+			Object getObj(); //获取当前游标获取对象
+		}
+		//聚合类
+		class Concrete {
+			private List<Object> list
+				= new ArrayList<Object>();
+			public void push(Object obj) {
+				list.add(obj);
+			}
+
+			//实现一个内部迭代器，可以直接使用外部类属性
+			private class I implements Interator {
+				private int cursor = 0; //定义游标，用于记录遍历位置
+				public void first() {
+					this.cursor = 0;
+				}
+				public void last() {
+					this.cursor = list.size()-1;
+				}
+				public void next() {
+					if (cursor < list.size()-1)
+						this.cursor++;
+				}
+				public boolean hasNext() {
+					if (cursor < list.size())
+						return true;
+					else return false;
+				}
+				public boolean isFirst() {
+					if (this.cursor == 0)
+						return true;
+					else return false;
+				}
+				public boolean isLast() {
+					if (this.cursor == list.size()-1)
+						return true;
+					else return false;
+				}
+				public Object getObj() {
+					return list.get(cursor);
+				}
+			}
+			
+			public Interator create() {
+				return new I();
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				//创建一个聚合对象
+				Concrete c = new Concrete();
+				c.push("你好");
+				c.push("谢谢");
+				c.push("再见");
+				//获取一个迭代器
+				Interator i =  c.create();
+				System.out.println(i.getObj());
+				i.next();
+				System.out.println(i.getObj());
+				i.next();
+				System.out.println(i.getObj());
+				i.next();
+				System.out.println(i.getObj());
+			}
+		}
+
+	中介者模式：
+		解耦了多个同事对象之间的交互关系。
+		每个对象都持有中介者对象的引用，只跟中介者对象打交道。
+		import java.util.Map;
+		import java.util.HashMap;
+		//中介者接口
+		interface Mediator {
+			//注册对象
+			void reg(String n, Department d);
+			//控制对象
+			void ctrl(String n);
+		}
+		//经理(实现中介者对象)
+		class Manager implements Mediator {
+			//记录下属
+			private Map<String, Department> notebook
+				= new HashMap<String, Department>();
+			public void reg(String n, Department d) {
+				notebook.put(n, d);
+			}
+			public void ctrl(String n) {
+				notebook.get(n).selAct();
+			}
+		}
+		//同事类接口
+		interface Department {
+			void selAct(); //做本部门事情
+			void outAct(String n); //向中介者发出申请
+		}
+		//研发部门
+		class Development implements Department {
+			private Mediator m; //中介者对象
+			Development(Mediator m) {
+				this.m = m;
+			}
+			public void selAct() {
+				System.out.println("科研项目");
+			}
+			public void outAct(String n) {
+				this.m.ctrl(n);
+			}
+		}
+		//财务部
+		class Finacial implements Department {
+			private Mediator m; //中介者对象
+			Finacial(Mediator m) {
+				this.m = m;
+			}
+			public void selAct() {
+				System.out.println("数钱发钱");
+			}
+			public void outAct(String n) {
+				this.m.ctrl(n);
+			}
+		}
+		//市场部
+		class Market implements Department {
+			private Mediator m; //中介者对象
+			Market(Mediator m) {
+				this.m = m;
+			}
+			public void selAct() {
+				System.out.println("市场推广");
+			}
+			public void outAct(String n) {
+				this.m.ctrl(n);
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Mediator m = new Manager();
+				Department deve = new Development(m);
+				Department fin = new Finacial(m);
+				Department mart = new Market(m);
+				m.reg("研发部", deve);
+				m.reg("财务部", fin);
+				m.reg("市场部", mart);
+				
+				m.ctrl("财务部");
+				fin.outAct("研发部");
+				deve.outAct("市场部");
+			}
+		}
+
+	3.命令模式：
+		将一个请求封装为一个对象，从而使我们可用不同的请求对客户进行参数化。
+		对请求排队或者记录请求日志，以及支持可撤销操作。
+		//控制接口
+		interface Ctrl {
+			/*
+			这是一个返回结果为空的方法
+			实际中，可以根据需求设计多个不同的方法
+			*/
+			void exec();
+		}
+		//控制类
+		class Conc implements Ctrl {
+			//命令的真正执行者
+			private Receiver r;
+			Conc(Receiver r) {
+				this.r = r;
+			}
+			public void exec() {
+				//命令执行前后可以做相关处理
+				this.r.action();
+			}
+		}
+		//命令执行者接口
+		interface Receiver {
+			void action();
+		}
+		//命令执行者
+		class Rece implements Receiver {
+			public void action() {
+				System.out.println("执行命令");
+			}
+		}
+		//命令发起者
+		class Invoke {
+			//可以存放多个控制对象
+			private Ctrl c;
+			Invoke(Ctrl c) {
+				this.c = c;
+			}
+			public void call() {
+				this.c.exec();
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Ctrl c = new Conc(new Rece());
+				Invoke p = new Invoke(c);
+				p.call();
+			}
+		}
+
+	4.解释器模式：略
+	5.访问者模式：略
+	6.策略模式：
+		解决某一问题的一个算法族
+		允许用户从该算法族中任选一个算法解决某一问题，同时可以方便的更换算法或增加新算法
+		由客户端决定调用哪个算法，分离算法，选择实现
+		/*
+		模拟市场人员各种策略
+		新客户少批量购买，不打折
+		新客户大批量购买，9折
+		老客户少批量购买，85折
+		老客户大批量购买，8折
+		*/
+		//策略类接口
+		interface Strategy {
+			void getPrice(double p);
+		}
+		//新客户少批量购买
+		class NewFew implements Strategy {
+			public void getPrice(double p) {
+				System.out.println("不打折 "+p);
+			}
+		}
+		//新客户大批量购买
+		class NewMany implements Strategy {
+			public void getPrice(double p) {
+				System.out.println("9折  "+p*0.9);
+			}	
+		}
+		//老客户少批量购买
+		class OldFew implements Strategy {
+			public void getPrice(double p) {
+				System.out.println("85折  "+p*0.85);
+			}
+		}
+		//老客户大批量购买
+		class OldMany implements Strategy {
+			public void getPrice(double p) {
+				System.out.println("8折  "+p*0.8);
+			}
+		}
+		//上下文类，负责和具体策略类交互
+		//算法和客户端调用分离，可以独立变化
+		class Context {
+			//当前采用的算法
+			private Strategy s;
+			//通过构造器注入
+			Context(Strategy s) {
+				this.s = s;
+			}
+			public void get(double s) {
+				System.out.println("您该报价：");
+				this.s.getPrice(s);
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Context c = new Context(new NewMany());
+				c.get(996);
+			}
+		}
+		
+	7.模板方法模式：
+		定义一个操作中的算法骨架，将某些步骤延迟到子类中实现
+		新的子类可以在不改变一个算法结构的前提下重新定义该算法的某些特定步骤
+		处理步骤父类中定义好，具体实现延迟到子类中定义
+		适用场景：整体步骤固定，部分易变，把易变部分抽象，供子类实现
+		//银行办理业务流程
+		//模板方法抽象类
+		abstract class BankMethod {
+			public void takeNumber() {
+				System.out.println("取号排队");
+			}
+			//抽象方法，办理业务
+			public abstract void transact();
+			public void evaluate() {
+				System.out.println("反馈评分");
+			}
+			//模板方法
+			public final void process() {
+				this.takeNumber();
+				this.transact();
+				this.evaluate();
+			}
+		}
+		//具体实现类
+		class DrawMoney extends BankMethod {
+			public void transact() {
+				System.out.println("取款");
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				BankMethod draw = new DrawMoney();
+				draw.process();
+				//匿名内部类实现
+				BankMethod loan = new BankMethod() {
+					public void transact() {
+						System.out.println("贷款");
+					}
+				};
+				loan.process();
+			}
+		}
+		
+	8.状态模式：
+		不同的状态不同的行为
+		用于解决系统中复杂对象的状态转换以及不同状态下行为的封装为题
+		//状态接口
+		interface State {
+			void handle();
+		}
+		//空闲
+		class Free implements State{
+			public void handle() {
+				System.out.println("空闲");
+			}
+		}
+		//繁忙
+		class Busy implements State {
+			public void handle() {
+				System.out.println("繁忙");
+			}
+		}
+		//等待
+		class Wait implements State {
+			public void handle() {
+				System.out.println("等待");
+			}
+		}
+		//上下文类
+		class Context {
+			private State s;
+			Context(State s) {
+				this.s = s;
+			}
+			public void setState(State s) {
+				this.s = s;
+			}
+			public void getState() {
+				this.s.handle();
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				Context ctx = new Context(
+					new Free()
+				);
+				ctx.getState();
+				ctx.setState(new Busy());
+				ctx.getState();
+			}
+		}
+
+	9.观察者模式
+		订阅者，客户称为观察者
+		同步给多个观察者的数据封装对象，称为目标
+		当一个对象（目标）状态发生变化时，需要及时告知一系列对象（观察者），令他们做出响应
+		通知观察者的方式：
+			推：每次都会把通知以广播方式发送给所有观察者（被动接受）
+			拉：观察者只要知道有情况即可，至于什么时候获取内容，获取什么内容，可以自主决定
+		import java.util.List;
+		import java.util.ArrayList;
+		//观察者类
+		class Observer {
+			private int state;
+			public void setState(int state) {
+				this.state = state;
+			}
+			public int getState() {
+				return this.state;
+			}
+		}
+		//目标类
+		class Subject {
+			private int state;
+			private List<Observer> list
+				= new ArrayList<Observer>();
+			public void register(Observer o) {
+				this.list.add(o);
+			}
+			public void remove(Observer o) {
+				this.list.remove(o);
+			}
+			public void setState(int state) {
+				this.state = state;
+				this.notifyObserver();
+			}
+			public int getState() {
+				return this.state;
+			}
+			//通知观察者更新状态
+			public void notifyObserver() {
+				for (Observer o:this.list)
+					o.setState(this.state);
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				//观察者
+				Observer o1 = new Observer();
+				Observer o2 = new Observer();
+				Observer o3 = new Observer();
+				//目标对象
+				Subject s = new Subject();
+				//注册观察者
+				s.register(o1);
+				s.register(o2);
+				s.register(o3);
+				//目标对象更新状态
+				s.setState(10);
+				//测试结果
+				System.out.println(s.getState());
+				System.out.println(o1.getState());
+				System.out.println(o2.getState());
+				System.out.println(o3.getState());
+			}
+		}
+
+	10.备忘录模式
+		保存某个对象内部状态的拷贝，以后就可以将该对象恢复到原先状态
+		import java.util.List;
+		import java.util.ArrayList;
+		//源发器类（对象内部的状态）
+		class Emp {
+			public String name;
+			public int age;
+			public double salary;
+			//进行备忘操作
+			public EmpMemonto memento() {
+				return new EmpMemonto(this);
+			}
+			//进行数据恢复或前进，恢复成指定备忘录对象的值
+			public void recovery(EmpMemonto obj) {
+				this.name = obj.name;
+				this.age = obj.age;
+				this.salary = obj.salary;
+			} 
+			Emp(String name, int age, double salary) {
+				this.name = name;
+				this.age = age;
+				this.salary = salary;
+			}
+		}
+		//备忘录类（存储拷贝）
+		class EmpMemonto {
+			public String name;
+			public int age;
+			public double salary;
+			EmpMemonto(Emp obj) {
+				this.name = obj.name;
+				this.age = obj.age;
+				this.salary = obj.salary;
+			}
+		}
+		//负责人类（管理备忘录对象）
+		class CareTaker {
+			private List<EmpMemonto> list = new ArrayList<EmpMemonto>();
+			private int pointer = 0;
+			//获取备份
+			public void set(EmpMemonto obj) {
+				this.list.add(obj);
+				this.pointer = this.list.size()-1;
+			}
+			//撤销
+			public EmpMemonto revoke() {
+				if (this.pointer == 0)
+					return this.list.get(0);
+				return this.list.get(--this.pointer);
+			}
+			//前进
+			public EmpMemonto forward() {
+				if (this.pointer == this.list.size()-1)
+					return this.list.get(this.pointer);
+				return this.list.get(++this.pointer);
+			}
+		}
+		public class hello {
+			public static void main(String args[]) {
+				CareTaker taker = new CareTaker();
+				Emp emp = new Emp("张三", 20, 9000);
+				System.out.println("第一次打印对象"+
+					"名字："+emp.name+" 年龄："+emp.age+" 工资："+emp.salary);
+				//备份一次
+				taker.set(emp.memento());
+
+				emp.name = "李四";
+				emp.age = 25;
+				emp.salary = 3000;
+				System.out.println("第二次打印对象"+
+					"名字："+emp.name+" 年龄："+emp.age+" 工资："+emp.salary);
+				//备份二次
+				taker.set(emp.memento());
+					
+				//撤销
+				emp.recovery(taker.revoke());
+				System.out.println("第三次打印对象"+
+					"名字："+emp.name+" 年龄："+emp.age+" 工资："+emp.salary);
+					
+				//前进
+				emp.recovery(taker.forward());
+				System.out.println("第四次打印对象"+
+					"名字："+emp.name+" 年龄："+emp.age+" 工资："+emp.salary);
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

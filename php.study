@@ -1,0 +1,2142 @@
+php：超文本预处理器
+
+web组成部分：
+	web服务器：监听客户端连接请求，接收请求，返回响应内容
+	web客户端：浏览器，移动设备
+	http协议：定义web服务器和客户端通讯的细节
+
+httpd软件是apache组织下的服务器环境
+	http://httpd.apache.org
+
+如何访问服务器：
+	协议 地址 端口号（门牌号）
+	服务器端口号范围：1~65535
+php数据类型：
+	值/标量类型：string boolean int/integer float/double 
+	复合类型：object array
+	特殊类型：null/NULL resource
+双引号中变量会被转值
+单引号变量不会被转值
+var_dump(); 查询变量的类型和值
+count(arr); 数组的长度
+phpinfo(); 输出php解释器信息
+arr[] = 1; 向数组尾部添加新元素
+关联数组：
+	$arr = ['a' => 1, 'b' => 2];
+	$arr['c'] = 3;
+声明变量：$a = 10;
+声明常量：const a = 10;
+foreach($arr as $i) 遍历数组
+声明函数：function add() {}
+函数内默认不能使用全局变量的，必须使用global声明一下才能用
+@放在语句首，用来压制警告消息
+die() 终止执行
+|| 逻辑与用 or
+PHP接受表单提交的数据：
+	$_REQUEST //数组，自动接收数据
+PHP操作数据库函数：
+	php连接数据库（与命令行交互模式步骤一样）
+		1. 连接mysql服务器
+			$database = mysqli_connect('127.0.0.1', 'root', '', 'abc', 3306);
+			//参数依次是：主机地址，账号名，密码，数据库名，端口
+		2. 发送mysql语句
+			mysqli_query($database, "insert into hello values(),();");
+		3. 关闭连接（可以不写）
+			mysqli_close($database);
+	mysqli_insert_id() 返回sql语句执行后自增后主键的值
+	mysqli_affected_rows() 返回sql语句影响的行数
+	显示数据库中的数据：
+		抓取一行,返回关联数据：
+			//mysqli_fetch_row 索引数组
+			mysqli_fetch_assoc(
+				//如果数据行不存在返回false
+				mysqli_query($database, "select * from hello")
+			); //循环获得所有(最后返回Null)
+		抓取所有行,返回二维数组：
+			mysqli_fetch_all(
+				mysqli_query($database, "select * from hello")
+			,1); //加个参数1，会使数组变关联
+	返回时间函数：time()
+	包含其他页面函数：require('a.php')
+	获得所有请求头：getallheaders();
+服务器组合：
+	1. LAMP
+	2. WAMP
+	3. LNMP
+	4. WNMP
+apache特点：稳定性好，配置简单，并发不高（2k-3k）
+nginx特点：并发性高（3w），配置复杂
+集成软件：appserv
+调试appserv：
+	第一种：计算机 -- 管理 -- 服务 -- 查看是否启动：apache24 mysql57
+	第二种：任务管理器看服务和进程
+	第三种：进入cmd，输入命令：tasklist | find "http" 和 tasklist | find "mysql"
+	第四种：查看80端口确定httpd是否启动：netstat  -anb
+关闭AM服务：
+	第一种：计算机管理，服务，停止apache或mysql
+	第二种：dos	命令 net start apache24 或 net stop mysql57
+配置apache服务器：
+	找到配置文件，apache24/conf/http.conf
+	1. 默认文件：295行
+	2. 切换php版本：180行和196行
+phpinfo() //php详细信息，版本以及所有模块
+<?php
+	//code写到此标签内，文件名要是php
+?>
+php定义常量：define("ABC","abcd");
+php的变量名区分大小写
+可变变量：
+	$a = "b";
+	$b = "123";
+	$$a == "123";
+引用变量：
+	$a = 10;
+	$b = &$a; //取址符&
+变量的类型：
+	标量（标准类型）：
+		1. 整型
+		2. 浮点型
+		3. 字符串型
+		4. 布尔型
+	符合类型：
+		5. 数组 // $arr = array(1, 2, 3);
+		6. 对象
+	特殊类型：
+		7. 资源
+		8. null
+按原格式输出：
+	echo "<pre>";
+	print_r($arr);
+	echo "</pre>";
+字符串/变量连接符：点（.
+用双引号包裹的字符串中可以直接解析变量，或用{}包裹变量
+布尔类型不参与自增自减运算
+测试变量类型：
+	1. var_dump();
+	2. gettype(); //需要echo
+	3. is_int(), is_float(), is_string(), is_array(), is_object(), is_resource()//资源, is_null(), is_scalar()//标量, is_numberic()//数字, is_callable()//函数
+测试变量是否存在：
+	1. isset(); //变量未定义，或为null，返回false
+	2. empty(); //判断是否为空，除了(null 0 "" '0' array() 0.0 false)这些，返回false
+删除变量/数组/数组元素：unset($arr[3]);
+自动类型转换：
+	1. 字符串转整型
+	2. 整型转字符串
+	3. 所有类型转布尔型（相当于用empty()转换）
+强制类型转换：
+	1. (int)$num //转整型
+	2. (string)$num //转字符串
+	3. (bool)$num //转布尔
+php特殊的流程控制：
+	exit("XXX") //终止全部脚本
+	die("XXX") //同exit,都可以写文字
+判断是不是自定义的函数：function_exists("fn");
+全局变量和局部变量：
+	函数外面的全局变量，里面的就是局部变量，两个作用域变量不能互相使用	
+修饰局部变量为全局变量：global $num; //表示操作的是全局变量$num
+静态变量：static $num; //同一个函数在多次调用时，可以共享使用
+引用函数：function fn(&num){} fn($a)
+不定长参数函数：函数内部使用func_get_args()接受参数
+回调函数：参数类型可以是另一个函数的名字（用字符串传递）
+变量函数：函数的名字可以是另一个变量的值
+引入外部文件：
+	require "x.php"; 或 include "x.php"
+	区别：require包含文件错误会终止脚本，而include不会，会报警告
+数组的作用：
+	一个变量可以存很多值，类型8种任意一种
+数组定义：$arr = array(); 或 $arr = [];
+索引数组：$arr = array(1, 2, 3);
+关联数组：$arr = array("a"=>"hi", "b"=>"bye");
+混合数组：$arr = array(1, "two"=>2);
+数组赋值：
+	1.简单赋值：$arr[0] = 10;
+	2.追加数据：$arr[] = 10; //按照最大下标+1进行添加数据
+数组遍历：
+	1. foreach($arr as $key => $val) {}	
+	2. each会取出数组的一条元素，依次去取，直到取不到，返回false
+		list会取出数组中索引下标的值
+		while($list($key, $val) = each($arr)) {
+			echo "{$key} is {$val}";
+		}
+超全局数组: //哪也能用(fn inside and outside)
+  php事先为程序员定义好的数组，范围是全局的，在函数或方法中直接使用
+	1.$_GET //接收get请求数据
+	2.$_POST //接收post请求数据
+	3.$_REQUEST //接受get,post,cookie请求数据
+	4.$_COOKIE
+	5.$_SESSION
+	6.$_FILES
+	7.$GLOBALS //包含了所有其他超全局数组和定义的全局变量
+	8.$_SERVER //服务器的信息
+超全局作用：
+	1.预定义：php内部已经定义好了
+	2.超全局：函数内外都能用，全脚本使用
+表单提交时，如果name写成abc[]那么php会创建一个abc的子数组，依次添加传递的值	
+数组函数：
+	key和value操作函数：
+		1.array_values($arr) //获取数组中的值
+		2.array_keys($arr) //获取数组中的键
+		3.in_array(val, $arr) //检查一个值在不在数组中
+		4.array_key_exists(key, $arr) //检查数组中键是否存在
+		5.array_flip($arr) //键和值对调
+		6.array_reverse($arr) //数组翻转
+	统计数组中元素个数以及唯一性：
+		1.count($arr) //数组元素个数	
+		2.array_count_values($arr) //统计数组中所有值出现的次数
+		3.array_unique($arr) //输出不重复的值
+	使用回调函数处理数组：
+		1.array_filter($arr, "callback") //默认过滤数组中的转boolean为false的值，可以定义函数加回调
+		2.array_map("callback", $arr) //通过回调处理数组，直接改
+	数组的排序函数（都直接改原数组）：
+		1.sort($arr) //升序排序，不保留key
+		2.rsort($arr) //降序排序，不保留key
+		3.asort($arr) //升序排序，保留key
+		4.arsort($arr) //降序排序，保留key
+		5.ksort($arr) //按key升序排序
+		6.krsort($arr) //按key降序排序
+		7.natsort($arr) //按字母首字符排序
+		8.natcasesort($arr) //忽略字符大小写排序
+		9.array_multisort($row, $arr) //多数组排序，通过第一个数组值的排序给第二个数组排序
+	数组的截取与合并：
+		1.array_slice($arr, 1, 3) //从1号下标取3个值
+		2.array_splice($arr, 1, 3, array(3, 4)) //从1号下标提取3个值，会改变原数组，最后数组参数可以插入数据
+		3.array_combine($arr, $arr2) //第一个数组的值作为key，第二个作为值，返回一个新数组
+		4.array_merge($arr, $arr2) //合并数组
+	数组/字符串的拆分和连接：
+		1.implode(",", $arr) //分割数组，特定符号连接为字符串
+		2.explode(",", $str) //以特定符号切割字符串，返回数组
+		3.join(",", $arr); //和implode一样
+	数组与数据结构：
+		1.array_pop($arr) //弹出数组最后一个值，修改原数组，返回最后一个元素值
+		2.array_shift($arr) //删除第一个值
+		3.array_push($arr, "a") //从后面插入一个值
+		4.array_unshift($arr, "a") //从前面插入一个值
+	其他数组函数：
+		1.range("a", "z") //生成有规律字母的数组A,Z
+		2.array_sum($arr) //计算数组元素之和
+		3.shuffle($arr) //打乱原数组
+		4.array_rand($arr) //随机取一个key
+字符串相关：
+	字符串的输出：
+		1.echo //输出字符串
+		2.var_dump() //输出数据类型，长度，和值
+		3.print()
+		4.print_r()
+		5.die()/exit()
+		6.printf() //格式化输出
+		7.sprintf() //返回格式化输出内容
+	字符串空白字符，填充，重复：
+		1.trim($str, "-") //不写第二个参数默认去除字符串左右两边空格，有第二个参数去除指定字符集
+		2.ltrime($str, "-") //去除字符串左边空格
+		3.rtrime($str, "-") //去除字符串右边空格
+		4.str_pad($str, 100, "-", STR_PAD_BOTH) //填充字符最后一个参数省略是向右填充，还有左STR_PAD_LEFT和右STR_PAD_RIGHT
+		5.str_repeat("-", 20) //重复字符串多少次
+	字符串的大小写：
+		1.strtolower($str) //转小写
+		2.strtoupper($str) //转大写
+		3.ucfirst($str) //字符串第一个字母大写
+		4.ucwords($str) //每个单词首字母大写
+	格式化，与html相关：
+		1.nl2br($str) //把\n转为<br/>
+		2.strip_tags($str) //去掉所有html标签，格式化
+		3.addslashes($str) //给引号加反斜线\"
+		4.stripslashes($str) //去反斜线
+		5.htmlspecialchars($str) //html代码转实体符
+		6.htmlspecialchars_decode($str) //html代码解实体符
+	字符串的截取：
+		1.substr($str, 0, 2) //从某个下标开始截取2个，下标负数是倒着数，省略就是截取到最后
+		2.mb_substr($str, 0, 2) //多字节截取（可以截取汉字按照个数），也可以直接截取英文
+	字符串的查找和替换：
+		1.strpos($str, "hello") //查找字符串在字符串中的第一个位置
+		2.strrpos($str, "hello") //查找字符串在字符串中最后一个位置
+		3.str_replace("old", "new", $str) //把第一个参数的字符串替换为字符串中第二个
+	关于地址字符串的处理：
+		1.pathinfo($str) //自动解析地址的详细信息，返回数组
+		2.basename($str) //自动解析地址获取文件名
+		3.dirname($str) //自动解析地址获取目录名
+		4.parse_url($str) //自动解析url地址（带http）
+		5.parse_str($str, $arr) //输入get请求传递的字符串转为数组，用第二个参数接住，如果不写第二个参数，那么将会自动加变量到php脚本中
+	其他字符串格式化：
+		1.strrev($str) //翻转字符串
+		2.strlen($str) //字符串长度
+		3.number_format($str) //货币格式化（加逗号）
+		4.md5($str) //加密字符串
+		5.str_shuffle($str) //打乱字符串
+		6.strrchr($string, $char) //寻找字符串中最后一次出现字符的位置后的字符串
+		7.uniqid() //生成随机字符串，第一个参数是前缀，第二个参数是true就更具有唯一性
+字符串正则函数：
+	1.preg_match($reg, $str, $arr) //只匹配一次，输出到第三个参数数组中
+	2.preg_match_all($reg, $str, $arr) //匹配所有，输出到第三个参数数组中
+	3.preg_grep($reg, $arr) //查找数组匹配正则的所有值，返回一个数组
+	4.preg_split($reg, $str) //用正则表示的字符分割字符串，返回数组
+正则表达式：
+	原子：
+	1.任意一个字符 /./
+	2.单个字母，数字 /[a-zA-Z0-9]/
+	3.特殊字符
+		\d任意一个数字 \D任意一个非数字
+		\s空格				 \S非空格
+		\w任意一个字母，数字，下划线
+		\W任意一个非字母，数字，下划线
+	1.向后引用：$1-$n
+	2.转义字符：\
+	3.元字符：
+		*  0个或多个前面的原子
+		+  1个或多个前面的原子
+		?  0个或1个前面的原子
+		|  或者
+		^  以什么开头
+		$  以什么结尾
+		\b 单词边界(开头结尾逗号引号句号空格空白回车)
+		\B 非单词边界
+		[^] 取非
+		{}  多少个前面的原子
+		()  单元匹配(进行一次更细的匹配)
+	4.模式修正符：
+		i  忽略大小写
+		m  视为多行，\n视为回车
+		s  视为单行，可以匹配\n
+		U  贪婪模式
+		e  向后引用（可以写php函数处理）
+数学函数：
+	max($arr) //求出数组中最大值或多个参数值
+	min($arr) //同上，这个是求最小
+	round($num) //四舍五入一个数
+	ceil($num) //向上取整
+	floor($num) //向下取整
+	mt_rand(0, 10) //生成0到10之间的随机数
+日期函数：
+	1.改时区：设置php.ini的date.timezone = prc
+		或是直接写一个函数：date_default_timezone_set('prc')
+	2.获取时间戳：time();
+    获取日期：getdate();
+	3.时间戳转日期：date("Y-m-d h:i:s", time());
+		//第二个参数可以省略
+		date中的参数：
+		Y 2018年份
+		m 01-12个月份
+		n 1-12个月份
+		d 01-31天
+		j 1-31天
+		H 24时
+		h 12时
+		i 00-59分
+		s 00-59秒
+		w 0-6周
+		A AM或PM
+		a am或pm
+		L 本年是否是闰年
+		t 本月一共多少天
+	4.日期转时间戳：strtotime("2018-8-30");
+	5.获取微秒：microtime();
+		//1秒等于1e6微秒，有参数的话可以与其它微秒计算，结果为秒
+错误处理（错误级别）：
+	1.提示错误 E_NOTICE 不阻止脚本执行
+	2.警告错误 E_WARNING 不阻止脚本执行
+	3.致命错误 E_ERROR 阻止脚本执行
+	4.语法错误 E_PARSE 不执行脚本
+	5.丢弃错误（新版本抛弃，禁用的语法） E_DEPRECATED 不阻止脚本执行
+	设置错误错误：
+		1.php.ini中的error_reporting配置项
+			E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED
+				表示显示左右错误，并且忽略（~是忽略的意思）严格模式的错误（STRICT必须兼容最新版本语法）
+		2.error_reporting函数直接定义（值不用引号包裹）
+		3.ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+	错误日志：
+		在php.ini中设置
+		log_errors = On 开启日志功能
+		log_errors_max_len = 1024 错误提示写入最大的字节数
+		error_log = E:/error/1.log 错误日志文件保存的路径
+		error_log("测试") 页面中自定义输出错误信息到日志
+	显示/关闭页面错误提示：
+		display_errors = On
+		display_errors = Off
+	自定义错误处理器：
+		可以收集错误信息（致命错误和语法错误除外），灵活设置显示位置
+		set_error_handler("myhandler");
+			设置自定义错误处理器，参数是错误处理器函数名字
+		function myhandler($level, $mess, $file, $line) {
+			/*
+				当发生错误时，自动传递参数到处理器函数
+				参数1 错误的级别号
+				参数2 错误的信息
+				参数3 错误发生的文件
+				参数4 错误发生的行号
+			*/
+		}
+php图片处理：
+	php gd函数库：处理图像、画图
+	开启gd库（php.ini，去掉分号）：
+		extension=php_gd2.dll
+	创建画布（内存中创建图像资源）
+		$board = imagecreatetruecolor($width, $height);
+	分配颜色
+		$blue = imagecolorallocate($board, 0, 0, 255);
+			第一个参数是为哪个画布资源分配
+			剩下三个参数是RGB颜色
+	在画布上画图或文字：
+		1.imagefill($board, $x, $y, $blue)
+			画布填充颜色，中间两个参数是起始的X轴Y轴坐标
+		2.背景透明化处理(png gif)
+			$white = imagecolorallocate($board, 255, 255, 255);
+			$transparent = imagecolortransparent($board, $white);
+			imagefill($board, $transparent);
+		3.imagefilledellipse($board, $x, $y, $w, $h, $blue)
+			画一个填充的圆形，x,y是圆心位置，w,h是宽和高，imageellipse是描边圆形
+		4.imagesetpixel($board, $x, $y, $black)
+			画一个像素
+		5.imageline($board, $x1, $y1, $x2, $y2, $black)
+			绘制线条，$x1和$y2是开始的X轴Y轴坐标，$x2和$y2是结束的X轴Y轴坐标
+		6.imagefilledrectangle($board, $x1, $y1, $x2, $y2, $black)
+			画一个填充的矩形，$x1, $y1左上角坐标，$x2, $y2右下角坐标，imagerectangle是描边矩形
+		7.imagefilledpolygon($board, $arr, 3, $black)
+			画一个填充的多边形，数组是点的坐标(格式是[1, 1, 200, 200])，3是有3个点，imagepolygon是描边多边形
+		8.imagefilledarc($board, $c1, $c2, $w, $h, $s, $e, $black, IMG_ARC_PIE)
+			画圆弧形
+			$c1, $c2是圆心
+			$w, $h是圆的宽高
+			$s是正圆开始绘制的角度
+			$e是正圆结束绘制的角度
+			顺时针画，最后一个参数是圆弧的类型
+			imagearc是描边
+			不写最后的参数
+		9.imagettftext($board, $size, $angle, $x, $y, $black, realpath("123.ttf"), $text)
+			写入文本到图像（使用特定的字体）
+			$size是字体大小
+			$angle是文字倾斜的角度
+			$x, $y坐标是以文字左下角为基准
+			参数7：字体文件（文件的绝对路径，可以使用realpath("123.ttf")转换为绝对路径）
+			参数8：绘制的文字
+			字体文件需要在服务器中
+		10.imagecopy($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h)
+			将图像绘制到画布中
+			参数1：目标图像资源(画布)
+			参数2：原图像资源（imagecreatefromjpeg("1.jpg") jpeg png gif）
+			参数3、4：目标图像资源绘制的XY坐标
+			参数5、6：原图采集的起点XY坐标
+			参数7、8：截取原图的宽度、高度
+		11.imagecopyresampled($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h)
+			图像压缩，制作缩略图
+			前面的参数和上面一样
+			参数7、8：绘制到画布的宽度高度
+			参数9、10：截取原图的宽度、高度
+  获取图像的尺寸：getimagesize("1.jpg");
+	获得图像资源宽度
+		imagesx($src_img)
+	获得图像资源高度
+		imagesy($src_img)
+	图片压缩/裁剪：
+    把一张大图缩略成不同的小图
+    1.导入大图资源： $srcimg = imagecreatefromjpeg('1.jpg');
+    2.创建小图画布： $dstimg = imagecreatetruecolor(300, 200);
+    3.把大图缩放到小图上去： imagecopyresampled($dstimg, $srcimg, 0, 0, 0, 0, 300, 200, 600, 400);
+    4.输出小图： imagejpeg($dstimg, 'sm_a.jpg');
+	规定范围等比例缩放图像：
+		function thumb($path, $w, $h) {
+			$imgInfo = getimagesize($path);
+			$srcW = $imgInfo[0];
+			$srcH	= $imgInfo[1];
+			if ($srcW / $w >= $srcH / $h)
+				$m = $srcW / $w;
+			else $m = $srcH / $h;
+			$m = ceil($m);
+			$dstW = round($srcW / $m);
+			$dstH = round($srcH / $m);
+			return json_encode([$dstW, $dstH]);
+		}
+	图片验证码：
+		生成字母数字的方法：
+		$arr = array_merge(range(0,9),range("a","z"),range("A","Z"));
+		shuffle($arr);
+		$str = join("", array_slice($arr, 0, 5));
+		多页面共享数据的方法：session
+		session_start(); //开启，必须放在html之前
+		$_SESSION['data'] = $str; //存数据
+		$_SESSION['data']; //取数据
+	保存最终图像（增加第二个参数，保存地址）：
+		imagejpeg($board, "1.jpg");
+			//保存1.jpg文件到根目录
+		imagepng($board, "2.png")
+		imagegif($board, "3.gif")
+	输出图像资源到浏览器页面：
+		header("content-type:image/jpeg");
+		imagejpeg($board);
+		header("content-type:image/png");
+		imagepng($board);
+		header("content-type:image/gif");
+		imagegif($board);
+	释放画布资源：
+		imagedestroy($board);
+	画图类的封装：
+		class Draw {
+				private $board;
+				private $color;
+				private $create_fn = [
+					"image/png" => "imagecreatefrompng",
+					"image/gif" => "imagecreatefromgif",
+					"image/jpeg" => "imagecreatefromjpeg"
+				];
+				private $mime = "image/jpeg";
+				private $output_fn = [
+					"image/png" => "imagepng",
+					"image/gif" => "imagegif",
+					"image/jpeg" => "imagejpeg"
+				];
+				
+				public function __construct($width, $height) {
+						$this->board = imagecreatetruecolor($width, $height);
+						$this->set_color(255, 255, 255);
+				}
+				//设置颜色
+				public function set_color($r, $g, $b) {
+						if (!$this->board) return;
+						$this->color = imagecolorallocate($this->board, $r, $g, $b);
+				}
+				//设置透明颜色
+				public function set_transparent() {
+					$this->color = imagecolortransparent($this->board,
+						imagecolorallocate($this->board, 255, 255, 255)
+					);
+				}
+				//设置图像的mime类型
+				public function set_mime($mime) {
+					$this->mime = $mime;
+				}
+				//填充背景
+				public function fill($x, $y) {
+						if (!$this->board) return;
+						imagefill($this->board, $x, $y, $this->color);
+				}
+				//画线
+				public function line($x1, $y1, $x2, $y2) {
+						if (!$this->board) return;
+						imageline($this->board, $x1, $y1, $x2, $y2, $this->color);
+				}
+				//画点
+				public function pixel($x, $y) {
+					if (!$this->board) return;
+					imagesetpixel($this->board, $x, $y, $this->color);
+				}
+				//画矩形
+				public function rectangle($x1, $y1, $x2, $y2, $filled=false) {
+						if (!$this->board) return;
+						if ($filled)
+								imagefilledrectangle($this->board, $x1, $y1, $x2, $y2, $this->color);
+						else imagerectangle($this->board, $x1, $y1, $x2, $y2, $this->color);
+				}
+				//画圆形
+				public function ellipse($x, $y, $w, $h, $filled=false) {
+						if (!$this->board) return;
+						if ($filled)
+								imagefilledellipse($this->board, $x, $y, $w, $h, $this->color);
+						else imageellipse($this->board, $x, $y, $w, $h, $this->color);
+				}
+				//画弧形
+				public function arc($c1, $c2, $w, $h, $s, $e, $filled=false) {
+						if (!$this->board) return;
+						if ($filled)
+								imagefilledarc($this->board, $c1, $c2, $w, $h, $s, $e, $this->color, IMG_ARC_PIE);
+						else imagearc($this->board, $c1, $c2, $w, $h, $s, $e, $this->color);
+				}
+				//拷贝图片到画布
+				public function copy($src_path, $dst_x, $dst_y, $src_x, $src_y, $src_w=null, $src_h=null) {
+						if (!$this->board) return;
+						$img_info = getimagesize($src_path);
+						$mime = $img_info["mime"];
+						if (!$this->create_fn[$mime]) return;
+						$src_img = $this->create_fn[$mime]($src_path);
+						if ($src_w === null)
+								$src_w = $img_info[0];
+						if ($src_h === null)
+								$src_h = $img_info[1];
+						imagecopy($this->board, $src_img,  $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h);
+				}
+				//图像压缩
+				public function thumb($src_path, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w=null, $src_h=null) {
+					if (!$this->board) return;
+					$img_info = getimagesize($src_path);
+					$mime = $img_info["mime"];
+					if (!$this->create_fn[$mime]) return;
+					$src_img = $this->create_fn[$mime]($src_path);
+					if ($src_w === null)
+							$src_w = $img_info[0];
+					if ($src_h === null)
+							$src_h = $img_info[1];
+					imagecopyresampled($this->board, $src_img, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+				}
+				//写入文字
+				public function text($size, $angle, $x, $y, $font_family, $text) {
+						if (!$this->board) return;
+						imagettftext($this->board, $size, $angle, $x, $y, $this->color, $font_family, $text);
+				}
+				public function print($filename=null) {
+					if ($filename) {
+						$this->output_fn[$this->mime]($this->board, $filename);
+						imagedestroy($this->board);
+						$this->board = null;
+						return;
+					}
+					header("content-type:{$this->mime}");
+					$this->output_fn[$this->mime]($this->board);
+					imagedestroy($this->board);
+					$this->board = null;
+				}
+		}
+	验证码类的封装：
+		require_once "GD.class.php";
+		//封装验证码类
+		class Captcha {
+
+				//验证码的宽度
+				private $width;
+				//验证码的高度
+				private $height;
+				//验证码字符的个数
+				private $num;
+				//验证码字体文件
+				private $font_family;
+				//验证码字体大小
+				private $font_size;
+				//生成干扰线条数
+				private $lines;
+				//生成干扰像素点个数
+				private $pixel;
+
+				public function __construct($width, $height, $num, $font_family, $font_size, $lines, $pixel) {
+						$this->width = $width;
+						$this->height = $height;
+						$this->num = $num;
+						$this->font_family = realpath($font_family);
+						$this->font_size = $font_size;
+						$this->lines = $lines;
+						$this->pixel = $pixel;
+				}
+
+				//生成验证码
+				public function get() {
+					 $image = new Draw($this->width, $this->height);
+					 $image->set_color(
+							 $this->getRGB(100, 200),
+							 $this->getRGB(100, 200),
+							 $this->getRGB(100, 200)
+					 );
+					 $image->fill(0, 0);
+					 $str = "";
+					 for ($i = 0; $i < $this->num; $i ++) {
+							 $image->set_color(
+									 $this->getRGB(0, 99),
+									 $this->getRGB(0, 99),
+									 $this->getRGB(0, 99)
+							 );
+							 $char = $this->getLetter();
+							 $str .= $char;
+							 $image->text(
+									 $this->font_size,
+									 mt_rand(-30, 30),
+									 ($this->width/$this->num)*$i+5,
+									 27,
+									 $this->font_family,
+									 $char
+							 );
+					 }
+					 for ($i = 0; $i < $this->lines; $i++) {
+							 $image->set_color(
+									 $this->getRGB(100, 200),
+									 $this->getRGB(100, 200),
+									 $this->getRGB(100, 200)
+							 );
+							 $image->line(
+									 mt_rand(0, $this->width),
+									 mt_rand(0, $this->height),
+									 mt_rand(0, $this->width),
+									 mt_rand(0, $this->height)
+							 );
+					 }
+					 for ($i = 0; $i < $this->pixel; $i++) {
+								$image->set_color(
+										$this->getRGB(0, 100),
+										$this->getRGB(0, 100),
+										$this->getRGB(0, 100)
+								);
+								$image->pixel(
+										mt_rand(0, $this->width),
+										mt_rand(0, $this->height)
+								);
+						}
+					 $image->print();
+					 return $str;
+				}
+
+				//获取RGB颜色
+				private function getRGB($min, $max) {
+						return mt_rand($min, $max);
+				}
+
+				//随机生成字母和数字
+				private function getLetter() {
+						do {
+								$num = mt_rand(65, 122);
+						} while ($num < 97 && $num > 90);
+						if (mt_rand(1, 10) >= 5)
+								return mt_rand(0, 9);
+						return chr($num);
+				}
+		}
+php操作文件：
+  文件是数据源（保存数据的地方）的一种方式
+  在php编程中，文件是以字符流（文本文件）或字节流（二进制文件）两种形式来操作
+  输入和输出都是针对php程序(即内存)
+  读入到php程序(读入内存)，输入流
+  从php程序把内容保存到文件中，输出流
+文件的操作函数：
+  filetype("1.txt") //测试文件还是目录
+  is_file("1.txt") //判断是不是文件
+  file_exists("1.txt") //文件或目录是否存在
+  filesize("1.txt") //文件大小
+  filetype("1.txt") //文件类型（文件或是目录）
+  filectime("1.txt") //文件创建时间
+  filemtime("1.txt") //文件修改时间
+  fileatime("1.txt") //文件访问时间(php程序 touch函数)
+  $fp = fopen("1.txt", "r") //打开文件，返回流资源，第一个参数是文件名，第二个是打开文件的方式（模式）
+    r 只读方式打开，文件指针指向文件头
+    r+ 读写方式打开，文件指针指向文件头
+    w 写入方式打开，将指针指向文件头并将文件大小截为0，文件不存在尝试创建
+    w+ 读写方式打开，将指针指向文件头并将文件大小截为0，文件不存在尝试创建
+    a 写入方式打开，将文件指针指向文件尾，文件不存尝试创建
+    a+ 读写方式打开，将文件指针指向文件尾，文件不存尝试创建
+  fseek($fp, SEEK_CUR) //文件指针偏移
+    第一个参数为文件资源
+		第二个参数为偏移量（int类型）字节
+		第三个参数决定文件指针的初始位置，配合第二个参数决定最终指针的位置。
+    第三个参数的可用选项：
+      1. SEEK_CUR:指针当前位置
+      2. SEEK_END：文件末尾，如果想向前偏移，偏移量必须为负数。
+      3. SEEK_SET:文件开始位置
+  ftell($fp) 获取偏移量
+  fread($fp, filesize("1.txt")) //读取文件返回字符串，第二个参数是字节
+    如果字节小于文件的大小，下次读取会从结束处继续读取
+    feof($fp) //判断有没有读取到文件结束位置的函数
+	fwrtie($fp, "hello") //写入文件，第三个参数可以指定写入的字节大小，不指定会全部写入进去
+	readfile("1.txt") //读取文件直接输出到页面
+    替换文本中的回车（windows）是 "\r\n"，Linux回车是"\n" return newLine
+    替换文本中的tab是 "  "(敲一个tab键)
+  fgets($fp) //读取一行数据
+  $arr = fstat($fp) //返回文件属性(到数组中)
+    $arr['size'] //文件大小
+    $arr['atime'] //文件的php程序访问时间(php程序 touch函数)
+    $arr['ctime'] //文件的创建时间
+    $arr['mtime'] //文件的修改时间
+  file_get_contents("1.txt") //读取文件(或url)返回字符串
+  file_put_contents("1.txt", $str) //写入文件数据，文件不存在会创建，文件存在会覆盖写入
+    如果要追加写，最后参数加上 FILE_APPEND 常量即可
+  parse_ini_file('text.ini');
+    读取形如
+      a=1
+      b=2
+    这样数据的文件，自动转为关联数组
+  unlink("1.txt") //文件删除
+  rename("1.txt", "2.txt") //重命名文件或目录（目录是一种特殊的文件）
+    因为文件函数是早期的函数，对gbk，gb2312支持比较好，对utf8支持不够
+    iconv('utf-8', 'gbk', '你好'); //转码函数，返回转码后的字符串
+  copy("old_path", "new_path") //复制文件
+  fclose($fp) //释放文件资源
+目录的操作：
+	is_dir("1.txt") //判断是不是目录（必须带上级目录一起判断）
+  opendir("./home") //打开目录句柄
+  readdir($dir) //读取目录句柄，可以通过循环取出目录中所有的文件/目录
+    while ($file_name = readdir($dir)){ echo $file; }
+  $files = scandir("../girlsHome") //直接拿到目录所有文件/目录，返回数组
+  mkdir("admin") //创建单级目录
+    mkdir('d:/a/b/c', '0777', true); 
+      //创建多级目录，0777是(linux)最大权限访问(windows中省略)，true代表可以创建多级目录
+  rmdir("admin") //删除空目录
+  closedir($dir) //关闭目录资源
+文件上传：
+	表单提交的数据分为以下两种：
+		1. 字节流数据：输入框，单选框，复选框，多行文本域等都是通过字节的数据传输
+		2. 二进制文件流：提交一些文件时，由于文件是二进制进行编码，所以需要将二进制文件转码为二进制文件流，然后传输
+  MIME类型：
+		多用途Internet邮件拓展，它的出现是跟着电子邮件一起出现的
+		早期，发送电子邮件时，会附带一些附件，计算机系统根据附件的类型找到对应设备打开
+			比如 传输视频，用视频播放器打开；传输网页，用浏览器打开
+		MIME包括两部分：
+			第一部分是该文件所属的一个大类
+			第二部分是文件细节小类（拓展名）
+			text/html 文件文件，html类型
+			image/jpg 图像文件，jpg类型
+	文件上传原理：
+		提交表单会将file文件域的文件先上传到临时目录（可以在php配置文件中配置）
+		默认临时目录是“c:/windows/temp”，如果要持久保持，需要通过php函数move_uploaded_file()移动到指定位置
+		如果不移动，当php脚本执行结束，临时文件就会消失
+	上传文件时，form要设定enctype="multipart/form-data"
+  php文件使用$_FILES来接受，文件域必须name属性
+  移动表单临时数据到目标目录（返回布尔值）
+    move_uploaded_file($_FILES['img']['tmp_name'], "imgs/0.jpg")
+  判断文件类型，是否可以上传($exp是后缀)
+    $isHave = ["jpg", "png", "pdf"];
+    if (in_array($exp, $isHave)) move_uploaded_file()
+  限制文件的大小：$_FILES['img']['size']<500*1024(500KB)
+  错误码：0无错误 1文件大小超过php限制 4没有上传任何文件
+	php.ini关于文件的配置：
+		file_uploads = On 表示允许上传文件
+		upload_tmp_dir = "" 上传的临时目录（不指定就用系统默认的临时目录）
+		upload_max_filesize = 2M 上传文件的最大限制（大于限制不会进入临时目录）
+		max_file_uploads = 20 一次上传最大文件数量
+		post_max_size = 100M php允许表单post传输的最大大小
+		表单post超过最大值$_FILES为空数组
+	如果拓展名修改了，通过$_FILES无法获得真实的MIME类型获取文件真实的MIME类型的方法
+	获取文件真实的MIME类型的方法：
+		$finfo = new finfo(FILEINFO_MIME_TYPE);		
+		$type = $finfo -> file("a/1.txt");
+	文件上传类（提高代码的重用性，保证代码在不同场景中灵活的运用）
+文件下载：
+  //设置文件mime类型
+	header("content-type:application/octet-stream");
+  //设置文件名和内容类型
+	header("content-disposition:attachment;filename=1.txt");
+  //设置文件大小
+	header("content-length:100KB");
+  //按照字节大小返回
+	header("accept-Ranges:bytes");
+	//下载文件
+	readfile($filename);
+	//防止文件乱码的方法
+	$file_path = iconv("utf-8", "gbk", $file_path);
+类的自动加载机制
+	当程序员使用到一个不存在的类时
+		new 类
+	会自动触发一个系统提供的__autoLoad魔术函数
+	function __autoload($class_name) {
+		//自动获取类名
+		require "{$class_name}.class.php";
+	}
+	优化：可以定义一个数组(也可以在外部文件)，映射类和类路径的关系
+	$class_map = [
+		'Dog' => 'abc/Dog.class.php',
+		'Cat' => 'Cat.class.php',
+	]
+	function __autoload($class_name) {
+		global $class_map;
+		require $class_map[$class_name];
+	}
+	当程序员使用到一个不存在的类时
+		new 类
+		类::静态方法
+		类 extends 父类
+		类 implements 接口
+	注册一个自动加载，当触发自动加载机制时调用回调函数，并把类名传入函数中
+	spl_autoload_register('my_autoload');
+	//如果回调函数的某个对象的方法，传参应该传一个数组，成员分别是对象和方法名
+	spl_autoload_register([
+		$obj, "autoload"
+	]);
+	//函数自动传入类名
+	function my_autoload($class_name) {
+		require $class_name.".class.php";
+	}
+php面向对象：
+  类与对象关系：类实例化，诞生，生产出对象
+  类的组成部分：1.属性 2.方法
+  oop达到了软件工程三个目标：重用性，灵活性，拓展性
+  oop面向对象编程的特点：封装，继承，多态
+	对象的赋值是地址（标识符）拷贝，加上&就不会拷贝地址，直接引用
+		$obj = $obj2;  $obj = &$obj2;
+  判断类是否存在 class_exists("类名");
+	判断对象或类中有没有某个属性
+		property_exists(类/对象, "属性名");
+		先判断对象中是否存在该属性，如果有返回真，如果没有在去类中查看是否有，有返回真，没有返回假
+	判断对象或类中有没有某个方法
+		method_exists(对象, "方法名");
+		先判断对象中是否存在该方法，如果有返回真，如果没有在去类中查看是否有，有返回真，没有返回假
+	返回对象的类名 get_class(对象);
+	返回对象或类的父类名 get_parent_class(对象/类);
+	trait可以让类复用一段代码
+		trait my_code {
+			function hello() {
+				echo 'hello world!';
+			}
+		}
+		class A {
+			use my_code; //引入代码段
+		}
+		如果父类有和trait代码段相同的方法时，那么这时相当于方法的重写，以trait中的方法优先级高
+	反射对象：一个类本身也可以看做一个对象
+		$class_obj = new ReflectionClass($obj); //传入对象名或类名
+		$class_obj->getName(); //获取类名
+		$class_obj->getMethods(); //获取所有方法名
+		$class_obj->getProperties(); //获取所有属性名
+		$class_obj->newInstance('Tom', 20); //通过反射对象实例化对象
+		用其他对象调用某对象中的方法
+			$fun_obj = $class_obj->getMethod('fun'); //获取一个方法(方法看做对象)
+			$fun_obj->invoke($other_obj, 'Tom'); //第一个参数是对象，后面是参数
+	属性动态重载：为一个不存在的属性赋值，相当于添加一个属性
+	类和对象的代码实例：
+    class Person {
+        public $name = 'goudan';
+        public function say_hi() {
+          echo "hello, my name is ".$this->name;
+        }
+    } //上面的代码是类
+    //实例化一个对象
+    $man = new Person();
+    //访问对象的成员
+    $man->name
+    $man->say_hi()
+  $this代表本对象
+	类名规范是大驼峰
+	魔术方法：
+    1. __construct 构造方法
+			访问修饰符可以是任意三个之一，默认是Public
+			构造函数没有返回值，写了也没效
+			构造方法是系统调用，程序员不能显示调用
+			以用类名创建的函数等于构造函数
+			创建一个新对象时，系统会自动调用构造方法完成新对象的初始化
+			构造函数只能有一个，多个会报错
+    2. __destruct 析构方法
+			显示销毁：$obj = null; $obj = 0; unset($obj);
+			如果程序员不去显示销毁对象，那么在程序执行完毕后，这个对象就会被系统销毁，这个就是系统销毁
+			析构函数都是public，没有形参
+    3. __toString 把对象当成字符串输出的时候会调用
+    4. __call 对象调用不可访问的方法(1.该方法不存在 2.直接访问了protected或者private方法)时可以用它处理，有两个参数一个是对象名，一个是传参的数组列表
+    5. __get 对象访问一个不可访问的属性(1.该属性不存在 2.直接访问了protected或者private属性)，用它处理，一个参数是属性名
+    6. __set 对象设置一个不可访问的属性，用它处理，两个参数，一个是属性名，一个是值
+    7. __isset 当使用isset或empty判断对象属性时，如果不可访问，用它处理，一个参数属性名
+    8. __unset 当对象使用unset删除属性时，如果受保护，用它处理，一个参数属性名
+		9. __clone 当使用clone关键字克隆对象时，自动调用此方法，可以在里面改克隆后对象的属性
+			 如果要阻止克隆，只要把克隆函数改为私有即可
+		10. __callStatic 调用一个不可访问的静态方法时触发，必须也要用static修饰，参数一个是方法名，一个是参数数组
+	比较两个对象
+		==  如果两个对象属性和属性值都相等，而且是同一个类的实例，就返回true
+		=== 如果两个对象变量指向同一个类的同一个实例(即同一个对象)
+	克隆对象：$obj = clone $obj1;
+	类文件的命名规范：Cat.class.php
+  构造方法(创建对象之前执行)：
+    class Person{
+      public function __construct($name) {
+        $this->name = $name;
+      }
+    }//实例化对象时传递数据
+    $man = new Person('jack');
+  析构方法(对象销毁前执行)：
+    class Person{
+      public function __destruct() {
+        echo "{$this->name} has died";
+      }
+    }
+		某个对象的所有引用都被删除或者当对象被显式销毁时执行
+		最重要的作用：释放对象创建用到的资源
+  垃圾回收机制
+		当一个对象没有任何引用指向它的时候，就会变成一个垃圾对象，php会启用垃圾回收其将对象销毁
+		当程序退出前，php也会启用垃圾回收器，销毁对象
+	对象->成员
+  属性作用域：
+    1.类外变量不能作用到类内
+    2.类中属性可以作用到类方法中
+    3.类中变量不能作用到类方法中
+    4.类中方法中变量可以给属性赋值
+    5.类中变量或属性都不能作用到类外面
+  类的继承：class Man extends Person{} //父类和子类 基类和拓展类
+		继承根本作用是解决代码的复用性，减少冗余度。同时利于类的维护和拓展
+  调用父类构造函数：parent::__construct($a, $b) //写到构造函数中
+  类继承特征：
+		如果子类中有何父类同名的方法(参数个数(如果有类型约束，数据类型也一样)也必须一样)，就会被重写
+		属性除了private的其他都可以被重写
+  继承的作用：
+    1.提高重用性
+    2.提高扩展性
+  类的访问修饰符：
+    1.public 公开的 类外，子类，父类都能访问
+    2.protected 被保护的 类外面不能访问，子类可以访问，父类可以访问
+    3.private 私有的 类外面，子类不能访问，父类可以访问
+  类的封装级别：子类的修饰词要<=父类同名方法的修饰词访问权限
+  类的封装特性：提高灵活性
+  封装的作用：
+    1.部分方法要对外开放
+    2.部分方法要对外封锁
+  抽象类：含有抽象方法的类就是抽象类
+    abstract class Father{
+      public function a() {
+        echo "do something";
+      }
+      //抽象方法，子类继承后如果不实现此方法就不能new
+      abstract punclic function b();
+    }
+  接口：只含有抽象方法的类(命名规范：首字母用i)
+    interface iFather{
+			//因为都是抽象方法，所以都不用abstract修饰
+      public function a();
+      public function b();
+    }
+    //子类不是继承，而是实现，可以实现多个接口
+    class iChild implements iFather,iMother{}
+  接口的继承，可以多继承(接口的拓展)：
+    interface Father extends Grandfatehr, Grandmother{}
+	接口中可以有属性，但必须是常量
+		interface A {
+			const NAME = '小明';
+		}
+  多态：多种形态，只有实现了接口中所有的抽象方法，才能使用下面函数
+    function hello(A $obj) { //A表示一个接口
+      $obj->say();
+    }
+	接口可以在不打破类继承的前提下，对类的功能进行拓展
+	关键字：
+		1.类常量const 可以修饰属性
+			class Person{
+				const HOST = '127.0.0.1';
+			}
+			Person::HOST; //类调用使用双冒号
+			常量名的规范是全部大写，用下划线间隔
+			const之前不用public修饰，默认是public
+			访问常量：
+				1. 类的内部 类名(接口)::常量名 self::常量名
+				2. 类的外部 类名(接口)::常量名
+			常量定义时就被初始化(不能是表达式)，以后不能修改
+			常量可以被子类继承
+			常量是属于类的，不是属于对象的
+			常量的数据类型是除了对象和资源，其他都可以
+		2.最终版本final 可以修饰类和方法(最终类)
+			修饰类的时候类不能被继承
+			修饰方法的时候子类不能覆盖此方法
+			不能修饰属性
+			final class Person{
+				public function ok(){}
+				final public function noOk(){}
+			}
+		3.静态变量static 属于所有对象，因此可以被所有对象共享
+			class Person{
+				static public $num = 0;
+				public function __construct() {
+					self::$num++;
+					//或用self::$num++;一样
+				}
+			}
+			$obj = new Person();
+			Person::$num; //输出1
+			:: 叫做范围解析符
+			静态方法的意义：此方法中没有$this，可以直接使用类去调用
+			静态方法只能调用静态属性或静态方法
+			静态方法访问修饰符不是public不能再类外部访问
+			当程序员需要对静态属性进行操作时，可以定义静态方法来处理，静态方法专门用于操作静态属性。
+			类外部调静态方法 类名::fun() 对象名::fun() 对象名->fun() 后两个不推荐
+			类内部调静态方法 类名::fun() self::fun() $this->fun() 后一个不推荐
+		对象的类型约束(在函数的形参中)，可以使用类名做修饰符约束(可以是基类)
+	对象的遍历：指的是对某个对象所有属性进行遍历
+		在类外部遍历：只能遍历到对象的public属性
+			foreach ($obj as $key=>$val) {}
+		在类内部遍历：遍历所有属性
+			foreach ($this as $key=>$val) {}
+	php内置标准类：stdClass
+		如果希望把一些数据用对象的方式存储，但又不想定义一个类
+		这是系统提供，不需要程序员创建，而是直接使用就可以
+	数组转对象：$obj = (object)$arr;
+	对象转数组: $arr = (array)$obj; //受保护的和私有属性仍无法访问
+	对象的序列化和反序列化：
+		对象序列化：将一个对象转换为字符串，包含属性名，属性值，属性类型，和该对象的对应的类名。简单说把一个对象的数据和数据类型转成字符串。
+			serialize($obj); //对象序列化
+		反序列化：将一个序列化的字符串恢复成对应的对象。注意实例化对象的类必须存在（引入该对象的类定义）。
+			unserialize($obj); //反序列化
+		序列化对象的时候会触发__sleep魔术方法
+			要返回一个数组，数组是需要被序列化的属性名，['name', 'age']
+			如果没有返回值会报错
+		反序列化会触发__wakeup魔术方法
+			可以在这里决定对某些属性进行初始化或改变（$this代表要恢复的对象）
+命名空间：
+	包含其他php文件时，解决同一个php脚本同名类，同名函数，同名常量的问题
+	每个文件可以引入多个命名空间，每个空间互不干预，不会冲突
+	被引入的文件没有定义命名空间就默认是全局的命名空间
+	namespace关键字声明命名空间，一旦使用namespace声明了，就会在当前文件创建一个命名空间，后面代码会保存到该空间（在内存中维护）
+	namespace前不能放任何PHP代码，或PHP之外的HTML代码
+	PHP会预解释会把声明的类，函数，常量放到对应的命名空间中（没有声明命名空间就放到全局命名空间），执行的时候自动拼接各个命名空间中的成员
+	定义一个命名空间
+		namespace 名字;
+	定义一个子命名空间
+		namespace 名字\名字2;
+	一个文件可以定义多个命名空间
+	非限定名称（相对路径）：
+		使用类，函数，常量这些成员时，如果成员前没有任何空间修饰，就会在当前空间查找这个成员
+		常量，函数会先找当前空间，找不到就去全局空间找（类不会）
+	限定名称（相对路径）：
+		abc\hello();
+		以当前命名空间为起点寻找子命名空间中的成员
+	完全限定名称（绝对路径）：
+		\abc\hello();
+		以全局命名空间为起点寻找子命名空间的成员
+	全局命名空间就是namespace之外的空间
+		\函数() 表示使用的就是全局命名空间的函数 
+	使用类: 
+		new \命名空间名字\类名();
+		默认上一级命名空间是定义后的命名空间，没有定义就是全局
+	导入命名空间（防止使用类空间修饰的前缀太长）：
+		整体导入：
+			use \a\b\c as d;
+			如果不写as后的部分，就用最后的空间名做别名，别名不能重名
+			使用 new d\abc();
+		导入类：
+			use \a\b\c\abc;
+		导入函数：
+			use function \a\b\c\aaa;
+		导入常量：
+			use const \a\b\c\bbb;
+		导入类，函数，常量之后可以直接使用，他们也可以保存到变量中
+	__NAMESPACE__ 此时的使用的命名空间(预定义常量)
+	namespace关键字还可以作为当前命名空间修饰来使用
+		namespace\show();
+PDO(php data object)php数据对象：
+	PDO也可以理解为数据库抽象层
+	PDO为我们访问数据库提供了轻量级一致性的接口，通过PDO不仅能访问MySQL数据库，还能访问其他类型的数据库：oracle、mssql等，便于数据库移植迁移
+	用phpinfo()查看pdo和pdo_mysql是否开启
+	如果没有可以去php.ini中搜索php_pdo_mysql.dll去开启
+	pdo操作mysql：
+		//数据源（参数的顺序可以打乱，端口默认3306），分号后面不要有空格
+		//连接数据库类型 数据库服务器地址 数据库名称 数据库端口 使用编码格式
+		$dsn = "mysql:host=127.0.0.1;dbname=xinxiaoquan;port=3306;charset=utf8";
+		//参数2 用户名 参数3 密码
+		$pdo = new PDO($dsn, "root", "123");
+	pdo类的方法：
+		$pdo->exec("set names utf8"); //设置字符集
+		$pdo->exec 用来设置sql语句的增删改，返回受影响行数（记录数），如果语句错误返回false
+		$pdo->query sql查询的语句，返回结果集
+		$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_NUM) //设置默认数组显示
+			PDO::FETCH_NUM 索引数组显示
+			PDO::FETCH_ASSOC 关联数组显示
+			PDO::FETCH_BOTH 混合数组显示
+		$pdo->lastInsertId() //最后一次插入数据的id（主键）
+		$pdo->errorInfo() //获得sql语句错误信息
+		$pdo->errorCode() //获得sql语句错误代码号
+		$pdo->quote($str) // 引号转义(不具有原来的意义)，再在最外面包裹一层引号
+	PDOStatement对象的方法（获取查询的数据）：
+		$obj = $pdo->query("select * from user"); //执行mysql语句，并返回一个结果集（预处理语句对象PDOStatement）
+		$obj->fetchAll(); //获取所有记录
+		$obj->fetch() 获取一条记录
+		/*
+			参数为PDO::FETCH_ASSOC就是关联数组
+			参数为PDO::FETCH_NUM就是索引数组
+			参数为PDO::FETCH_BOTH 混合数组显示
+		*/
+		$obj->fetchColumn() 获取第一条记录的第一个字段的数据，参数是字段的索引（从0开始）下次执行就是下一记录
+		$obj->rowCount(); //查看增删改影响行数
+		$obj->columnCount(); //返回列数(字段数)
+		$obj->errorInfo() //获得预编译sql语句错误信息
+		$obj->errorCode() //获得预编译sql语句错误代码号
+		$obj -> closeCursor() //关闭游标、指针(查询数据后，将游标初始化，便于下次查询)
+	事务机制：
+		一个事件有多个任务组成
+		事务是逻辑上一组操作，这组操作各个单元要么全部成功，要么全部失败
+		使用事务，数据表存储引擎必须是innodb类型
+		开启事件
+			1. 如果所有任务都成功该事件完成
+				1).提交该事件
+				2).结束事件
+			2.如果有一个任务失败该事件完成
+				1).回滚事件
+				2).结束事件
+	pdo错误输出模式：
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION)
+	pdo事务机制：
+		1.$pdo->beginTransaction() //开启事务机制
+		2.$pdo->commit() //提交事件
+		3.$pdo->rollBack() //回滚事件
+	pdo预处理类：
+		提前预先处理sql，预处理执行的结果，先把sql语句结构部分固定住，后期结构不会变化，只能变化数据
+		这样就不会因为输入的数据改变sql语句的结构
+		1.使用占位符替代数据(占位符有?和:name) 命令占位符可以使用任何名字
+			$sql = "DELETE FROM mytable WHERE id=?";
+		2.预处理，固定sql语句的结构
+			$obj=$pdo->prepare($sql); //预处理sql语句，返回一个PDOStatement对象
+		3.绑定真实的数据（使用真实数据替代占位符）
+			$obj->bindValue(1, "1");
+			/*
+				第一个参数：
+				问号占位符：1表示第一个问号 2表示第二个问号
+				命令占位符：直接写名字
+			*/
+			//第二个参数：真实的数据
+		4.执行sql语句
+			$obj->execute(); //执行sql语句
+	使用预处理的优势：
+		1.对数据库操作更加安全，将外部用户传递的数据使用占位符替代，不影响sql语句的结构
+		2.预处理会将sql语句的结构部分固定住，如果后期再执行类似的操作时，就直接用上次编译好的(预处理)语句，从而提升效率
+PHP异常处理：
+	针对可能出现意外的地方，先尝试执行，如果出现意外就抛出异常信息，在catch语句中捕获异常信息并使用备选方案
+	try{
+		//尝试执行可能出现意外的代码
+		//如果出现意外，抛出异常信息
+		throw new Exception("异常信息");
+	}catch(Exception $e) {
+		//捕捉Exception类的实例，$e为异常对象
+		//异常对象的方法
+		$e->getMessage() //错误信息
+		$e->getCode() //错误代码
+		$e->getLine() //错误行数
+	}
+	自定义异常处理器：
+		Exception类只能捕获异常信息，但实际中我们还需要提供备选方案，所以需要自定义异常类
+		自定义异常类需要继承基础类（Exception）
+		class TravelE extends Exception {
+			public function byAir() {
+				echo "坐飞机";
+			}
+		}
+		class Travel {
+			public $ticket = true;
+			public function buyTicket() {
+				//抛出自定义异常处理类
+				if ($this->ticket === false)
+					throw new TravelE("车票卖完了!");
+				echo "做火车";
+			}
+		}
+		$t = new Travel();
+		$t -> ticket = false;
+		try {
+			$t -> buyTicket();
+			//捕获自定义异常类
+		} catch(TravelE $e) {
+			echo $e -> getMessage();
+			$e -> byAir();
+		}
+Memcache：
+	1.数据缓存
+	2.数据共享
+	优点：内存缓存，速度快
+	缺点：关机易丢失，大小受限制
+Memcache和文件缓存的区别：
+	Memcache
+	1.连接通讯
+	2.速度快
+	3.关机易丢失
+	文件缓存：
+	1.永远存储
+	2.不需要通讯
+	3.受硬盘限制
+常用的数据缓存：
+	1.文件缓存
+	2.内存缓存
+	3.静态缓存
+端口连接：
+	1.dos中：telnet 127.0.0.1 521 //521是端口号
+	2.putty端口连接器
+	3.securecrt端口连接器
+	查进程：tasklist | find "mem"
+	查端口：netstat -ano | find 11211
+	默认端口是：11211
+Memcache的命令：
+	1.下载Memcached.exe
+	2.安装命令： memcached.exe -d install
+	3.卸载命令： memcached.exe -d uninstall
+	4.启动服务命令： memcached.exe -d start
+	5.停止服务命令： memcached.exe -d stop
+	6.路径/memcached.exe -p 1000 -m 1024 -d runservice //-p设置端口 -m设置存储大小
+	7.修改注册表：regedit->local->system->currentControlSet->services->memcached->imgPath->上一条的命令
+操作Memcache服务器：
+	查看状态：stats
+	增数据：set name 1 200 5 //表示设置一个变量name编号是1存200秒5个字符
+	删数据：delete name
+	改数据：replace name 1 100 10
+	查数据：get name
+	查看变量状态：stats items
+	查看变量：stats cachedump 1 0
+php操作Memcache：
+	添加模块：
+		下载php的Memcache拓展，安装到php目录的ext下
+		再到php.ini中添加（大约900行）extension=php_memcache.dll
+		最后重启apache，加载新模块
+	php存储标量是0标记，存储数组是1标记
+	memcache可以存数组！
+	$mem = new Memcache;
+	$mem->connent("127.0.0.1", "11211");
+	//增加(更新)一个值为bbb的aaa变量，不压缩，有效期为30秒(最后参数为0表示无限期)
+		$mem->set("aaa", "bbb", 0, 30)
+	$mem->delete("aaa"); //删除aaa
+	$mem->get("aaa"); //查数据
+	$mem->flush(); //清空数据
+	$mem->getStats() //获取状态，返回数组
+COOKIE和SESSION应用场景：
+	1.不同页面共享使用同一变量
+	2.实现用户在不同页面登录跟踪
+COOKIE管理：
+	setcookie("key","value",time()+100,"/");
+		参数1：保存的cookie变量名称
+		参数2：变量对应的值
+		参数3：cookie文件的有效期
+		参数4：有效路径，cookie起作用的路径
+			默认只允许访问当前目录或上级目录定义的cookie，不能访问子目录定义的cookie
+			/ 表示服务器根目录，在整个服务器根目录起作用
+		参数5：有效域名
+			cookie不支持跨域请求，指定在哪个域名下起作用
+			设置的域名及其子域名都可以使用
+			如果不设置只在当前域名下访问
+		参数6：是否只允许在https协议下使用
+			值是布尔值
+		参数7：为了防止cookie被劫持定义的参数
+			只允许在http协议下（web服务器）进行传输，只允许服务器读取修改cookie
+			如果设置为false的话，js就读取不到cookie
+			值是布尔值
+	setcookie("key", "', time()-1, "/"); //删除cookie
+	这个函数之前不能有任何输出，比如echo
+COOKIE细节：
+	每个域名最多创建20个
+	每个cookie文件最大是4k
+	Chrome创建的cookie文件更大，18k
+php会话技术：
+	http协议是无状态协议，客户端每次请求完服务器，请求就会消失，服务器不会记住客户端信息
+SESSION介绍：
+	是服务器端技术，session保存的数据存储到服务器端
+	由于cookie每次都携带数据到服务器，所以有两个问题：
+		1.效率低
+		2.安全性差
+SESSION原理：
+	1.客户端的cookie只存放卡号
+	2.客户的数据都放在服务器上
+	3.办卡的同时数据就会激活
+	4.浏览器关闭时客户端cookie会消失
+	5.服务器上存储的客户的卡在一定时期后会自动销毁
+SESSION文件的存储位置：
+	在php.ini中的 session.save_path 可以设置
+	也可以在程序中用session_save_path()设置
+SESSION可以存储除了资源类型以外的所有类型的数据
+SESSION的下标只能是字符串不能是数值
+开启SESSION（设置和读取时都要先开启）：
+	session_start();
+设置SESSION：
+	$_SESSION['user'] = 'name';
+修改SESSION：
+	修改session也是通过$_SESSION数组进行操作，如果数组的下标已经存在，则表示修改的意思，并且会把原来的值覆盖掉
+删除SESSION:
+1.删除单个数据 unset($_SESSION["name"]);
+2.删除全部数据：
+	1.$_SESSION = []; //清空数组
+	2.session_destroy(); //把服务器session文件销毁
+	3.setcookie(session_name(), '', time()-1, '/'); //把cookie删除
+	session_name()获取session文件的名字
+不要直接删除$_SESSION这个超全局数组，因为里面除了我们创建的session数据之外，还可能有php创建的其他的数据
+SESSION的存储机制：
+	session_start开启阶段：
+		1.确定浏览器请求中是否有session_id（session文件的名字），如果有去寻找此session文件（找不到就新创建），如果没有就新创建，并把session文件名字（session_id）响应给浏览器
+		2.初始化$_SESSION这个变量，先读取session文件中的内容，再将内容反序列化之后，赋值给$_SESSION这个变量
+		3.这个阶段还会判断哪些session文件已经过期，然后触发垃圾回收机制
+	脚本运行周期内，session_start之后：
+		php只是对$_SESSION这个变量进行增删改查操作，并没有影响到session文件中的内容，除非session_destroy
+	脚本结束阶段：
+		这个阶段才会对session文件进行操作，也就是把$_SESSION数组中的数据序列化然后存储到session文件中
+SESSION的GC垃圾回收机制：
+	session的垃圾回收机制，当session_start()的时候，会判断哪些文件已过期，会触发垃圾回收机制，并不是直接把过期的session文件删除，而是有概率的删除，概率是
+	删除概率：propability/divisor
+	例如:将propability设置为1，divistor设置为1，maxlifetime设置为60，表示session文件60秒内无任何操作，说明文件过期，删除的概率是100%
+SESSION存储机制重写（session数据写入到数据库）：
+	1.创建session表
+		create table session(s_id varchar(32) primary key, s_content text, put_time int unsigned);
+	2.将session.save_handler配置项改为user，开始重写session存储机制
+		//修改配置文件，将session存储机制改为user
+		ini_set("session.save_handler", "user");
+		/*
+			开始自定义session的存储
+			参数1：表示session_start的时候怎么处理
+			参数2：脚本结束时怎么处理
+			参数3：读取session数据表中数据函数
+			参数4：想session数据表中写入数据的函数
+			参数5：销毁session数据表中数据的函数
+			参数6：session过期之后处理函数
+		*/
+		session_set_save_handler("open", "close", "read", "write", "destroy", "gc");
+		session_start();
+		
+		global $mySQLi;
+
+		//初始化session、session_start时执行的函数
+		function open() {
+			 //初始化数据库的链接
+			$GLOBALS["mySQLi"] = new mySQLi('127.0.0.1', 'root', '', 'xinxiaoquan', 3306);
+			$GLOBALS["mySQLi"] -> set_charset("utf-8");
+		}
+
+		//脚本结束的函数
+		function close() { return true; }
+
+		/*
+		从session表中读取数据的方法
+		说明：客户端携带过来的session_id，会自动传递到read里面
+		*/
+		function read($s_id) {
+			$sql = "SELECT s_content FROM session WHERE s_id='{$s_id}'";
+			$res = $GLOBALS["mySQLi"] -> query($sql);
+			$arr = $res -> fetch_assoc();
+			return $arr["s_content"];
+		}
+
+		/*
+		向session表中写入数据的函数
+		说明：当$_SESSION["aa"]=1这样的操作时，就会把数据写入session表
+		*/
+		function write($s_id, $s_content) {
+			$sql = "INSERT INTO session VALUES('{$s_id}', '{$s_content}', ".time().")";
+			$GLOBALS["mySQLi"] -> query($sql);
+		}
+
+		/*
+		当session_start的时候会判断哪些文件过期，在这里会判断
+		说明：会把session文件有效期传进来
+		*/
+		function gc($lifetime) {
+			$time = time() - $lifetime;
+			$sql = "DELETE FROM session WHERE put_time < {$time}";
+			$GLOBALS["mySQLi"] -> query($sql);
+		}
+php的mysql扩展：
+  mysql扩展指：php程序可以通过mysql扩展对mysql数据库操作，对应的dll文件是php_mysql.dll文件
+php的mysqli扩展：
+  mysqli拓展和mysql拓展都可以对mysql数据库操作
+  mysqli拓展是mysql拓展升级/增强版，i=improve
+  mysqli拓展性能比mysql拓展好，因此我们在新项目开发中，就不用mysql扩展，新项目对mysql数据库操作使用mysqli,pdo
+  mysqli扩展支持面向对象开发，也支持面向过程开发
+  php用mysqli扩展面向对象写法：
+    $mySQLi = new mySQLi('localhost', 'root', '123', 'testdb', 3306);
+      //参数分别是主机，用户名，密码，使用的数据库名，端口
+    if ($mySQLi->connect_errno != 0) {
+      //判断是否连接成功，connect_errno返回错误编号，没有错误返回0，有错误返回对应错误号
+      die('连接错误，错误信息' . $mySQLi->error);
+    }
+    $mySQLi->set_charset('utf-8');
+      //设置字符集
+    $sql = 'select * from abc';
+    $res = $mySQLi->query($sql);
+      //如果是查询就返回一个mysql_result资源对象
+      //如果是增删改就返回布尔值，$mySQLi->error接收错误信息
+      //$mySQLi->affected_rows 操作影响的行数
+      //$mySQLi->insert_id 刚刚添加数据自增长的id
+    if (!$res) die('查询错误！' . $mySQLi->error);
+      //查询失败也会返回false
+    while ($row = $res->fetch_assoc()) {
+      //获取所有数据行，还可以用fetch_all
+      var_dump($row);
+      /*
+        $res->fetch_assoc() 获取一行关联数组
+        $res->fetch_row() 获取一行索引数组
+        $res->fetch_array() 获取一行索引数组+关联数组
+        $res->fetch_object() 获取一行对象
+      */
+    }
+    $res->data_seek(0);
+      //重置数据指向，恢复数据结果
+    $res->free(); //释放结果集
+    $mySQLi->close(); //关闭连接
+      //释放相关资源，如果不释放系统也会自动释放
+  mysqli扩展与事务：
+    开始事务的三种方法：
+      $mySQLi->begin_transaction();
+      $mySQLi->autocommit(false);
+      $mySQLi->query('start transaction');
+    提交事务：$mySQLi->commit();
+    事务回滚：$mySQLi->rollback();
+  mysqli扩展批量执行sql语句：
+    $mySQLi->multi_query($sqls); //语句用分号分割，最后一个不用
+    批量执行sql语句分两大类(dml[insert,delete,update]和dql[select])，不要混用
+    返回结果是以第一条sql语句执行结果为准
+    当一条错误时，就不会往下执行了，之前的执行
+    批量查询，获取结果集
+      $mySQLi->multi_query('……');
+      //取出所有结果
+        do {
+          $res = $mySQLi->store_result(); //获取mysql_result对象
+          while($row = $res->fetch_assoc()) {
+            //$row是数组
+          }
+          //判断还有没有资源数据
+          if (!$mySQLi->more_results()) break;
+          $res->free();
+        } while($mySQLi->next_result()); //往下走一步
+  mysqli扩展的预处理：
+    提升效率，预防sql注入
+    增删改的写法：
+      $sql = "insert into `?` values(?,?,?)";
+      //$sql2 = "update `?` set ?=? where ?=?";
+        //问号是占位符
+      $pre_res = $mySQLi->prepare($sql);
+      $pre_res->bind_param('sisd', $user, $age, $name, $num);
+        //第一个参数是占位数据的类型，s是string，i是int，d是double
+        //必须绑定变量
+      $user = 'user'; //下面略
+      $bool = $pre_res->execute(); //执行
+      if ($bool) echo 'ok';
+      $pre_res->bind_param('sisd', ……);
+      $bool = $pre_res->execute();
+      if ($bool) echo 'ok';
+      else $mySQLi->error;
+      $pre_res->close(); //释放资源
+      $mySQLi->close(); //关闭连接
+    查询的写法：
+      $sql = "select * from `user` where id > ?";
+      $pre_res = $mySQLi->prepare($sql);
+      $pre_res->bind_param('i', $id);
+      $id = 10;
+      $pre_res->bind_result($a, $b, $c);
+        //绑定查询后返回数据，每个字段写一个变量
+      $bool = $pre_res->execute(); //执行
+      if ($bool)
+        while ($pre_res->fetch)
+          echo " -- {$a} -- {$b} -- {$c}"; //取数据
+      $pre_res->free_result(); //释放查询资源
+      $pre_res->close();
+      $mySQLi->close();
+DAOMySQLi类的编写：
+  DAO表示data access object数据访问对象，专门对mysql进行操作
+  此类使用的是单例模式
+  DAOMySQLi.class.php代码：
+    final class DAOMySQLi {
+      //各种数据库连接需要的数据
+      private $_host;
+      private $_user;
+      private $_pwd;
+      private $_dbname;
+      private $_port;
+      private $_charset;
+
+      //本类的一个对象实例，因为是单例模式，所以只允许创建一次
+      private static $_DAOOBJ;
+
+      //mysql的连接对象
+      private $_mysqlObj;
+
+      //判断mysql连接对象是否存在
+      private function hasMysqlObj() {
+        if ($this->_mysqlObj) return true;
+        else {
+          echo '错误，数据库未连接！<br/>';
+          return false;
+        }
+      }
+
+      //定义构造对象的方法
+      public static function getObj(array $option) {
+        //判断有没有创建本类对象
+        if (self::$_DAOOBJ && self::$_DAOOBJ instanceof self)
+          return false;
+        else {
+          if (!isset($option['host']) ||
+              !isset($option['user']) ||
+              !isset($option['pwd']) ||
+              !isset($option['dbname']) ||
+              !isset($option['port']) ||
+              !isset($option['charset'])) {
+            echo '<b style="color:red">错误！数据格式有误！</b><br/>';
+            return false;
+          }
+          return self::$_DAOOBJ = new self($option);
+        }
+      }
+
+      //定义构造方法，不允许外部访问
+      //参数限制为数组
+      private function __construct(array $option) {
+        //写入数据库相关数据和验证
+        $this->_host = @$option['host'];
+        $this->_user = @$option['user'];
+        $this->_pwd = @$option['pwd'];
+        $this->_dbname = @$option['dbname'];
+        $this->_port = @$option['port'];
+        $this->_charset = @$option['charset'];
+        
+        //初始化mysql连接对象
+        $link = new MySQLi(
+          $this->_host,
+          $this->_user,
+          $this->_pwd,
+          $this->_dbname,
+          $this->_port
+        );
+        if ($link->connect_errno === 0) {
+          $this->_mysqlObj = $link;
+          $link->set_charset($this->_charset);
+          if ($link->errno !== 0)
+            echo '设置字符集无效！<br/>';
+        } else {
+          echo '警告，数据库连接错误，如果进行数据库操作会失败！<br/>';
+          echo '错误信息：' . $link->connect_error . '<br/>';
+        }
+      }
+
+      //防止克隆
+      private function __clone() {}
+
+      //mysql获取查询语句返回的数组
+      public function fetch_all(string $sql) {
+        if (!$this->hasMysqlObj()) return;
+        
+        if (!$this->isSelect($sql)) return null;
+        
+        $res = $this->_mysqlObj->query($sql);
+        if (!$res) {
+         echo '查询错误！<br/>';
+         return null;
+        } else {
+         if (is_bool($res)) return null;
+         $resArray = [];
+         while($row = $res->fetch_assoc())
+          $resArray[] = $row;
+         return $resArray;
+       }
+       $res->free();
+      }
+
+      //mysql增删改
+      public function query(string $sql) {
+        if (!$this->hasMysqlObj()) return;
+        
+        if ($this->isSelect($sql))
+          return $this->fetch_all($sql);
+        
+        $res = $this->_mysqlObj->query($sql);
+        if ($res) return ['status'=>'ok', 'affected_rows'=>$this->_mysqlObj->affected_rows, 'insert_id'=>$this->_mysqlObj->insert_id];
+        else return ['status'=>'error', 'errno'=>$this->_mysqlObj->errno, 'error'=>$this->_mysqlObj->error];
+      }
+
+      //判断是不是查询语句
+      private function isSelect(string $sql) {
+        
+        preg_match('/show|select|desc/', $sql, $tmp);
+        if (count($tmp)) return true;
+        else false;
+      }
+
+      }
+SESSION的配置（php.ini）：
+	1.session.save_path
+		session文件的保存路径
+	2.session.use_strict_mode = 0
+		是否采用严格模式，不接受非服务器创建的session文件名称，建议开启，防止伪造session文件
+	3.session.use_cookies = 1
+		是否使用cookie携带session_id，也就是session文件的名字
+	4.session.cookie_secure
+		是否采用安全传输，仅在https协议下传输
+	5.session.use_only_cookies = 1
+		使用cookie存储session_id
+	6.session.name
+		传输session的名字
+	7.session.auto_start = 0
+		自动开启session 0表示不自动开启
+	8.session.cookie_lifetime = 0
+		用户保存session_id的cookie有效期是0（单位是秒），表示浏览器关闭，cookie中的session_id就会清除
+	9.session.cookie_path = /
+		cookie的有效路径，/表示服务器的根目录
+	10.session.cookie_domain
+		cookie在哪个域名下有效
+	11.session.cookie_httponly
+		是否只在http协议下传输，禁止其他语言劫持
+	12.session.serialize_handler = php
+		使用php序列化数据，然后保存到session文件
+	13.session.gc_probability = 1
+		garbage collection  垃圾回收机制，该项是除数
+	14.session.gc_divisor = 1000
+		被除数，垃圾回收机制
+		不是过期就删除，而是有概率的删除，概率是 gc_probability / gc_divisor
+			表示一旦session过期，删除改session文件概率是 1/1000
+	15.session.gc_maxlifetime = 1440
+		24分钟之内没有任何操作，就会触发垃圾回收机制
+
+读取php.ini配置项
+	ini_get("配置项");
+动态修改php.ini配置项
+	ini_set("配置项", "配置值");
+	只能在当前脚本生效，	其他脚本无效	
+
+虚拟目录（把不存在的目录映射到某个目录）
+	在 http.conf 中
+	#如果网站根目录以外的目录访问不了
+	#去掉<Directory />中的Require all denied
+	Alias /abc "d:/website/task"
+	<Directory "d:/website/task">
+		Options Indexes MultiViews
+		AllowOverride None
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+配置网站/虚拟主机（不同子域名映射不同的目录）：
+  1.打开apache/conf/httpd.conf文件
+    解开注释：Include conf/extra/httpd-vhosts.conf
+  2.找到hosts文件(没有可以直接写，本地DNS解析文件)
+		浏览器解析域名时首先去找hosts文件寻找对应主机
+    c:/windows/system32/drivers/etc/hosts
+    添加：127.0.0.1（IP） 域名
+  3.配置虚拟主机文件httpd-vhosts.conf
+		在 http.conf 中，开启扩展
+			apache/conf/extra/httd-vhosts.conf
+		在 http-vhosts.conf 中
+    添加以下语句：
+		NameVirtualHost *:80
+		#配置1.com主机(域名)，可以多配置，端口可以改
+      <VirtualHost *:80>
+        #DocumentRoot 是该网站的根目录
+        DocumentRoot "c:/abc/def"
+        #主机名，域名，可以写ip
+        ServerName 1.com
+      </VirtualHost>
+		配置子域名
+			<VirtualHost *:80>
+        DocumentRoot "c:/abc/sss"
+        ServerName study.1.com
+      </VirtualHost>
+		如果出现localhost访问403，是因为http.conf中的配置与虚拟机冲突
+  4.重启Apache
+配置虚拟主机细节说明：
+  1.如何查看错误日志
+    到apache/log/error.log查看
+  2.配置默认网站首页（优先级顺序从左到右）
+    <VirtualHost *:80>
+			#……
+      DirectoryIndex abc.html abc2.html
+    </VirtualHost>
+  3.配置某个网站的权限
+    <VirtualHost *:80>
+      <Directory "d:/abc/def">
+        #所有人可以访问
+        Require all granted
+        #所有人不可访问
+        Require all denied
+        #指定可以访问ip或域名
+        Require local 127.0.0.1
+        #指定允许特定ip或ip段访问
+        Require ip 127.0.0.1 168.12
+        #拒绝特定ip或ip段访问
+        Require not ip 127.0.0.1 168.13
+      </Directory>
+    </VirtualHost>
+	4.可以嵌套配置虚拟目录
+
+浏览器连上服务器后，向服务器请求某个web资源，称为浏览器向服务器发送一个http请求
+http请求包括：
+  请求行：请求方式(get/post) 请求资源 http版本(通常是1.1) 等
+  请求消息头：接受内容类型 接受语言 浏览器内核 接受压缩方式 主机名 等
+    Accept 浏览器可以接受的数据类型
+    Accept-Encoding 浏览器可以接受的压缩格式
+    Accept-Language 浏览器可以接受的语言
+    Host 请求的主机名
+    If-Modified-Since 本地已经有这个资源，这个资源的最新更新时间是什么
+    Referer 告诉服务器，这个请求从哪个页面来，链接来路
+    User-Agent 浏览器内核
+    在php中所有请求消息头都会封装在：
+      $_SERVER (预定义超全局数组) 所有HTTP开头的键值就是消息头
+      $_SERVER["REMOTE_ADDR"] 表示访问的客户端的地址
+  一个空行
+  实体内容(发给服务器的内容)
+http响应包括：
+  状态行：http版本 状态码 状态描述
+    常见状态码：
+      200 成功
+      302 重定向(告诉浏览器到另一个url取资源)
+      304 资源未修改(服务器说明浏览器本地的资源已经是最新的，没有修改过)
+      403 禁止访问(告诉浏览器没有权限访问该资源)，和php代码无关，是配置的问题
+      404 没有该资源(url错误或资源被删除)
+      500 服务器内部错误
+  响应消息头：
+    常用消息头：
+      location http://taobao.com 浏览器跳转地址
+      content-type text/html 返回的数据类型
+			Keep-Alive:timeout=5,max=100 5秒钟内客户端不发http请求就会断开连接，最大连接时间为100秒
+      refresh:5;url=123.html 停留多少秒后跳转到相应地址
+      last-modified 返回该资源的最新修改时间
+        第一次请求会返回此信息，浏览器会记录和缓存文件，下次请求如果有此缓存会把最后修改日期提交服务器，服务器如果没有修改就不返回文件，返回状态码304     
+  一个空行
+  实体内容
+请求方式：get post，区别：
+  1.get方式提交的数据会放在url后面，post提交的数据会放在实体内容中
+    php的url编码函数 urlencode()
+    php的url解码函数 urldecode()
+  2.提交数据长度限制：
+    get数据长度是由浏览器或操作系统来限制
+    post数据理论上没有限制
+    如果我们要上传或下载文件，可以使用http协议，但该文件一般不要大于2m
+    如果要上传或下载大文件，一种方案写插件，一种方案开发客户端，传太大文件容易超时
+    配置上传文件大小在php.ini中搜索upload_max_fileSize
+
+302 重定向
+	header("location:../");
+301 永久重定向
+	header("HTTP/1.1 301 Moved Permanently");
+	header("location:../");
+
+Apache的参数调节
+apache改监听端口
+	在 http.conf 中
+	修改 Listen 80
+	如果增加了Listen即可监听多个端口（可以配合虚拟机使用）
+	如：Listen 8080
+apache默认安装目录
+	在 http.conf 中
+	ServerRoot
+apache禁止访问目录
+	在 http.conf 中
+	将 Options Indexes FollowSymLinks
+	改为 Options FollowSymLinks
+apache加载拓展模块
+	在 http.conf 中
+	LoadModule ……
+apache网站根目录
+	在 http.conf 中
+	DocumentRoot "d:/website"
+网站访问权限：
+	在 http.conf 中
+	<Directory "d:/website">
+		#设置访问权限和组织权限
+		Order allow,deny
+		#设置访问
+		allow from all
+		#设置禁止
+		deny from 192.168.1.10
+	</Directory>
+设置默认首页（优先级顺序从左到右）
+	在 http.conf 中
+	<IfModule dir_module>
+    DirectoryIndex index.html index.htm index.php
+	</IfModule>
+apache解析php
+	在 http.conf 中添加
+	AddType application/x-httpd-php .php
+apache的错误日志
+	在 http.conf 中
+	ErrorLog ""
+apache错误级别
+	在 http.conf 中
+	LogLevel warn
+apache成功访问文件
+	在 http.conf 中
+	CustomLog "" common
+apache控制错误页面（404）
+	在 http.conf 中
+	ErrorDocument 404 404.html
+
+SVN（版本控制）：
+服务端的svn（https://sourceforge.net/projects/win32svn/）的操作
+	1. 创建一个目录作为版本库：mkdir d:/abc
+	2. 创建svn版本库：svnadmin create d:/abc
+	3. 创建用户和密码
+			在 conf/authz 文件中配置
+				[/] #代表可以操作仓库下所有文件
+				xinxiaoquan=rw #创建一个xinxiaoquan用户给了读写操作
+			在 conf/passwd 文件中配置
+				xinxiaoquan=123 #为新小圈设置密码为123
+	4. 对仓库进行配置
+			在 conf/svnserve.conf 文件中
+				anon-access=none #无登录状态禁止对文件读取
+				auth-access=write #登录状态对文件可以写操作
+				password-db=passwd #使用仓库必须使用密码
+				authz-db=authz #必须验证权限规则
+				realem=d:/abc #操作的目录
+	5. 启动服务：svnserve -d -r d:/abc
+	6. 多开服务：svnserve -d -r d:/aaa --listen-port 3691
+	7. 提取svn更新的代码到服务器目录
+			svn co svn://127.0.0.1 d:/def
+客户端TortoiseSVN（https://tortoisesvn.net/downloads.html）的操作
+	1. 在网站根目录文件夹右击选择检出连接服务器
+	2. 版本库url写服务器的ip如：svn://127.0.0.1:3690
+
+php分页类（渲染导航条）：
+class Page {
+	private $all_data_count; //所有数据条数
+	private $one_page_count; //每页显示数据条数
+	private $now_page_num; //当前第几页
+	private $all_page_count; //一共多少页
+	
+	public function __construct($all_data_count, $one_page_count, $now_page_num) {
+		$this->all_data_count = (int)$all_data_count;
+		$this->one_page_count = (int)$one_page_count;
+		$this->now_page_num = (int)$now_page_num;
+		//计算一共多少页
+		$this->all_page_count = ceil(
+			$this->all_data_count / $this->one_page_count
+		);
+	}
+	
+	//创建分页导航条的方法
+	public function create() {
+		//固定首页按钮
+		$page = "<ul>";
+		if ($this->now_page_num == 1)
+			$page .= "<li><a href='?page=1' class='active'>首页</a></li>";
+		else $page .= "<li><a href='?page=1'>首页</a></li>";
+		
+		//遍历中间的导航按钮
+		$start = $this->now_page_num - 3;
+		if ($start <= 2) $start = 2;
+		$end = $this->now_page_num + 3;
+		if ($end >= $this->all_page_count)
+			$end = $this->all_page_count - 1;
+		for ($i = $start; $i <= $end; $i++) {
+			if ($this->now_page_num == $i)
+				$page .= "<li><a href='?page={$i}' class='active'>{$i}</a></li>";
+			else $page .= "<li><a href='?page={$i}'>{$i}</a></li>";
+		}
+		
+		//固定尾页按钮
+		if ($this->now_page_num == $this->all_page_count)
+			$page .= "<li><a href='?page={$this->all_page_count}' class='active'>尾页</a></li>";
+		else $page .= "<li><a href='?page={$this->all_page_count}'>尾页</a></li>";
+		
+		return $page;
+	}
+}
+		
+跨域响应ajax请求：	header("Access-Control-Allow-Origin:*");
+	
+创建静态模板文件：
+	ob_start();
+	include "1.php";
+	$content = ob_get_contents();
+	file_put_contents("1.html", $content);
+
+Smarty模板引擎：
+	html页面使用占位符代替真实数据，然后模板引擎再从php文件中读取真实数据，生成一个编译文件，使用真实数据代替占位符
+	下载Smarty：https://www.smarty.net/
+	解压后，将libs目录拷贝到工程目录下，通常改名为smarty
+	引入Smarty.class.php并实例化Smarty核心类，即可使用
+		{} 是标识（占位符，标签），可以写smarty的语法
+		在html文件（模板）中使用{$name}的占位符代替变量
+		绑定数据：$smarty->assign('name', "耿康康");
+			//第一个参数是模板中的占位符变量，第二个是绑定的真实数据
+		引入模板并生成缓存文件，输出结果：
+			$smarty->display("../abc/1.html"); //参数是模板的路径
+	Smarty中的变量来源：
+		1.通过smarty中的assign方法分配
+		2.配置文件数据
+			什么是配置文件？
+				配置文件是用来保存一些有规范，可以在多个文件中公用的数据
+			配置文件的格式
+				key=val
+				key=val
+			在模板中引入配置文件 {config_load file="config.ini"}
+			在模板中使用配置项 {#key#}
+				//key存在于配置文件中，相当于对象的键
+			在php文件中设置配置文件的目录：
+				$smarty->setConfigDir("../abc/")
+		3.smarty保留的变量：
+			这些变量都是smarty保留的，内置的，不需要声明加载，可直接使用
+			{$smarty.now} 获取当前的时间戳
+			{$smarty.const} 获取php文件中定义的常量
+			{$smarty.config} 获取配置文件中的配置项
+			($smarty.current_dir) 获取模板的所在目录
+		4.在模板中获得http请求头携带的变量
+			显示URL地址栏中的参数{$smarty.get.abc} post也可以
+			显示cookie数据{$smarty.cookies.abc}
+			显示session数据{$smarty.session.abc}
+			显示$_SERVER数据{$smarty.server.DOCUENT_ROOT}
+		5.smarty变量调节器（修饰器）
+			对模板的变量进行调节，修饰的作用
+			语法：{变量|修饰器:参数} |是管道符
+			将时间戳换成日期格式
+				{$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}
+			单词首字母大写
+				{$str|capitalize}
+			字符串整体大写
+				{$str|upper}
+			统计字符个数
+				{$str|count_characters}
+			如果变量为空、空字符串，就可以使用默认值代替
+				{$str|default:100}
+			字符缩进，默认用空格缩进，还可以制定缩进的字符
+				{$str|indent:2:'-'}
+			字符串实体转码（字符串转码为实体字符）
+				{$str|escape} 默认是实体转码
+			字符串URL编码（将中文，特殊符号URL编码）
+				{$str|escape:"url"}
+			字符串截取
+				{$str|truncate:100}
+				参数1截取字符数 参数2截取后追加的字符，默认是…（会计算在截取的长度之内）
+		6.smarty中的流程控制语句
+			foreach遍历数组
+				{foreach $array as $k=>$v}
+					如果有数据就在这里显示
+					{foreachelse}
+					如果没有数据就在这里显示
+				{/foreach}
+			for循环，可以设置步长，默认步长是1
+				{for $i=0 to 10 step=5}
+					输出数据
+				{/for}
+			if 条件判断语句
+				{if $money>5000}
+					旅游
+				{elseif $money>3000}
+					吃大餐
+				{else} 学习
+				{/if}
+			include 包含其他模板代码(如果设置了默认模板路径就按它为起点)
+				{include file="abc/1.html"}
+			extends 模板继承，可以更改被继承模板中的数据(如果设置了默认模板路径就按它为起点)
+				被继承模板中
+					{block name="aa"}你好世界{/block}
+				继承的模板中
+					{extends file="abc/1.html"}
+					覆盖数据
+						{block name="aa"}Hello World{/block}
+					追加数据
+						{block name="aa" append}Hello World{/block}
+					在前面追加数据
+						{block name="aa" prepend}Hello World{/block}
+				注意：继承后的模板的数据会被公共模板数据覆盖
+			literal 不解析占位符，原样输出
+				{literal}
+					body {font-size:100px;}
+				{/literal}
+	smarty中的缓存
+		可以将多次重复查询的数据缓存到文件中，避免重复连接查询数据库
+		原理：某个用户访问后就查询数据库并缓存数据，等其他用户访问的时候只要缓存文件在有效期内，就访问缓存数据
+			$smarty -> isCached("abc.html"); 判断是否有缓存文件
+			$smarty -> caching = true; 开启缓存
+			$smarty -> setCacheDir("cache"); 设置缓存存储的目录
+			$smarty -> cache_lifetime = 100; 设置缓存有效期（秒）
+	insert标签，实现局部不缓存（即使缓存了数据也会执行函数），调用函数
+		{insert name="fun" id={$v.goods_id}} name指定一个函数，参数以键值对的方式传入
+		函数定义的位置：smarty/plugins
+		函数文件的命名规范：insert_函数名.php
+		文件中函数的命名规范：
+			function smarty_insert_函数名($param) {
+				//参数是以关联数组的形式传入的
+			}
+	单模板多缓存
+		一个模板多个缓存文件
+			$smarty -> display("abc.html", $id);
+				smarty会根据引入模板第二个参数来创建单独的缓存文件
+		判断某一个缓存文件是否存在
+			$smarty -> isCached("abc.html", $id);
+	删除缓存：
+		1.$smarty->clearCache("abc.html", $id)
+			删除指定模板对应的缓存，不写第二个参数就删除对应模板所有的缓存
+		2.$smarty->clearAllCache()
+			删除所有缓存
+	修改模板路径，修改后分配模板可以不写目录
+		$smarty -> setTemplateDir("tpl");
+	修改编译文件目录
+		$smarty -> setCompileDir("tpl_c");
+	设置模板中的定界符（标识符，占位符，标签）
+		$smarty -> left_delimiter = "<{"; 左边的标签
+		$smarty -> right_delimiter = "}>"; 右边的标签
+
+MVC模式架构：
+	M：model 模型，用来处理数据（一般操作sql语句）
+	V：view 视图，用来显示内容（一般操作html文件）
+	C：controller 控制器，用来分发任务
+	控制器分发任务，命令模型处理数据，命令视图显示数据
+	模型接收控制器处理数据的命令并将处理的结果返回给控制器
+	视图接收控制器发来数据和显示数据命令，就显示数据
+	MVC架构的优势：
+		便于多人协同开发分工更加明确，提升开发效率
+	MVC架构的劣势：
+		提升开发效率的同时，相应的降低执行效率，可以通过优化PHP代码或SQL语句去提升执行效率
+自定义MVC框架：
+	前提：要用OOP思想封装（主流），最小单位是类
+	模型的封装：
+		一张表看作一个整体（类）
+		表的操作封装成方法（增删改查）
+		基础模型类：
+			可以将处理数据库的操作（公共代码）封装到一个类中，其他类去继承它
+			class Model {
+				protected static $pdo;
+				public function __construct() {
+					if (self::$pdo) return;
+					self::$pdo = new PDO(/*省略*/);
+				}
+			}
+		模型类：
+			每一个表都封装为一个类，继承基类，每个子类都有表的操作方法
+			class Mytable extends Model {
+				/*增删改查*/
+				public function add() {
+					self::$pdo -> query(/*省略*/);
+				}
+			}
+		模型工厂类：
+			传参模型类，生产单例模型对象（避免多次实例化模型类）
+			class Factory {
+				protected static $arrList = [];
+				public function M($className) {
+					if (!isset(self::$arrList[$className]))
+						self::$arrList[$className] = new $className;
+					return self::$arrList[$className];
+				}
+			}
+	控制器的封装：
+		控制器根据功能模块划分，方便分工协作
+		每个功能模块的操作封装到控制器的方法中
+		控制器后面加Action后缀，避免和模型类方法重名，便于区分
+		控制器发布命令：命令模型处理数据，命令视图显示数据
+		基础控制器类：	
+			每个控制器都需要smarty对象分配数据，所以将smarty对象封装到一个基础类中
+			class Controller {
+				protected static $smarty;
+				public function __construct() {
+					if (self::$smarty) return;
+					self::$smarty = new Smarty();
+				}
+			}
+		控制器类：
+			1.命令模型处理数据
+				引入模型工厂类，实例化对应的模型对象，然后操作数据
+			2.命令视图显示数据
+				使用smarty对象进行分配数据
+			class Hit extends Controller {
+				public function doAction() {
+					//命令模型处理数据
+					inlcude_once "Mytable.class.php";
+					$m = Factory::M("Mytable");
+					$data = $m -> show();
+					//命令视图显示数据
+					self::$smarty -> assign("data", $data);
+					self::$smarty -> display("abc.html");
+				}
+			}
+	MVC框架目录：
+		有些代码是和具体的业务相关的，所以保存到项目目录里，通常取名application
+		还有写代码是公共的（任何项目都可能会用到），就保存到框架目录里，通常取名为framework
+		在application中
+			由于项目分为前台和后台，前台用户浏览使用，后台管理员进行内容管理使用，所以目录结构又划分为前台home和后台admin
+			而前台和后台为了提升开发效率，都会使用MVC架构管理代码，所以每个目录中都会有控制器、模型、视图三个目录
+		在framework中
+			随着框架不断完善，会出现很多工具类，为了有效管理，我们分目录存储
+			像控制器基础类，模型基础类等核心的类文件保存到core目录中
+			像smarty这样别人提供的，就保存到vendor目录中，表示第三方类库
+			像Captcha、Page等自己写的工具，就保存到tools目录中
+			像DAOPDO、I_DAO这些类、接口，和数据访问相关的，就保存到dao目录
+		入口文件（分发控制器）：
+			通过URL传递参数确定是去前台还是后台，访问哪个控制器的哪个方法
+	11163口诀：
+		一个功能模块对应一个控制器
+		一个控制器对应一个模型
+		一个模型对应一张数据表
+		6个方法：
+			index 展示主（列表）页面
+			add 展示添加内容表单页面
+			addHandle 将表单数据提交到这里，接收数据入库
+			edit 展示编辑内容的表单页面
+			update 接受表单数据并更新数据表
+			delete 删除内容的操作
+		3个视图文件
+			index.html 显示内容列表
+			add.html 添加内容表单
+			edit.html 修改内容表单
+
+
+
+
+
+	
+  
+  
+  
+  
+  
+
+
+
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

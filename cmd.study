@@ -1,0 +1,1 @@
+copy con file_name.txt 可以使用此命令在cmd窗口中写入文件，结束ctrl+z

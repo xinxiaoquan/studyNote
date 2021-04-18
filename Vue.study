@@ -1,0 +1,79 @@
+Vue的基本使用：
+	<script src="vue.js"></script>
+	<div id="view">
+		{{sayHi}}
+	</div>
+	<script>
+		new Vue({
+			el:"#view",
+			data: {
+				sayHi:"hello"
+			},
+      methods: {
+        show() {}
+      }
+		});
+	</script>
+设置标签属性v-cloak(样式自己设为display:none)可以防止闪烁
+v-text="msg" //和{{}}(插值表达式)效果一样，输出文本
+v-html="html" //输出html标签
+v-bind:title="myTitle" //绑定属性执行vue的变量和表达式，可以简写为一个冒号，myTitle是vue中的变量
+v-on:click="show" //绑定事件，方法要定义在vue的methods对象中，缩写为@
+事件修饰符：
+  v-on:click.stop="show" //阻止事件冒泡
+  v-on:click.prevent="show" //阻止默认行为
+  v-on:click.capture="show" //使用事件捕获模式
+  v-on:click.self="show" //只是自身触发，阻止自己的冒泡
+  v-on:click.once="show" //只触发一次
+数据的双向绑定：
+  v-bind:value="" //只能实现单向数据绑定
+  v-model="" //可以实现数据的双向绑定，只能写在表单中
+vue中的class：
+  v-bind:class="['red', 'thin']" //可以用数据包含class名(必须用引号包起来)
+  v-bind:class="[flag?'red':'green']" //可以写三元表达式
+  v-bind:class="['red':flag]" //如果flag为true就用这个class
+  v-bind:class="{red:true, green:flase}" //对象的属性是类型，不用带引号
+  v-bind:class="obj" //obj就是定义的一个对象在data中，同上
+内联样式;
+  v-bind:style="{'font-weight':'bold', color:'red'}" 
+  v-bind:style="obj" 
+  v-bind:style="[obj1, obj2]" 
+迭代数组/对象;
+  <p v-for="v in arr">{{v}}</p>
+  <p v-for="(v, k) in arr">k is {{k}}, v is {{v}}</p>
+  <p v-for="(v, k, index) in arr">{{index}} -- k is {{k}}, v is {{v}}</p>
+  <p v-for="count in 10">{{count}}</p>
+保证数据的唯一性：v-bind:key="obj.id"
+v-if="bool" //移除和显示DOM元素
+v-show="bool" //隐藏和现实DOM元素
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

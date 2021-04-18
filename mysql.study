@@ -1,0 +1,641 @@
+mysql常用的命令：
+注意：1. 不区分大小写 2. 结尾用分号结尾 3. #单行注释
+自定义命令结束符：delimiter $$
+向服务器提交sql语句有两种方式：
+	1. 交互模式：输入一行提交一行，适用于少量的语句
+		1. 连接到服务器：mysql -uroot -p #设置环境变量
+		2. 输入一行命令，添加一个分号，回车执行
+	2. 脚本模式：把所有语句编写在一个文本文件中，一次性批量多条提交给服务器执行
+		1. 创建一个文本文件
+		2. 开始编写所有的语句
+		3. 把整个文本文件提交给服务器执行
+				mysql -uroot -p < d:/1.txt
+SQL语句（命令）的分类：
+	1.DDL:data define language 数据结构定义语言(定义列)
+		drop create alter truncate
+	2.DML:data manipulate language 数据操作语言(操作行)
+		insert delete update
+	3.DQL:data query lauguage 数据查询语言
+		select
+	4.DCL:data control language 数据控制语言(控制用户权限)
+		grant revoke
+显示服务器所有的数据库：show databases; #分号不能省
+创建一个数据库：create database hello charset=utf8;
+	#设置数据存储编码为utf-8 sql语句会把斜杠解析成减号运算符
+删除一个数据库：drop database hello;
+试着删除指定数据库：drop database if exists hello;
+退出：quit;
+设置客户端/连接服务器/服务器返回数据的存储编码：set names utf8;
+进入指定的数据库：use hello;
+显示数据库中的所有表：show tables;
+查询表的结构：desc hello_user;
+修改数据库/表的结构：
+	添加一列：alter table hello_user add 列名 类型;
+	在某一列后添加一列：alter table hello_user add 列名 类型 after 列名;
+	删除一列：alter table hello_user drop 列名;
+	修改列/类型属性：alter table hello_user modify 列名 类型;
+	改表列名：alter table hello_user change 列名 新列名 类型;
+操作多列的方法：alter table hello_user add 列名 类型, add 列名 类型;
+创建保存用户信息的表：
+	create table hello_user(
+		uid int primary key auto_increment, #用户编号int型，主键列（不允许重复值或null，主键一张表只能有一个），自增列
+		uname varchar(6), #用户名字符串型，限制最大4个字（字母）
+		upwd varchar(32), #用户密码
+		pic varchar(10), #用户头像(src="XXX.jpg")
+		score float(10,2), #用户积分float浮点型，最长10位，小数点后面两位
+		regTime bigint #注册时间，bigint长整型
+	);
+向表中插入记录行（ROW）：
+	insert into hello_user values(
+		101, 'sixGod', '123456', 'img/101.jpg', '1234567980123'
+		#尽量用引号，所有数据都能加引号，会自动转
+		#字符串和日期数据必须使用引号，数字类型可用单引号，也可不用，关键字不能使用单引号
+	);
+	简写：insert into hello_user values(…),(…);
+向表中一部分列添加记录：
+	insert into hello_user(cid,name) values();
+查询出表中的数据：
+	select uid,uname,upwd form hello_user; #表里的数据
+	select * from hello_user; #查找所有的列
+	select * from hello_user where uid=100; #查询uid=100的数据
+	可以写表达式：
+		select name,money*2 from hello_user;
+		select * from hello_user where age>=19 and age<=25;
+	可以排序：
+		 升序：select * from hello_user order by 列名;
+		 降序：select * from hello_user order by 列名 desc;
+	模糊查询：
+		select * from hello_user name like "%你%"; #百分号是任意多个字符的意思
+	查询以什么开头：
+		select * from hello_user where like 'abc%';  # 这个%是通配符，表示0个或多个字符
+	限制结果集中从哪一行获取数据，最多要几行(下标从0开始)
+		select * from hello_user where … limit 0, 10;
+	跨表查询：select 列名1,列名2 from 表1,表2 where 列名3=列名4;
+删除一个表：drop table hello_user;
+清空一个表：delete from hello_user;
+	truncate table 你的表名
+	这样不但将数据全部删除，而且重新定位自增的字段
+备份一个表：create table hello_user2(select * from hello_user);
+给一个表改名：rename table hello to hello2;
+删除一行指定的记录：delete from hello_user where uid=1; #where就是满足某种条件的时候
+修改一行指定的记录：
+	update hello_user set uname='李狗嗨', upwd="46789" where uid=1;
+	可以写表达式：
+		update hello_user set money=meny*2 where id=1;
+数据库服务器：
+	海量数据存储
+	高速查询
+	种类：
+		1. 网状
+		2. 树状
+		3. 关系型（主流）
+			服务器端程序：保存管理
+			客户端程序：向服务器发增删改查指令
+		4. 对象型
+	关系型数据库中的数据结构：
+		server => database => table => row => column
+sql 结构化查询语言
+
+停止mysql服务：计算机->管理->mysql
+数据库三层结构：DBMS数据库管理系统 数据库 数据对象
+数据库产品：mysql, sql server, db2, oracle
+开启数据库：net start mysql57(这是服务名，计算机->管理->服务中查看)
+关闭数据库：net stop mysql57
+试着删除数据库：drop database if exists abc;
+如果存在就删除，不存在就不做操作：drop database if exists abc;
+cmd连接数据库：mysql -uroot -proot1234 -hlocalhost(主机名，不写默认是本机localhost) -P3306(端口)
+修改环境变量：计算机->属性->高级环境配置->path
+数据库操作数据的指令：
+	1.关键词建议大写，不是必须
+	2.反引号(``)用于控制关键字，比如希望用关键字创建数据库/表
+	查看数据库：show databases;
+	创建数据库：create database abc;
+	创建一个使用utf8字符集的数据库(默认就是utf8)：create database abc character set utf8;
+	创建一个带校对规则(不区分大小写)的数据库(默认不区分大小写)：create database abc collate utf8_general_ci;
+	创建数据库细节讨论：
+		1.在创建数据库时，我们可以通过指定字符集 character set 来规定该库的字符集，常用的字符集主要是 utf8 / gbk / big5 , 对我们大陆的程序员说，使用utf8
+		2.不同的校验规则，会对查询时字母是否区分大小写和排序有影响, 举例:
+			默认的 utf8_general_ci   不区分大小写（排序时是小写大写在一起按ASCII码排列）
+			还有有个 utf8_bin 这个是区分大小写（排序时是按ASCII码排列）
+	查看建库语句：
+		show create database abc;
+		说明：
+			1.当一个sql指令中有``时，表示要避免关键字的问题
+			2./*!40100 DEFAULT CHARACTER SET utf8 */ 这不是注释，表示当mysql的版本大于等于4.01.00，就执行后面的指令
+	修改数据库的字符集和校验规则：alter database `abc` character set utf collate utf8_bin;
+	字符集和校验规则有很多种：
+		show character se;
+		show collation;
+		如果希望修改默认的字符集和校验规则，可以在my.ini中修改
+	进入/使用数据库：use abc;
+	查看客户端的连接数量和信息：show processlist;
+	导出（备份）数据库（单库）：mysqldump --no-defaults -uroot -p abc > abc.sql
+		加入建库语句，去除多余注释，去除表锁
+			mysqldump --no-defaults -uroot -p -B abc --skip-add-locks --compact > abc.sql
+		导出数据库中的某几张表：mysqldump --no-defaults -uroot -p 数据库名 表1 表2 > abc.sql
+	导出（备份）数据库（多库）：mysqldump --no-defaults -uroot -p -B abc def > abc.sql
+	导入（恢复）数据库：
+		直接导入（多库导出的文件）：mysql -uroot -p < abc.sql
+		启动mysql用source abc.sql导入（先创建一个空库，使用这个库）
+			注意：如果有中文，先设置客户端编码：set names utf8;
+数据表操作指令：	
+	查看表结构：desc abc;
+	查看表数据：select * from abc;
+	创建表：create table abc(id int,
+						user varchar(50), pwd varchar(50)) character set utf8;
+		创建表也可以设置字符集和校验规则
+		设置存储引擎（引擎有三种：MyISAM, InnDB, meomery）：engine innoDB
+		如果不指定上述的三个信息，则使用默认的（数据库的信息），指定了就以指定的为准
+		一个myisam的表对应三个文件
+			*.frm 表的结构
+			*.myd 表的数据
+			*.myi 表的索引
+	更改表的引擎：alter table abc engine=innodb
+	查看建表语句：show create table abc;
+	dual是一个亚元表，可以做测试用
+	表字段的数据类型：
+		概括：
+			数值：tinyint smallint mediumint int bigint
+			字符串：char varchar tinytext text mediumtext longtext
+		整型：用于保存整数的数据类型，常见有（tinyint(1byte) < smallint(2byte) < mediumint(3byte) < int(4byte) < bigint(byte)）
+			整型分为两种，一种是有符号的，一种是无符号的
+			整数存储数的范围算法：2^(字节*8)-1
+		字节型：num bit(1) 小括号中写的是存储多少字节（存储数据时会自动转为二进制存储）
+			bit字段在显示时，按ascii码对应的字符显示
+			查询的时候仍然要用数值（十进制）查询
+			如果要存储的只有0或1可以使用bit类型来节约空间，或约束数据大小（但是不满8位还是占一个字节）
+			字节类型默认是1，最大是64
+			不能修饰有符号类型（不能加signed，unsigned也不能加，默认就是无符号类型）
+		浮点（小数）型：
+			float和decimal都可以定义为有符号和无符号的
+			float(M, D) decimal(M, D)
+				M 表示显示的最大长度（总共有多少个数/位）
+				D 表示有几位小数（M >= D，如果小数位占2位，总共有10位，整数位就占8位）
+			float(4, 2) 表示-99.99~99.99 和decimal一样
+			float(4, 2) unsigned 表示0~99.99 和decimal一样
+			这两个小数类型的比较说明（都是十进制）：
+				decimal可以表示的精度更高（float大约精确到7位小数位，decimal精确30位）
+				float省略MD会根据硬件允许的限制来保存值，单精度浮点数精确到大约7位小数位
+				decimal省略D，默认是0，省略M，默认是10；M最大是65，D最大是30
+		字符串型：用来存放字符串，最主要有三种，char varchar text
+			char(n) n的取值范围是1~255
+			varchar(n) n的取值范围和表的字符集有关
+				如果字符集是utf8，那么n最大是(65535-3)/3=21844
+				如果字符集是gbk，那么n最大是(65535-3)/2=32766
+				如果字符集是latin1，那么n最大是(65535-3)/1=65532
+				解释：
+					varchar最大有65535个字节，但需要保留3个字节，2个用来保存实际字符数，1个用来标识是否为空
+					又因为utf8一个字符占3个字节，因此除以三，剩下的同理
+				char(n)和varchar(n)表示的都是字符数，不是字节数
+				char(n) 是定长，即使没有占满字符数也会占用相应数量的空间
+				varchar(n) 是变长，实际占用空间大小是字符数+1个字节（这个用来记录实际字符数，如果列长度>255就用2个字节）
+				char会把字符最后的空格删除，varchar不会
+				char的查询速度快于varchar
+			text可以视为varchar（不能有默认值），但是不用指定大小，它可以存放varchar最大的范围
+			注意：表的所有字段数据加起来不能超过65535字节（可以等于）
+				如果要大于65535，我们可以使用text来替代varchar
+		日期时间型：日期和时间主要有datedate,datatime,timestamp
+			date 只接收日期 '2019-10-10'
+			datetime 和 timestamp 有日期也有时间（没给时间，默认是 00:00:00） '2019-1-1 10:30:15'
+			timestamp 在insert（不给它赋值）和update时会自动更新
+		枚举类型和集合类型：
+			枚举是多个数据只能选择其中的一个
+			集合是多个数据能选择其中的几个
+			枚举：enum('apple', 'orange', 'pear')
+			集合：set('apple', 'orange', 'pear')
+			插入枚举的数据：insert into `user` values('apple');
+			插入集合的数据：insert into `user` values('apple,pear');
+			枚举和集合注意问题：
+				1.插入的选项都是表中规定好的
+				2.插入set字段时值的中间不要有空格（'选项1,选项2'）
+			插入enum字段时，选项可以用数字表示（最多65535个）
+			插入set字段时，选项可以用偶数表示（最多64个）
+				如果是第一个就是1，第二个就是2，第三个就是4，第四个就是8，第五个就是16
+				输入3就是1+2，就是1和2（第一个和第二个）
+				输入5就是1+4，就是1和4（第一个和第三个）
+				输入7就是1+2+4，就是1和2和4（第一个和第二个和第三个）
+			查询set字段中的数据：
+				select * from `user` where find_in_set('apple', hobby);
+				表示在hobby这个字段中查询有没有apple，如果有返回选项的第几个位置，没有返回0
+	字段属性(写在字段名后)：
+		1.unsigned 无符号（不写默认是有符号的 signed），写到最后
+		2.zerofill 数值前填充0（int(3)->001）
+			用法：`num` int(3) zerofill 
+				如果不够三位就在前面补0
+				自动变成无符号类型
+				int(3)不代表只能写3位数字
+				不用int(3)约束的话，就会默认填充所有位数(int最大是4294967295)
+		3.auto_increment
+				增长规则是找到字段的最大值加1
+				设置此列为自增列，按照上一个值加一，如果上一个值是null，就从1开始
+				可以和主键使用，如果不使用主键可以使用unique
+				自增长默认是从1开始，但可以改 alter table abc auto_increment=100
+		4.null 默认就是null，没有值的时候赋值为null
+		5.not null 字段值不允许为null
+		6.default 设置默认值
+		7.comment 对字段的注释说明
+	修改表名：rename table abc to edf;
+	删除表：drop table abc,def;
+	复制表结构：create table abc like def;
+	复制表内容：insert into abc select * from abc;
+	修改表字段（列）：
+		添加字段：alter table box add age int not null;
+		添加字段到某字段后：alter table box add age int after user;
+		添加字段到第一个位置：alter table box add age first;
+		删除字段：alter table box drop age; //注意删除无法恢复
+		修改字段属性：alter table box modify user varchar(20);
+		修改字段名：alter table box change user new_user varchar(20);
+		重排auto_increment：alter table box auto_increment=1;
+		查看字段：desc box;
+		注意事项：
+			如果把字段长度减小，有数据超过更改的数据了，就会报错
+			如果修改的数据类型不一致会报错
+	修改表的字符集：alter table abc character set utf8;
+	修改表的校验规则：alter table abc collate utf8_bin;
+	表字段去重复：创建一个结构相同的表，然后无重复查询再添加进此表
+delete和truncate清空数据表的区别：
+	delete 清空表数据，但不会清除计数器(自增)，返回删除的记录数
+	truncate（较快） 清空表数据，同时会把自增属性数据归零，返回0 
+		truncate table table_name;
+mysql服务器默认字符集（my.ini）：
+	1.建议客户端字符集
+		default-character-set = utf8
+	2.mysql服务端字符集为utf8
+		character-set-server = utf8
+	3.mysql服务端校验字符集
+		collation-server = utf8_general_ci
+数据库语句分类：
+	DDL 数据定义语言 create drop alter
+	DML 数据操作语言 insert update delete
+	DQL 数据查询语言 select
+	DCL 数据控制语言 grant commit rollabck
+数据的CRUD操作：
+	create read update delete
+	插入数据：insert into abc(id, user) values(10, "tom"),(11, "Jack"); //如果给表中所有字段添加数据，可以不写前面的字段名称
+	删除数据：delete from abc where id=1; //会返回删除的记录数
+	修改数据：update abc set user='hello',password=123 where user='hi';
+		在原有基础上增减数据：update abc set money = money + 100 where id = 1;
+查询数据：
+	select user u, password p from abc; //为查询出的字段名起别名，也可以加引号，中间可加as
+	select distinct * from abc; //查询不重复的数据
+	select * from abc order by id asc; //通过id字段升序(默认)
+	select * from abc order by id desc; //通过id字段降序
+	select * from abc order by id,age; //多个字段排序(先排第一个，再排第二个)
+	select * from abc limit 0,3; //分页查询
+		// 0 表示从第几条记录开始查，3 表示查几条记录
+		// 分页查询的公式 select * from abc limit (查询页数-1)*查询条数,查询条数
+where子句(过滤条件)中的比较运算符
+	> < >= <= = !=
+	between 10 and 20 //表示在10和20之间(包括10和20)
+	in(10,20) //等价于 10 or 20
+	like 'Tom%' //%表示的是0或多个字符
+	like '_A'; //_(下划线)代表一个字符
+	not like 'Tom%' //选取没有Tom开头的字符串
+	is null //查询为空的字段
+	not(age>10) //取反，相当于!
+	select * from abc where id>2;
+	select * from abc where id between 2 and 5;
+	select * from abc where id in(1,2,3);
+	select * from abc where user like "%u%"; //模糊查询
+	select * from abc where user is null; //查询user字段为null的数据
+	select * from abc where user is not null; //查询user字段不为null的数据
+查询与函数的使用：
+	select id*2 from abc; //直接使用表达式
+	select * from abc order by rand(); //随机排序
+	select * from abc order by rand() limit 1; //随机取出一条记录
+	select count(*) from abc; //聚合(合计)函数，统计一个表的行数
+		也可以写 count(列名) 会忽略 null 值，count(*) 不会忽略 null 值
+		count(distinct 表达式) 会不统计重复的
+	select sum(age) from abc; //求所有age字段数据的和
+		返回满足where条件的列的和
+		统计单列没问题，默认会加ifnull，sum(ifnull(a1,0))
+		sum(a1+a2) 统计两列总和，可能会返回不正确的值，因为数+null=null，默认sum(ifnull(a1+a2),0)
+			解决方法： sum(ifnull(a1,0),ifnull(a2,0))
+			ifnull函数，如果参数1值为null，就返回参数2，否则返回参数1
+	select avg(age) from abc; 求所有age字段数据的平均值
+		返回满足where条件列的平均值
+	select max(age) from abc; 求所有age字段数据的最大值
+	select min(age) from abc; 求所有age字段数据的最小值
+		满足where条件列的最大或最小值
+	select * from abc group by `user`,`user2`;
+		按照某一个字段(可以写多个字段)去分组，只能查询分组条件和使用聚合函数
+		对列进行分组统计，如果要对结果过滤，使用 having 关键字
+		order by写在group by后面
+	select * from abc where sal>all(select sal from abc where deptno=30)
+		all关键词的使用，表示其中所有都符合要求
+	select * from abc where sal>any(select sal from abc where deptno=30)
+		any关键词的使用，表示其中任意有一个符合要求即可
+	select * from (select * from abc) as newSheet; from子查询
+mysql多表查询：
+	select * from abc,def; //两表数据组合乘积
+	select * from abc,def where abc.id=def.id; //两表id相同的数据
+		select abc.*,def.name from abc,def where abc.id=def.id;
+	select * from abc where (math, chinese, english)=(select math,chinese,english from abc where id=1);
+		//多行子查询
+	select * from abc where id in(select distinct id from def); //嵌套多表查询
+	select * from abc as A, abc as B where A.id=B.mar; //自连接
+	select * from abc left join def on abc.id=def.abc_id' //左外连接，左边的表全显示，右边的没有显示空
+	select * from abc right join def on abc.id=def.abc_id' //右外连接
+	select * from abc inner join def on abc.id=def.abc_id' //内连接==普通多表查询
+	(select ……) union (select ……) //合并查询结果重复的字段（union all不合并）
+mysql字符串函数：
+	harset() //返回字符串返回的字符集
+	concat() //连接字符串，参数多个，分别是要连接的字符串
+	instr('abc', 'a') //返回 'a' 在 'abc' 的位置下标
+	length() //字符串的长度(按字节计算)
+	lcase() //转小写
+	ucase() //转大写
+	left('abc', 1) //从左边取出多少字符串
+	right('abc', 1) //从右边取出多少字符串
+	ltrim() //去除左边空格
+	rtrim() //去除右边空格
+	repeat("-",20) //重复字符串多少次
+	replace("hello","ello","i") //替换字符串，把 'hello' 替换为 'hi' 
+	substring("hello",1,2) //字符串截取，从第 1 个字符开始，截取 2 个，不写截取个数就全部取出
+	space(10) //显示多少空格
+	length() //统计字符串占用的字节数
+mysql数学函数：	
+	bin() //把十进制数转为二进制
+	abs() //求绝对值
+	ceiling() //向上取整
+	floor() //向下取整
+	format(1012, 3) //对数字进行格式化(每三位打一个逗号，第二个参数四舍五入保留小数几位)
+	mod(10, 3) //取余数
+	round(10,2) //四舍五入，第二个参数是保留几位小数，不写就是整数
+	max() //取最大数
+	min() //取最小数
+	sqrt() //开平方
+	rand() //求随机数
+mysql日期函数：
+	curdate() //当前日期
+	curtime() //当前时间
+	now() //当前日期加时间
+	unix_timestamp() //当前时间戳(从1970年到现在的秒数)，可以写其他日期转时间戳
+	from_unixtime() //时间戳转日期，第二个参数可以指定日期格式 '%Y-%m-%d %H:%i:%s'
+	week() //输入日期，判断是1年里的第几周
+	year() //输入日期，返回是哪年
+	date() //输入日期，返回日期部分
+	hour() minute() second()
+	date_add('2010-10-5', interval 10 day)
+		//表示在原有日期上加10天，也可以是年月日时分秒（year month day hour minute second）
+	date_sub('2010-10-5', interval 10 day) //表示在原有日期上减10天，同上
+	datediff() //输入两个日期，返回相差多少天
+	timediff() //输入两个日期，返回相差时间差
+mysql聚合函数：
+	最大/最小/平均值/列值的个数/求和：
+	max() min() avg() count() sum()
+	select max(列) from 表;
+mysql流程控制函数：
+	if(expr1, expr2, expr3);
+		//expr表示表达式，如果第一个表达式值为假，就返回第二个表达式的值，为真就返回第三个表达式的值
+	ifnull(expr1, '为空'); //如果第一个表达式为null，就返回第二个表达式的值
+	CASE
+		WHEN expr THEN expr
+		WHEN expr THEN expr
+		ELSE pxpr
+	END
+		//相当于if else语句
+mysql其他函数：
+	user() //显示当前用户名
+	database() //当前正在操作哪个数据库
+	md5() //将字符串编码/加密，长度为32个字符的密文，常用来保存密码
+	password() //加密字符串
+mysql的正则表达式的使用：  
+	select * from abc where name regexp ".*康$";
+mysql约束分类：
+	1.主键约束:primary key
+		不能重复，不能为空，一表最多有一个主键，但可以使用复合主键(primary key(id,name))
+		字段后面直接定义 id int primary key;
+		在表中定义写 primary key(id);
+	2.唯一约束：unique
+		字段中的值不重复
+		可以设置多个字段
+		如果不设置not null就可以为null并且可以多个
+	3.not null
+	4.check：检查约束，mysql不生效
+		age int check(age>=10 and age<=100)
+	5.外键约束：
+		在表中定义：
+			foreign key(本表设置外键的字段) references 表名(从表设置主键或唯一的字段)
+		注意事项：
+			1.当给表添加记录时，要外键的值已经在主表中存在，否则不能添加成功
+			2.如果外键没有设置not null，那么外键的值可以是null，而且可以有多个
+			3.外键指向的表字段必须是主键或唯一
+			4.表的类型必须是innodb
+			5.外键字段的数据类型要和从表设置字段保持一致，长度可以不一样
+			6.外键字段的值必须在主键字段中出现过，或者为null
+			7.一旦设置了主外键关系，从表数据不能随意删除(参照完整性)
+	对于约束的增删改查：
+		增加主键 alter table abc add primary key(id);
+		字段唯一 alter table abc unique(email);
+		删除主键 alter table abc drop primary key;
+		删除外键:
+			1.查询到外键的名称 show create table abc;
+			2.alter table abc drop foreign key 外键名;
+		添加外键：alter table abc add foreign key(id) references def(id)
+mysql索引：
+	索引作用是提供数据的检索/查询速度，但对添加，修改，删除有影响，不过可以忽略不计
+	查看索引：
+		show index from abc\G; \G表示查询是纵向排列
+		show indexes from abc\G;
+		show keys from abc\G;
+		desc abc;
+		show create table abc;
+	输出索引必须先知道索引名，可以通过查看索引找到
+	索引操作(更改字段的方法)：
+		添加普通索引：alter table user add index i_name(name);
+		删除普通索引：alter table user drop index i_name;
+	主键索引：
+		1.一个表只能有一个主键索引，但该主键索引可以指向多列(复合主键)
+		2.主键索引的效率很高
+		3.主键索引的值不能为空，不能重复
+		添加主键索引(三种方法，行级定义，表级定义，修改)：
+			id int unsigned primary key;
+			primary key(id);
+			alter table user add primary key(id);
+		删除主键索引：alter table user drop primary key;
+	唯一索引：
+		1.一个表中可以有多个唯一索引
+		2.一个唯一索引可以指向多列
+		3.唯一索引效率也很高
+		4.唯一索引的值不能重复，和约束规则一样
+		5.如果不确定某个字段有重复的值，则不能使用唯一索引
+		添加唯一索引(三种方法)：
+			email varchar(20) unique;
+			unique(email);
+			alter table user add unique u_name(name);
+			create unique index i_age on abc(age);
+		删除唯一索引：
+			alter table user drop index u_name;
+			drop index i_age on abc;
+	普通索引：
+		1.一个表中可以有多个普通索引
+		2.当我们字段有重复时，就使用普通索引即可
+		添加普通索引(三种方法)：
+			index (name);
+			alter table abc add index (name);
+			create index i_age on abc(age);
+		删除普通索引：drop index i_age on abc;
+	全文索引：
+		当我们需要对某个字段的内容的关键字进行检索时，就考虑使用全文索引
+		比如：我们需要在一篇文章中检索有没有某个关键字，则使用全文索引
+		mysql支持全文索引，但mysql5.5不支持中文，表的存储引擎是myisam
+mysql事务：
+	事务用于保证数据的一致性，它由一组相关的dml语句组成，该语句要么全部成功，要么全部失败
+	支持事务的表引擎有innodb
+	start transaction;//开启事务，一种方法
+	set autocommit=false; //开启事务，另一种方法
+	savepoint a; //添加一个a保存点
+	rollback to a; //回退到a保存点，如果跳过几个保存点，会自动销毁它们
+	rollback; //回退到匿名保存点（开启事务自动创建的）
+	commit; //事务的提交，清除所有保存点
+	在php中使用事务
+		$db = @mysqli_connect('127.0.0.1', 'root', 'root1234');
+		if (!$db) die('数据库连接失败！');
+		mysqli_select_db($db, 'test');
+		mysqli_query($db, 'start transaction');
+		$res1 = mysqli_query($db, 'update a set num = num+10 where id=1');
+		$res2 = mysqli_query($db, 'update a set num = num-10 where i0d=3');
+		if ($res1 && $res2) {
+			echo '<br/> objk';
+			mysqli_query($db, 'commit');
+		} else {
+			echo '<br/> 有问题！';
+			mysqli_query($db, 'rollback');
+		}
+事务隔离级别（了解）
+  脏读：当一个事务读取另一个事务尚未提交修改时，产生脏读
+  不可重复读：同一查询在同一事务多次进行，由于其他提交事务所做的修改或删除，每次返回不同结果集，此时发生非重复读
+  幻读：同一查询在同一事务多次进行，由于其他提交事务所做的插入操作，每次返回不同结果集，此时发生幻读
+  set session transaction isolation level read uncommitted;
+    读未提交：会产生脏读，不可重复读，幻读，不加读锁
+  set session transaction isolation level read committed;
+    读已提交：会产生不可重复读，幻读，不加读锁
+  set session transaction isolation level repeatable read;
+    可重复读：不会产生脏读，不可重复读，幻读，不加读锁
+  set session transaction isolation level serializable;
+    可串行化：不会产生脏读，不可重复读，幻读，加读锁
+  注意：先设置事务隔离然后再开始事务
+  查看当前会话隔离级别：select @@tx_isolation;
+  查看当前系统隔离级别：select @@global.tx_isolation;
+  更改默认的事务隔离级别：
+    在mysql.ini中修改 transaction-isolation=……
+  事务的acid特性：原子性，一致性，隔离性，持久性
+mysql的存储引擎：
+  事务安全性存储引擎：BDB, InnoDB
+  非事务安全性存储引擎：Myisam, mermory
+  查看所有存储引擎：show engines;
+  常用存储引擎比较：
+    1.Myisam存储引擎介绍：
+      执行速度快，批量插入速度高
+      不支持事务，不支持外键
+      会产生碎片，需要定时进行optimize table abc
+      如果不需要事务，则考虑使用Myisam
+    2.InnoDB存储引擎介绍：
+      并发性好，批量插入速度低
+      支持事务，支持外键
+      如果希望使用事务，则应该选择InnoDB
+    3.Memory存储引擎介绍：
+      数据在内存中，执行速度快
+      当重启mysql后数据消失，表结构还在
+      memory表可以优化项目，可以放经常查询或变化的数据，而且数据不需要入库
+  修改表的存储引擎：alter table abc engine=innodb;
+mysql视图：虚拟的表(快照)，它会和原表相互影响，互相变化
+	create view myView as select * from abc; //创建一个视图表
+	alter view myview as select * from def; //修该视图表
+  drop view myView; //删除视图表
+	select * from myView; //查询视图表
+mysql用户管理：
+  mysql用户都保存在mysql数据库中的user表中
+    1.host字段表示该用户可以登录的ip，如果是localhost表示只能本机登录，不能远程登录，注意我们实际开发中只能让本机登录
+    2.user字段表示用户名，说明完整的用户名是由user和host构成的，比如root@localhost
+    3.password字段表示用户密码，使用password函数加密的
+  mysql查看当前用户：select user();
+  mysql创建用户：
+    create user '用户名'@'主机名' identified by '密码';
+    如果不写主机名，则默认为%，代表是任何ip都可以连接
+    主机名也可以写成11.22.33.%表示符合这个ip段都可以登录
+  mysql删除用户：
+    drop user '用户名'@'主机名';
+    如果主机名不是%那么需要指定
+  mysql修改密码：
+    修改自己的密码：set password = password('密码');
+    修改其他用户密码：set password for '用户名'@'主机名' = password('密码');
+  mysql设置用户权限：  
+    grant 权限列表 on 数据库.表 to '用户名'@'主机名' identified by '密码'; 
+      数据对象包括：表，视图，触发器，函数，存储过程
+      identified by '密码' 可不写，如果给出密码，有用户会修改，没用户会创建用户
+      权限列表：select, update, delete, insert …… 全部权限是all 无权限是usage
+      数据库.表：可以将某个库的某个表给某个用户使用
+        如果希望将某个库全部表都给用户，则可以写 数据库.*
+        如果希望将所有库全部表都给用户，则可以写 *.*
+  刷新权限：flush privileges; //如果设置不生效
+  mysql回收用户权限：
+    revoke 权限列表 on 数据库.表 from '用户名'@'主机名';
+  mysql查看权限：
+    show grants for '用户名'@'主机名';
+mysql中的命令帮助
+	? show //查询关于show的命令
+	? sh% //查询关于sh开头的命令
+查询一般优化：
+	1.查单列的速度要优于多列
+	2.查主键索引的列中的所有值比其他列快
+检查服务器自启动以来CURD使用频次：
+	show status like "%Com_update%";
+	show status like "%Com_delete%";
+	show status like "%Com_select%";
+	show status like "%Com_insert%";
+查innodb自启动以来的影响行数：
+	show status like "%InnoDB_rows%";
+定位一条sql语句影响行数
+	desc slect * from abc;
+查看慢查询日志：
+	show variables like "%quer%"; //是否开启慢查询
+	show status like "%quer%"; //查看慢查询的次数
+修改慢查询的时间：
+	找到配置文件 mysql.ini
+	找到 long_query_time=10
+	重启mysql服务器
+优化表空间：optimize table abc;
+	1.myisam表没问题
+	2.innodb表ibdata1文件无法回收空间
+检查表：check table abc; 
+复合索引：
+	create index i_hello on abc(one, two);
+	查询时可能第二列不起作用
+	但是两列一起查的时候会有作用
+使用like搜索时，%在前，索引可能会失效
+检索为null数据时，能用到索引
+使用or关键字时，索引失效
+字段和值类型不同，该字段的索引可能会失效
+查看索引的使用频次：show status like "Handler_read%";
+数据库改密码：set password = password('abcd');
+跳过密码使用数据库：
+	关闭数据库，然后在mysqld.exe根目录执行下面命令
+	mysqld.exe --skip-grant-tables //越过授权表，启动母进程
+	然后再启动另一个cmd启动mysql，不用密码
+	flush privileges //刷新权限
+	alter user 'root'@'localhost' identified by '123'; //改密码
+退出mysql：exit;
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
