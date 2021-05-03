@@ -28,6 +28,8 @@ git的简单使用（交作业用）
 		为本地仓库添加一个远程仓库（github） 注意：要在本地仓库的目录下运行
 	git remote
 		查看远程仓库
+	git branch -M main
+		设置分支
 	git push -u github main
 		把本地仓库推送到远程仓库
 	github ssh推送模式下要先配置公钥私钥
