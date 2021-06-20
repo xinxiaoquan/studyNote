@@ -32,7 +32,7 @@ git的简单使用（交作业用）
 		把本地仓库推送到远程仓库
 	github ssh推送模式下要先配置公钥私钥
 		ssh-keygen -t rsa -C "3111381465@qq.com"
-		生成的id_rsa就是公钥，将它复制到github（头像下的settings->SSH and GPG key->new SSH KEY->title不用写）
+		生成的id_rsa.pub就是公钥，将它复制到github（头像下的settings->SSH and GPG key->new SSH KEY->title不用写）
 	
 	
 	
