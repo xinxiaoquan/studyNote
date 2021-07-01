@@ -12,6 +12,41 @@ process 进程对象
 	process.platform //查看操作系统的版本
 	process.pid //查看当前运行的node的进程编号
 	process.kill(pid) //结束进程方法，传入进程编号
+	process.nexTick(callbak)
+		//立即执行的定时器，比setImmediate早
+Buffer 缓冲区对象
+	//缓冲区：内存中存储数据的区域
+	let buf=Buffer.alloc(3, "abc")
+		//创建一个缓冲区，参数1是空间大小，参数2是数据
+	buf.toString() //将buffer数据转为字符串
+定时器
+	setImmediate(callbak) //立即执行的定时器
+	clearImmediate(timer) //清除定时器
+
+模块：
+	是一个独立的功能体，每一个文件/目录都可以称为一个模块
+	模块分为：自定义模块，核心模块（官方提供），第三方模块
+nodejs会自动为模块添加一个构造函数
+(function(exports, require, module, __filename, __dirname) {
+	//程序员写的代码
+})
+	require 是一个函数，用于引入一个模块
+	module 指代当前模块
+	module.exports 当前模块导出的对象，供其他模块使用（公开的内容）
+	exports 等价于module.exports
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
