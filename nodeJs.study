@@ -129,6 +129,55 @@ nodejs会自动为模块添加一个构造函数
 		删除文件：
 			fs.unlink(fd, (err)=>{});
 			fs.unlinkSync(fd);
+	http模块：
+		发送GET请求：
+			http.get(url, (res)=>{
+				//res响应的对象
+				res.statusCode //响应状态码
+				//data事件：当服务器有数据传递的时候触发
+				res.on("data", (data)=>{}) //获取响应主体
+			});
+		创建web服务器：
+			let server=http.createServer();
+			//监听端口
+			server.listen(888);
+			//接收请求，做出响应
+			//request事件：当有请求时，自动触发
+			server.on("resquest", (req, res)=>{
+				//req：请求的对象
+					req.method //请求的方法
+					req.url //请求的url
+					req.headers //请求的头信息
+				//res：响应的对象
+					res.writeHead(200,{
+						content-type:"text/html"
+					}); //设置响应头信息
+			})
+			server.end() //结束响应,发送响应主体
+	express框架：
+		基于nodejs，快速、开放、极简的web开发框架
+		//引入express包
+		const express=require("express");
+		//创建web服务器
+		let server=express();
+		//监听端口
+		server.listen(8888);
+		路由：浏览器向web服务器发送请求，服务器根据请求的方法和url做出响应
+		路由三要素：请求的方法，请求的url，响应（回调函数）
+		//接收get请求的url
+		server.get(url, (req,res)=>{
+			请求方法，请求URL，请求头 和http模块获取的方法一样
+			//查询字符串格式化后的对象
+			req.query
+			//响应内容
+			res.send();
+			//响应文件
+			res.sendFile(__dirname+"/path.html");
+		});
+	
+	
+	
+	
 	
 	
 	
