@@ -150,7 +150,7 @@ nodejs会自动为模块添加一个构造函数
 					req.headers //请求的头信息
 				//res：响应的对象
 					res.writeHead(200,{
-						content-type:"text/html"
+						"content-type":"text/html"
 					}); //设置响应头信息
 			})
 			server.end() //结束响应,发送响应主体
@@ -164,24 +164,97 @@ nodejs会自动为模块添加一个构造函数
 		server.listen(8888);
 		路由：浏览器向web服务器发送请求，服务器根据请求的方法和url做出响应
 		路由三要素：请求的方法，请求的url，响应（回调函数）
-		//接收get请求的url
-		server.get(url, (req,res)=>{
-			请求方法，请求URL，请求头 和http模块获取的方法一样
-			//查询字符串格式化后的对象
-			req.query
-			//响应内容
-			res.send();
-			//响应文件
-			res.sendFile(__dirname+"/path.html");
-		});
-	
-	
-	
-	
-	
-	
-	
-	
+			//接收get请求的url
+			server.get(url, (req,res)=>{
+				请求方法，请求URL，请求头 和http模块获取的方法一样
+				//查询字符串格式化后的对象
+				req.query
+				//响应内容
+				res.send();
+				//响应文件
+				res.sendFile(__dirname+"/path.html");
+			});
+			//接收post请求的url
+			server.post(url, (req, res)=>{
+				//接收post数据
+				req.on("data", (buf)=>{
+					let data=buf.toString();
+				})
+			});
+			//接收路由发送的数据
+			server.get("/abc/:id", (req, res)=>{
+				//获取数据
+				req.params;
+			});
+		路由器：就是一个自定义的模块，存放了一些路由
+			//新建路由器
+			let router=express.Router();
+			//添加路由到路由器
+			router.get(url, ()=>{});
+			//导出路由器
+			module.exports=router;
+			//引入路由器
+			let abc=require("./abc");
+			//挂载路由器（所有路由都放在了url下）
+			server.use(url, abc);
+		中间件：用于服务主要的业务逻辑（路由）
+			分类：应用级，路由级，内置，第三方，错误处理
+			应用级中间件：每一个中间件都是一个函数，需要配合其他中间件或路由使用
+				//拦截处理所有的请求
+				server.use((req, res, next)=>{ next(); });
+				//处理拦截特定的请求
+				server.use("/abc", (req, res, next)=>{ next(); });
+				//路由执行完毕后做的处理
+				server.get("/abc", (req, res, next)=>{ next(); });
+				server.use("/abc", (req, res)=>{ });
+			内置中间件：
+				static 托管静态资源到某个目录
+				//浏览器请求静态资源，服务器自动到对应的目录中寻找
+				//静态资源：html,js,css,img……
+				server.use( express.static("public") );
+			第三方中间件：
+				bodyParser 将post请求的数据转化为对象
+				let bodyParser=require("body-parser");
+				server.user( bodyParser.urlencoded({
+					//不使用第三方的qs模块，而使用querystring核心模块格式化字符串
+					extended:false
+				}) );
+				在路由中就可以使用req.body获取post数据了
+				
+mysql模块（第三方）：
+	//创建mysql连接
+	let conn=mysql.createConnection({
+		host:"127.0.0.1",
+		port:3306,
+		user:"root",
+		password:"root",
+		database:"abc"
+	});
+	//执行连接（可以省略）
+	conn.connect();
+	//执行sql语句
+	conn.query(sql, (err, res)=>{
+		if(err) throw err;
+		console.log(res);
+	});
+	//关闭连接
+	conn.end();
+	//mysql连接池
+	let pool=mysql.createPool({
+		//信息和普通连接一样
+		//连接池大小，默认是15条连接
+		connectionLimit:15
+	});
+	//执行sql语句
+	pool.query(sql,(err, res)=>{});
+	//使用占位符执行sql语句
+	pool.query("update abc set name=?,sex=? where id=?",["李狗蛋",1,10],(err, res)=>{});
+	//模块扩展的sql插入语句
+	pool.query("insert into abc set ?",[{
+		name:"李狗蛋",
+		sex:1,
+		age:18
+	}]);
 	
 	
 	

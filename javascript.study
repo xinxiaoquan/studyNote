@@ -1897,7 +1897,7 @@ AJAX:
 		xhr.open(method, uri, true); //打开服务器的连接，true表示异步，默认是true
 	4. 使用xhr对象发起异步http请求消息
 		xhr.send(body/null); //发送请求消息，如果是get，直接写到url中
-		如果用post请求发数据的话，先要设置
+		如果用post请求发数据的话，先要设置（服务器默认不接受特殊字符）
 			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded;charset=UTF-8");
 	XHR对象的常用属性和方法：
 		XHR对象作用：发起异步HTTP请求，并接收响应

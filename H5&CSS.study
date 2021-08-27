@@ -287,7 +287,8 @@ font-size定义字体大小
 	samll large 关键字定义
 	px单位定义
 	100%百分比定义（按照继承字体的百分比）
-	em单位，等同于百分比
+	em单位，父元素相同样式值的倍数
+	rem 根元素相同样式值的倍数
 font-weight定义字体的粗细
 	normal默认值，定义标准字体
 	bold 定义粗体
@@ -508,7 +509,12 @@ div~span{}
 		后面所有的兄弟（相隔元素也没问题）
 		语法：选择器1 ~ 选择器2
 
-13.selector1selector2 如果选择器这样写（中间没有分隔），表示“而且”的意思
+13.并集选择器
+	selector1selector2
+	如果选择器这样写（中间没有分隔），表示“而且”的意思
+
+14.群组选择器
+	a,b,c{}
 
 伪类选择器
 	伪类：匹配元素的不同状态，匹配到的是元素
@@ -1027,7 +1033,7 @@ background-attachment 背景图片的固定
 			repeating-linear-gradient() 重复线性
 			repeating-radial-gradient() 重复径向
 	2.线性渐变
-		语法：background-image:linear-gradient(angle（方向/角度）,color-point, 中间点(百分数), color-point,……);
+		语法：background-image:linear-gradient(angle（方向/角度）,color-point（色标）, color-point,……);
 			angle:渐变的填充方向
 				值：1.to top 从下向上填充
 					2.to right 从左向右填充
@@ -1049,7 +1055,7 @@ background-attachment 背景图片的固定
 						每个颜色平分元素区域
 			中间点就是分界线
 	3.径向渐变
-		语法：background-image:radial-gradient(size at position,color point（标志位）,color point,……);
+		语法：background-image:radial-gradient(size at position,color point（色标）,color point,……);
 			size at position 径向渐变的半径 at 圆心
 				size 圆的半径（只能用px）
 				position 圆心位置
@@ -1060,6 +1066,8 @@ background-attachment 背景图片的固定
 					3.at right bottom
 						将圆心设置元素右下角
 						关键字：top/right/bottom/left/center
+				色标设置的百分比是半径的
+				色标的位置设置具体值，半径无效
 浏览器的兼容性
 	各主流浏览器均支持渐变，对于不支持的，可以尝试加前缀
 	浏览器前缀：
