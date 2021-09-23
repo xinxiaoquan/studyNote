@@ -1456,12 +1456,107 @@ CSS动画：
 鼠标穿透：pointer-events:none;
 设置css文件编码：@charset "utf-8";
 禁止选择文本：-webkit-user-select:none;
-		
-		
-		
 
-		
-		
+CSS变量（自定义属性）
+	:root 根元素伪类（指代根元素），可以全局范围内设置变量
+	:root {
+		--size:10px;
+		/*定义变量*/
+	}
+	.font {
+		font-size:var(--size, 15px);
+		/*使用变量，如果变量不存在就取默认值*/
+	}
+	变量的类型：字符串和非字符串
+	:root {
+		--hello:"hello";
+		--world:"world";
+	}
+	.main::after {
+		content:var(--hello)var(--world);
+		/*字符串的拼接（只能字符串才能拼接）*/
+	}
+	:root {
+		--size:50;
+		/*数值变量的定义*/
+	}
+	.main {
+		font-size:calc(var(--size)*1px);
+		/*数值变量的计算*/
+	}
+	/*js操作css变量*/
+	var dom=document.querySelector(".main");
+	var styles=getComputedStyle(dom);
+	//获取css变量值
+	styles.getPropertyValue("--color");
+	//设置css变量
+	styles.getProperty("--aa", 10px);
+	
+弹性布局（一种布局方式）：
+主要解决某个元素中子元素的布局方式，为布局提供很大的灵活性。
+相关概念：
+	1.容器：要发生弹性布局子元素的父元素称为容器。就是设置display:flex那个元素。
+	2.项目：要做弹性布局的子元素们。就是设置了display:flex那个元素的子元素们。
+	3.主轴：项目们排列方向的一条轴。如果项目们是横向排列，x轴就是主轴，如果是纵向排列，y轴是主轴。项目们排列顺序是主轴的起点和终点。
+	4.交叉轴：与主轴相交的一条轴。项目们在交叉轴的对齐方式是交叉轴的起点和终点。
+容器的属性：
+	将块级元素设置为容器
+		display:flex
+	将行内元素设置为容器
+		display:inline-flex
+	元素设置为容器后，项目的float/clear/vertical-align/text-align属性失效
+	项目可以修改尺寸
+	主轴的方向
+		flex-direction:row;
+			row 默认值，主轴是x轴，主轴起点是左端
+			row-reverse，主轴是x轴，主轴起点是右端
+			cloumn，主轴是y轴，主轴起点是顶端
+			cloumn-reverse，主轴是y轴，主轴起点是底端
+	设置项目的换行
+		flex-wrap:nowrap;
+			nowrap 默认值，不换行(空间不够也不换行，项目自动缩小)
+			wrap 空间不够就换行
+			wrap-reverse 空间不够就换行(反转)
+	上面两个的缩写：flex-flow:direction wrap;
+	项目在主轴的对齐方式：
+		justify-content:flex-start;
+			flex-start 主轴起点对齐
+			flex-end 主轴终点对齐
+			center 主轴居中对齐
+			space-between 两端对齐(两端无空白)
+			space-around 两端对齐(每个间距大小相同)
+	单行项目在交叉轴的对齐方式：
+		align-items:flex-start;
+			flex-start 交叉轴起点对齐
+			flex-end 交叉轴终点对齐
+			center 交叉轴居中对齐
+			stretch 高度自动拉伸（没指定高度的情况下）
+	多行项目在交叉轴的对齐方式：
+		align-content:flex-start;
+			flex-start 交叉轴起点对齐
+			flex-end 交叉轴终点对齐
+			center 交叉轴居中对齐
+			space-between 两端对齐(两端无空白)
+			space-around 两端对齐(每个间距大小相同)
+			stretch 高度自动拉伸（没指定高度的情况下）
+项目的属性：
+	占容器剩余空间的份数：
+		flex:1;
+	设置项目交叉轴的对齐方式：
+		align-self:flex-start;
+			flex-start 交叉轴起点对齐
+			flex-end 交叉轴终点对齐
+			center 交叉轴居中对齐
+			stretch 高度自动拉伸（没指定高度的情况下）
+	设置排序：
+		order:0;
+			值越小，越靠前，默认是0
+
+
+
+
+
+	
 		
 		
 		

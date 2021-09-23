@@ -1650,6 +1650,7 @@ SESSION的配置（php.ini）：
 		AllowOverride None
 		Order allow,deny
 		Allow from all
+		Require all granted
 	</Directory>
 
 配置网站/虚拟主机（不同子域名映射不同的目录）：
