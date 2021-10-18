@@ -1540,8 +1540,6 @@ CSS变量（自定义属性）
 			space-around 两端对齐(每个间距大小相同)
 			stretch 高度自动拉伸（没指定高度的情况下）
 项目的属性：
-	占容器剩余空间的份数：
-		flex:1;
 	设置项目交叉轴的对齐方式：
 		align-self:flex-start;
 			flex-start 交叉轴起点对齐
@@ -1551,6 +1549,21 @@ CSS变量（自定义属性）
 	设置排序：
 		order:0;
 			值越小，越靠前，默认是0
+	项目放大比例：
+		flex-grow:0;
+			大于1按总和比例分配，不满1按当前比例分配
+			默认值是0
+	项目缩小比例：
+		flex-shrink:1;
+			默认是1
+	是否使用设置宽度
+		flex-basis:auto;
+			默认是auto，设置0表示不用设置的宽度
+	flex:flex-grow flex-shrink flex-basis
+	flex:none;  -> flex : 0 0 auto;
+	flex:auto;  -> flex:1 1 auto;
+	flex:1;    ->  flex:1 1 0;
+	flex:0;   ->   flext:0 0 0;
 
 
 

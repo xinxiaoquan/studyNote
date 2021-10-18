@@ -18,13 +18,17 @@ git config --global --list
 	查看配置信息
 pwd 查看仓库的路径
 git add 文件名
+	git add 2.php abc/
 	提交到暂存区（如果文件名是. 就代表所有已修改的文件）
 git status
 	查看提交暂存区的状态
-git reset head
-	回滚（取消）暂存
 git checkout -- .
-	取消修改
+	取消文件修改
+git reset head （所有）
+	git reset 文件名
+	回滚（取消）暂存
+git reset --hard 版本号
+	强制版本回退
 git commit -m 注释内容
 	暂存区提交版本库
 git log

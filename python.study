@@ -35,6 +35,128 @@ print 结束符号
 		print(2)
 	else:
 		print(3)
+生成随机整数（包含开始和结束数字）
+	import random
+	random.randint(1,10)
+三目运算符：
+	a if a>b else b
+while循环
+	while True:
+		do thing;
+for循环
+	遍历数据序列/列表/字符串
+		for c in str:
+			print("%s"%c)
+字符串切片：
+	str[开始下标:结束下标:步长]
+		步长是选取间隔，默认是1
+字符串（序列）操作函数
+	检测子串是否在字符串，返回子串开始位置下标，没有就返回-1
+		str.find(子串, 开始位置, 结束位置)
+		str.rfind(子串, 开始位置, 结束位置) #从右侧查找
+	检测子串出现的次数
+		str.count(子串, 开始位置, 结束位置)
+	字符串替换：
+		str.replace(旧子串, 新子串, 替换次数)
+	字符串分割为列表：
+		str.split(分割字串, 分割次数)
+	字符串连接列表：
+		字符串.join(列表)
+	字符串首字母转大写：
+		str.capitalize()
+	字符串每个单词首字母转大写：
+		str.title()
+	转大写：str.upper()
+	转小写：str.lower()
+	删除字符串左侧空白字符：
+		str.lstrip()
+	删除字符串右侧空白字符：
+		str.rstrip()
+	删除字符串两侧空白字符
+		str.strip()
+	字符串左对齐
+		str.ljust(字符串, 填充字符)
+	字符串右对齐
+		str.rjust(字符串, 填充字符)
+	字符串居中对齐
+		str.center(字符串, 填充字符)
+	判断是否以某字串开头：
+		str.startswith(子串, 开始下标, 结束下标)
+	判断是否以某字串结尾：
+		str.endswith(子串, 开始下标, 结束下标)
+删除变量：del abc
+列表序列：
+	可以存放多个不同类型数据，类似于js中的数组
+	获取列表元素个数
+		len(list)
+	判断某个元素是否在列表中
+		"abc" in list #是否不在 not in
+	查找某个元素在列表中的位置
+		list.index("aaa")
+	追加数据（追加序列会整体追加）
+		list.append("123")
+	追击数据（追加序列会把数据逐一追加）
+		list.extend([1,2,3])
+	插入数据
+		list.insert(1, "hello")
+	删除列表
+		del list
+	删除列表指定下标的数据
+		del list[0]
+	删除指定下标数据（默认是最后一个） 
+		返回删除的数据
+		list.pop()
+	删除列表中的第一个匹配的数据
+		list.remove("abc")
+	清空列表
+		list.clear()
+	列表反转：
+		list.reverse()
+	列表排序：
+		# 默认是升序排列 reverse=False
+		list.sort(reverse=False)
+	列表复制：
+		list.copy()
+元组序列：
+	元组的数据不能修改，只能查询（api和列表一样）
+	定义多数据的元组
+		(1,2,3)
+	定义单数据的元组
+		(1,)
+字典序列：
+	定义字典：dict1={"name":"23"}
+		定义空字典：
+			dict2={} 
+			dict3=dict()
+	增/改键值对:
+		dict1["id"]=1
+	删除键值对：
+		del dict1["id"]
+	清空字典：
+		dict1.clear()
+	查询字典数据：
+		dict1.get("key", key不存在返回的值)
+			如果用[]访问，key不存在报错
+	所有key列表(可遍历对象)
+		dict1.keys()
+	所有value列表(可遍历对象)
+		dict1.values()
+	转换为列表(可遍历对象)
+		dict1.items()
+		遍历：
+			for key,value in dict1.items():
+				print(f"{key}->{value}");
+	
+
+
+
+
+
+
+
+
+
+
 
 
 
