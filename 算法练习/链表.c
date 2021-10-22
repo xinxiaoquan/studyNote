@@ -9,22 +9,27 @@ typedef struct Node {
 	struct Node * pNext;
 }NODE, *PNODE;
 
+//创建非循环单链表，返回首节点地址
 PNODE create(void);
+//遍历链表
 void show(PNODE pHead);
+//判断链表是否为空
 int isEmpty(PNODE pHead);
+//链表排序 type为0就是升序，type为1就是降序
 void sort(PNODE pHead, int type);
+//链表插入节点
 void insert(PNODE pHead, int data, int pos);
+//删除节点
 int del(PNODE pHead, int pos);
 
 int main(void) {
 	PNODE pHead=create();
 	show(pHead);
-	printf("删除的数据%d\n", del(pHead, 3));
+	printf("删除的数据%d\n", del(pHead, 100));
 	show(pHead);
 	return 0;
 }
 
-//创建非循环单链表，返回首节点地址
 PNODE create(void) {
 	PNODE pNode,pHead, pEnd;
 	int i, len, val;
@@ -45,7 +50,6 @@ PNODE create(void) {
 	return pHead;
 }
 
-//遍历链表
 void show(PNODE pHead) {
 	PNODE pNode;
 	pNode=pHead->pNext;
@@ -62,14 +66,12 @@ void show(PNODE pHead) {
 	return;
 }
 
-//判断链表是否为空
 int isEmpty(PNODE pHead) {
 	if(pHead->pNext == NULL)
 		return 1;
 	return 0;
 }
 
-//链表排序 type为0就是升序，type为1就是降序
 void sort(PNODE pHead, int type) {
 	PNODE p,q;
 	int tmp;
@@ -87,7 +89,6 @@ void sort(PNODE pHead, int type) {
 	return;
 }
 
-//链表插入节点
 void insert(PNODE pHead, int data, int pos) {
 	int nowPos=1;
 	PNODE pNode=pHead, pNew;
@@ -103,21 +104,21 @@ void insert(PNODE pHead, int data, int pos) {
 	pNode->pNext=pNew;
 }
 
-//删除节点
 int del(PNODE pHead, int pos) {
 	int nowPos=1, val;
-	PNODE pNode=pHead->pNext, pPrev=pHead;
-	if(pNode == NULL || pos < nowPos)
-		return;
+	PNODE pNode=pHead, pTar;
+	if(pos < nowPos)
+		return -1;
 	else while(nowPos < pos) {
-		if(pNode == NULL) return;
+		if(pNode == NULL)
+			return -1;
 		nowPos++;
-		pPrev=pNode;
 		pNode=pNode->pNext;
 	}
-	pPrev->pNext=pNode->pNext;
-	val=pNode->data;
-	free(pNode);
+	pTar=pNode->pNext;
+	pNode->pNext=pTar->pNext;
+	val=pTar->data;
+	free(pTar);
 	return val;
 }
 

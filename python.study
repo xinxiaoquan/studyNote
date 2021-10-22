@@ -182,7 +182,43 @@ for循环
 	set() 转集合
 
 函数：
-	
+	def abc(a, b):
+		return a6+b;
+函数的说明文档：
+	def abc():
+		"""
+			这里可以写说明文档
+		"""
+		return "OK"
+	查看函数的说明文档：
+		help(abc)
+函数作用域访问全局变量：
+	global a #声明a为全局变量
+	a=100
+函数的参数：
+	位置参数：
+		def fn(a, b, c):
+			...
+		fn(1,2,3)
+	关键字参数:
+		def fn(a, b, c):
+			...
+		fn(a=100, c=200, b=300)
+	不定长参数:
+		def fn(*args):
+			print(args) #包裹位置传递，打印出来的是所有传入的位置参数
+		def fn(**kwargs):
+			print(kwargs) #包裹关键字传递，打印出来的是所有传入的关键字参数
+
+
+
+
+
+
+
+
+
+
 
 
 
