@@ -495,7 +495,7 @@ mysql事务：
 		mysqli_select_db($db, 'test');
 		mysqli_query($db, 'start transaction');
 		$res1 = mysqli_query($db, 'update a set num = num+10 where id=1');
-		$res2 = mysqli_query($db, 'update a set num = num-10 where i0d=3');
+		$res2 = mysqli_query($db, 'update a set num = num-10 where id=3');
 		if ($res1 && $res2) {
 			echo '<br/> objk';
 			mysqli_query($db, 'commit');

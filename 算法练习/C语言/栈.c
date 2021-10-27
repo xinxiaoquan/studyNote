@@ -17,14 +17,21 @@ PSTACK create(void);
 //入栈
 void push(PSTACK stack, int data);
 //出栈
-int pop(PSTACK stack);
+short pop(PSTACK stack, int * val);
 //查看
 void show(PSTACK stack);
+//清空
+void clear(PSTACK stack);
 
 int main(void) {
 	PSTACK stack;
+	int val;
 	stack=create();
-	push(stack, 123);
+	push(stack, 1);
+	push(stack, 2);
+	push(stack, 3);
+	push(stack, 4);
+	//clear(stack);
 	show(stack);
 	return 0;
 }
@@ -48,16 +55,15 @@ void push(PSTACK stack, int data) {
 	stack->top=pNode;
 }
 
-int pop(PSTACK stack) {
+short pop(PSTACK stack, int * val) {
 	PNODE top;
-	int val;
 	if(stack->top == stack->bottom)
-		return -1;
+		return 0;
 	top=stack->top;
-	val=top->data;
+	*val=top->data;
 	stack->top=stack->top->pNext;
 	free(top);
-	return val;
+	return 1;
 }
 
 void show(PSTACK stack) {
@@ -73,3 +79,23 @@ void show(PSTACK stack) {
 	}
 	printf("\n");
 }
+
+void clear(PSTACK stack) {
+	/*
+	实现方式1
+	int val;
+	while(pop(stack, &val)) {}
+	*/
+	PNODE p,q;
+	p=stack->top;
+	while(p != stack->bottom) {
+		q=p->pNext;
+		free(p);
+		p=q;
+	}
+	stack->top=stack->bottom;
+}
+
+
+
+
