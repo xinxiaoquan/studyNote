@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>3D翻转菜单</title>
+    <style>
+        .part {
+            width: 100px;
+            height: 50px;
+            display: inline-block;
+            margin-right: 20px;
+            position: relative;
+            perspective: 500px;
+            transform-style: preserve-3d;
+        }
+        
+        .item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: transform 1s;
+            transform-style: preserve-3d;
+        }
+        
+        .item:hover {
+            transform: rotateX(90deg);
+        }
+        
+        .item div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            text-align: center;
+            line-height: 50px;
+        }
+        
+        .item div:first-child {
+            background-color: lightseagreen;
+            transform: translateZ(25px);
+        }
+        
+        .item div:last-child {
+            background-color: limegreen;
+            transform: rotateX(-90deg) translateZ(25px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="parent">
+        <div class="part">
+            <div class="item">
+                <div>你好</div>
+                <div>hello</div>
+            </div>
+        </div>
+        <div class="part">
+            <div class="item">
+                <div>谢谢</div>
+                <div>thank you</div>
+            </div>
+        </div>
+        <div class="part">
+            <div class="item">
+                <div>再见</div>
+                <div>goodbye</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

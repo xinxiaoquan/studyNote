@@ -216,7 +216,7 @@ for循环
 	filter(fun, [1,2,3]) #将符合条件的元素组成迭代器返回
 
 文件操作：
-	f=open(name, mode) 
+	f=open(name, mode, encoding="utf-8") 
 		f是文件对象
 		打开文件操作 
 		name文件路径 mode打开文件的模式
@@ -245,17 +245,80 @@ for循环
 			0 文件开头
 			1 当前位置
 			2 文件结尾
+	f.read()
+		读取文件数据，参数可以写读取的长度（字节）
+文件和文件夹的其他操作需要借助os模块
+	import os #引入os模块
+	os.rename(目标文件名, 新文件名)
+		文件/文件夹重命名
+	os.remove(文件名)
+		删除文件
+	os.mkdir(目录名)
+		创建文件夹
+	os.rmdir(目录名)
+		删除文件夹
+	os.getcwd()
+		获取当前目录(当前文件所在目录)路径
+	os.chdir()
+		改变默认目录
+	os.listdir()
+		获取目录中文件列表(可以指定目录，不指定就是默认的)
 
-
-
-
-
-
-
-
-
-
-
+面向对象：
+	定义类：
+	class 类名():
+		def 方法名(self):
+			#self是实例化的对象
+			print("123")
+	定理对象：obj=类名()
+	魔法方法：
+		__xx__() 这样的方法就是魔法对象
+		__init__(self, c1, c2) 
+			初始化对象（构造器）
+			对象创建的时候自动调用
+		__str__()
+			使用print打印的数据（用返回）
+		__del__()
+			删除对象时调用的方法
+	继承：
+		所有类默认都继承object基类
+	单继承：
+		class A():
+			def __init__(self, name):
+				self.name=name
+		class B(A):
+			pass
+	多继承：
+		class A():
+			def __init__(self, name):
+				self.name=name
+		class B(A):
+			def __init__(self, name):
+				self.name=name
+		class C(A, B):
+			pass
+		如果多个父类有同名属性或方法，默认使用第一个类的
+	查看类继承的层级关系
+		A.__mro__
+	使用父类的方法和属性
+		class C(A, B):
+			def useParent(self):
+				A.__init__(self)
+				A.abc(self)
+		#如果调用的是第一个父类，直接用super()调用（方法不用传self）
+	私有属性和方法：
+		self.__money=10000000
+	类属性：
+		class A():
+			name="gkk"
+		#类属性只能通过类修改，如果通过实例修改会增加一个同名的实例属性，不会修改类属性
+		#类属性可以在类和所有实例中访问，只占用一块内存
+	类方法：
+		class A()
+			@classmethod
+			def getMoney(cls):
+				return cls.__money;
+		#需要使用类的调用方法时，可以定义类方法
 
 
 

@@ -1705,58 +1705,6 @@ SESSION的配置（php.ini）：
     </VirtualHost>
 	4.可以嵌套配置虚拟目录
 
-浏览器连上服务器后，向服务器请求某个web资源，称为浏览器向服务器发送一个http请求
-http请求包括：
-  请求行：请求方式(get/post) 请求资源 http版本(通常是1.1) 等
-  请求消息头：接受内容类型 接受语言 浏览器内核 接受压缩方式 主机名 等
-    Accept 浏览器可以接受的数据类型
-    Accept-Encoding 浏览器可以接受的压缩格式
-    Accept-Language 浏览器可以接受的语言
-    Host 请求的主机名
-    If-Modified-Since 本地已经有这个资源，这个资源的最新更新时间是什么
-    Referer 告诉服务器，这个请求从哪个页面来，链接来路
-    User-Agent 浏览器内核
-    在php中所有请求消息头都会封装在：
-      $_SERVER (预定义超全局数组) 所有HTTP开头的键值就是消息头
-      $_SERVER["REMOTE_ADDR"] 表示访问的客户端的地址
-  一个空行
-  实体内容(发给服务器的内容)
-http响应包括：
-  状态行：http版本 状态码 状态描述
-    常见状态码：
-      200 成功
-      302 重定向(告诉浏览器到另一个url取资源)
-      304 资源未修改(服务器说明浏览器本地的资源已经是最新的，没有修改过)
-      403 禁止访问(告诉浏览器没有权限访问该资源)，和php代码无关，是配置的问题
-      404 没有该资源(url错误或资源被删除)
-      500 服务器内部错误
-  响应消息头：
-    常用消息头：
-      location http://taobao.com 浏览器跳转地址
-      content-type text/html 返回的数据类型
-			Keep-Alive:timeout=5,max=100 5秒钟内客户端不发http请求就会断开连接，最大连接时间为100秒
-      refresh:5;url=123.html 停留多少秒后跳转到相应地址
-      last-modified 返回该资源的最新修改时间
-        第一次请求会返回此信息，浏览器会记录和缓存文件，下次请求如果有此缓存会把最后修改日期提交服务器，服务器如果没有修改就不返回文件，返回状态码304     
-  一个空行
-  实体内容
-请求方式：get post，区别：
-  1.get方式提交的数据会放在url后面，post提交的数据会放在实体内容中
-    php的url编码函数 urlencode()
-    php的url解码函数 urldecode()
-  2.提交数据长度限制：
-    get数据长度是由浏览器或操作系统来限制
-    post数据理论上没有限制
-    如果我们要上传或下载文件，可以使用http协议，但该文件一般不要大于2m
-    如果要上传或下载大文件，一种方案写插件，一种方案开发客户端，传太大文件容易超时
-    配置上传文件大小在php.ini中搜索upload_max_fileSize
-
-302 重定向
-	header("location:../");
-301 永久重定向
-	header("HTTP/1.1 301 Moved Permanently");
-	header("location:../");
-
 Apache的参数调节
 apache改监听端口
 	在 http.conf 中

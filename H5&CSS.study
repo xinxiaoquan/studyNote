@@ -1274,94 +1274,101 @@ CSS Hack：
 				5. ！不等于  <!--[if !IE]><![endif]-->
 				6. 省略不写  判断是否为IE或指定的版本
 转换：
-	转换是改变元素在页面中的大小，位置，形状，角度的一种方式
-	转换分为 2D转换 和 3D转换
-	2D转换：使元素在X轴和Y轴进行的转换操作
-	3D转换：增加了Z轴上的转换操作
-	转换属性：transform
+转换是改变元素在页面中的大小，位置，形状，角度的一种方式
+转换分为 2D转换 和 3D转换
+2D转换：使元素在X轴和Y轴进行的转换操作
+3D转换：增加了Z轴上的转换操作
+转换属性：transform
+取值：
+	1. none
+	2. transform-functions  一组转换函数，表示一个或多个转换函数，多个的话，用空格隔开
+转换的原点：
+	属性：transform-origin
+	默认：原点在元素的中心处
 	取值：
-		1. none
-		2. transform-functions  一组转换函数，表示一个或多个转换函数，多个的话，用空格隔开
-	转换的原点：
-		属性：transform-origin
-		默认：原点在元素的中心处
+		两个值：值1(X) 值2(Y);
+		三个值：值1(X) 值2(Y) 值3(Z);
+2D的位移：
+	改变元素在X轴和Y轴的位置
+	语法：
+		属性：transform
+		函数：
+			translate(X)  改变元素在X轴上的位置，取值为正右移，反之左移
+			translate(X,Y)  改变元素在X轴和Y轴的位置，Y轴取值为正下移，反之上移
+			translatex(X)  单项改变
+			translatey(Y)
+2D缩放：
+	改变元素在X轴或Y轴上的大小
+	语法：
+		属性:transform
+		函数：
+			scale(value)  value是缩放倍数。给一个值，等比例缩放
+			scale(x,y)  分别改变元素在X轴和Y轴的上的大小
+			scalex(X)  X轴缩放
+			scaley(Y)  Y轴缩放
+				取值：
+					默认值：1  原始大小
+					缩小：0~1之间的小数
+					放大：大于1的数值
+					取负值：旋转180deg的效果
+2D旋转：
+	属性：transform
+	函数：rotate(ndeg)
+		取值为正 顺时针旋转
+		取值为负 逆时针旋转
+	注意：
+		1. 转换原点
+			旋转围绕着转换原点来做的，原点位置不同，效果也不同
+		2. 旋转时连同坐标轴也一同跟着转
+2D倾斜：
+	改变元素在页面中的形状
+	以原点为中心，围绕着X轴和Y轴产生的倾斜角度
+	属性：transform
+	函数:
+		skew(Xdeg)  横向产生倾斜效果，实际改变是Y轴的倾斜角度
+			值为正：Y轴逆时针角度倾斜
+			值为负：Y轴顺时针角度倾斜
+		skew(Xdeg,Ydeg)
+			X 横向倾斜
+			Y 纵向倾斜
+				值为正，X按顺时针角度倾斜
+				值为负，X按逆时针角度倾斜
+		skewx(Xdeg)
+		skewy(Ydeg)
+同时使用多个转换：
+	transform:scale() translate();
+	写的循序会影响转换效果（先旋转再位移会改变坐标轴方向）
+3D转换:
+	x轴从左往右（左负右正）
+	y轴从上往下（上负下正）
+	z轴从里往外（里负外正）
+	1. perspective 属性
+		模拟人眼到3D变换物体之间的距离
+		该属性要添加到3D转换元素的父元素上
+		单位是px
+		浏览器的兼容性：
+			chrome和Safari  -webkit-perspective:数值;
+	2. 3D转换-旋转
+		属性：transform
 		取值：
-			两个值：值1(X) 值2(Y);
-			三个值：值1(X) 值2(Y) 值3(Z);
-	2D的位移：
-		改变元素在X轴和Y轴的位置
-		语法：
-			属性：transform
-			函数：
-				translate(X)  改变元素在X轴上的位置，取值为正右移，反之左移
-				translate(X,Y)  改变元素在X轴和Y轴的位置，Y轴取值为正下移，反之上移
-				translatex(X)  单项改变
-				translatey(Y)
-	2D缩放：
-		改变元素在X轴或Y轴上的大小
-		语法：
-			属性:transform
-			函数：
-				scale(value)  value是缩放倍数。给一个值，等比例缩放
-				scale(x,y)  分别改变元素在X轴和Y轴的上的大小
-				scalex(X)  X轴缩放
-				scaley(Y)  Y轴缩放
-					取值：
-						默认值：1  原始大小
-						缩小：0~1之间的小数
-						放大：大于1的数值
-						取负值：旋转180deg的效果
-	2D旋转：
-		属性：transform
-		函数：rotate(ndeg)
-			取值为正 顺时针旋转
-			取值为负 逆时针旋转
-		注意：
-			1. 转换原点
-				旋转围绕着转换原点来做的，原点位置不同，效果也不同
-			2. 旋转时连同坐标轴也一同跟着转
-	2D倾斜：
-		改变元素在页面中的形状
-		以原点为中心，围绕着X轴和Y轴产生的倾斜角度
-		属性：transform
-		函数:
-			skew(Xdeg)  横向产生倾斜效果，实际改变是Y轴的倾斜角度
-				值为正：Y轴逆时针角度倾斜
-				值为负：Y轴顺时针角度倾斜
-			skew(Xdeg,Ydeg)
-				X 横向倾斜
-				Y 纵向倾斜
-					值为正，X按顺时针角度倾斜
-					值为负，X按逆时针角度倾斜
-			skewx(Xdeg)
-			skewy(Ydeg)
-	3D转换:
-		1. perspective 属性
-			模拟人眼到3D变换物体之间的距离
-			该属性要添加到3D转换元素的父元素上
-			浏览器的兼容性：
-				chrome和Safari  -webkit-perspective:数值;
-		2. 3D转换-旋转
-			属性：transform
+			1. rotatex(ndeg)
+			2. rotatey(ndeg)
+			3. rotatez(ndeg)
+			4. rotate3d(x,y,z,ndeg)
+				x,y,z (1,1,1)
+				取值为0该轴不参加旋转
+				取值为1参加到旋转中来
+	3. 3D转换-位移
+		改变元素在X,Y,Z上的位置
+		2. transform 属性
 			取值：
-				1. rotatex(ndeg)
-				2. rotatey(ndeg)
-				3. rotatez(ndeg)
-				4. rotate3d(x,y,z,ndeg)
-					x,y,z (1,1,1)
-					取值为0该轴不参加旋转
-					取值为1参加到旋转中来
-		3. 3D转换-位移
-			改变元素在X,Y,Z上的位置
-			1. transform-style 属性
-				如何处理子元素的摆放位置
-				取值：
-					1. flat  默认值，不保留子元素的3D位置
-					2. preserve-3d  保留子元素的3d位置
-			2. transform 属性
-				取值：
-					translatez(Z);
-					translate3d(X,Y,Z);
+				translatez(Z);
+				translate3d(X,Y,Z);
+	transform-style
+			控制子元素是否开启三维空间（写在父盒子上）
+			取值：
+				1. flat  默认值，不开启3d立体空间
+				2. preserve-3d  子元素开启3d立体空间
 CSS过渡
 	在一段时间内，CSS属性值平滑变化的一个效果
 	过渡效果四要素
@@ -1401,6 +1408,7 @@ CSS过渡
 				3. ease-in 慢速开始快速结束
 				4. ease-out 快速开始，慢速结束
 				5. ease-in-out 慢速开始结束，中间先快后慢
+				6. steps(3) 一步一步的走
 		4. transition-delay 过渡延迟
 			取值：s | ms 单位的时间
 		5. 简写方式
@@ -1409,9 +1417,9 @@ CSS动画：
 	使元素从一种样式逐渐变化为另一种样式的过程
 	CSS实现动画，会存在兼容性问题，尽量加浏览器前缀
 	使用动画步骤
-		1. 声明动画
+		1. 定义动画
 			指定动画名称和创建动画中的每个状态（关键帧）
-			关键帧：当前元素状态的时间点及样式
+			关键帧：当前元素状态的时间点（百分比是划分时间）及样式
 			浏览器兼容性：
 				@-webkit-keyframes
 			语法：
@@ -1447,7 +1455,7 @@ CSS动画：
 					取值：
 						1. none  没有填充效果
 						2. forwards  动画播放完成后，保持最后一帧状态
-						3. backwards 动画播放前应用第一帧上（延迟时间内才会显示在第一帧上）
+						3. backwards 动画播放前元素的位置
 						4. both 动画播放前后，分别采用对应填充状态
 				9. animation-play-state  控制动画是播放还是暂停
 					取值：

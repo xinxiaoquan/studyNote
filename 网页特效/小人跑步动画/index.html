@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>小人跑步动画</title>
+    <style>
+         :root {
+            --size: 72px;
+        }
+        
+        @keyframes move {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(300px);
+            }
+        }
+        
+        @keyframes show {
+            0% {
+                background-position-x: 0;
+            }
+            100% {
+                background-position-x: -1440px;
+            }
+        }
+        
+        div {
+            width: calc(var(--size)*2);
+            height: calc(var(--size)*2);
+            background-image: url(R-C.png);
+            background-size: auto 100%;
+            background-repeat: no-repeat;
+            animation-name: show, move;
+            animation-duration: 1s;
+            animation-timing-function: steps(10), linear;
+            animation-iteration-count: infinite, 1;
+            animation-fill-mode: forwards, forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+</body>
+
+</html>

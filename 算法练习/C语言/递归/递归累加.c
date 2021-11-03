@@ -5,7 +5,7 @@
 int fn(int n);
 
 int main(void) {
-	printf("%d\n", fn(3));
+	printf("%d\n", fn(100));
 }
 
 int fn(int n) {
