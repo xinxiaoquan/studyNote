@@ -1499,7 +1499,24 @@ CSS变量（自定义属性）
 	styles.getPropertyValue("--color");
 	//设置css变量
 	styles.getProperty("--aa", 10px);
-	
+
+移动web：
+必须声明viewport元标签
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	viewport 承载窗口的网页，可设置宽度
+	<!-宽度是设备宽度-->
+	<meta name="viewport" content="width=device-width">
+	<!-初始缩放比例100%-->
+	content="initial-scale=1.0"
+	<!-禁止用户缩放-->
+	content="user-scalable=no"
+去除a链接高亮：
+	-webkit-tap-highlight-color:transparent;
+去除ios中输入框默认样式：
+	-webkit-appearance:none;
+禁用长按页面弹出菜单：
+	-webkit-touch-callout:none;
+
 弹性布局（一种布局方式）：
 主要解决某个元素中子元素的布局方式，为布局提供很大的灵活性。
 相关概念：

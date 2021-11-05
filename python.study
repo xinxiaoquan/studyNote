@@ -267,13 +267,13 @@ for循环
 面向对象：
 	定义类：
 	class 类名():
-		def 方法名(self):
-			#self是实例化的对象
+		def 方法名(this):
+			#this是实例化的对象
 			print("123")
 	定理对象：obj=类名()
 	魔法方法：
 		__xx__() 这样的方法就是魔法对象
-		__init__(self, c1, c2) 
+		__init__(this, c1, c2) 
 			初始化对象（构造器）
 			对象创建的时候自动调用
 		__str__()
@@ -284,17 +284,17 @@ for循环
 		所有类默认都继承object基类
 	单继承：
 		class A():
-			def __init__(self, name):
-				self.name=name
+			def __init__(this, name):
+				this.name=name
 		class B(A):
 			pass
 	多继承：
 		class A():
-			def __init__(self, name):
-				self.name=name
+			def __init__(this, name):
+				this.name=name
 		class B(A):
-			def __init__(self, name):
-				self.name=name
+			def __init__(this, name):
+				this.name=name
 		class C(A, B):
 			pass
 		如果多个父类有同名属性或方法，默认使用第一个类的
@@ -302,12 +302,12 @@ for循环
 		A.__mro__
 	使用父类的方法和属性
 		class C(A, B):
-			def useParent(self):
-				A.__init__(self)
-				A.abc(self)
-		#如果调用的是第一个父类，直接用super()调用（方法不用传self）
+			def useParent(this):
+				A.__init__(this)
+				A.abc(this)
+		#如果调用的是第一个父类，直接用super()调用（方法不用传this）
 	私有属性和方法：
-		self.__money=10000000
+		this.__money=10000000
 	类属性：
 		class A():
 			name="gkk"
@@ -316,17 +316,60 @@ for循环
 	类方法：
 		class A()
 			@classmethod
-			def getMoney(cls):
-				return cls.__money;
+			def getMoney(self):
+				return self.__money;
 		#需要使用类的调用方法时，可以定义类方法
+	静态方法：
+		class A():
+			@staticmethod
+			def print_info():
+				print("hello")
+		#不需要类或实例调用的方法可以定义为静态方法
 
+异常：
+捕获所有异常类型：
+	try:
+		print(num)
+	except Exception as info:
+		#info是异常的信息
+		print(info)
+	else:
+		#这里是没有捕获异常执行的代码
+		pass
+	finally:
+		#无论是否有异常都执行的代码
+		pass
+捕获指定异常类型：
+	try:
+		print(num)
+	except NameError as info:
+		#info是异常的信息
+		print(info)
+	#尝试执行的代码的异常类型和捕获的不一样就不会捕获
+	#一般try下只放一行代码
+捕获指定多个异常类型：
+	try:
+		print(num)
+	except (NameError,ZeroDivisionError) as info:
+		#info是异常的信息
+		print(info)
+自定义异常类:
+	class Abc(Exception):
+		def __str__():
+			return "出了什么错误。。。"
+抛出异常：
+	raise Abc()
 
+导入模块：
+	import XXX
+	#可以定义别名
+	import XXX as xxx
+导入模块的方法
+	from XXX import fn1,fn2
+	#定义别名
+	from XXX import fn1 as f1,fn2 as f2
 
-
-
-
-
-
+__name__是一个系统变量，如果执行代码是当前文件，值就是"__main__"，如果是以模块方式执行的，值就是模块的名字
 
 
 
