@@ -1,0 +1,171 @@
+@charset utf-8;
+
+* {
+	font-family: "microsoft yahei";
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	margin-bottom: 800px;
+	padding: 0 20px;
+}
+
+.layout {
+	margin: 0 auto;
+	position: relative;
+}
+
+.box {
+	position: absolute;
+}
+
+img, video {
+	width: 100%;
+	vertical-align: bottom;
+	pointer-events: none;
+}
+video {
+	pointer-events: auto;
+}
+
+.nav {
+	padding: 0;
+	list-style: none;
+}
+
+.TBCard {
+	display: block;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	height:80px;
+	background-image: linear-gradient(150deg, #c40000 0%, orange 100%);
+	border-radius: 10px;
+	cursor:pointer;
+}
+.TBCard a {
+	position: absolute;
+	left:0; right:0;
+	top:0; bottom:0;
+}
+.TBCard .title {
+	color:#fff;
+	white-space:nowrap;
+	position: absolute;
+	top:50%; left:50%;
+	transform: translate(-50%,-50%);
+}
+.TBCard:hover {
+	opacity: 0.5;
+}
+
+.block {
+	margin: 20px auto!important;
+	letter-spacing: 1px;
+	text-indent: 2em;
+	color:#333;
+	line-height: 1.6em;
+	padding:10px 15px;
+	border-left:5px solid orange;
+	background-color: lightgoldenrodyellow;
+}
+
+.table {
+	--border-color:#555;
+	color:#555;
+}
+.table ul,
+.table li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.table ul:first-child {
+	border-top: 1px solid var(--border-color);
+}
+.table ul {
+	border: 1px solid var(--border-color);
+	border-top:none;
+}
+.table li {
+	display: inline-block;
+	padding: 15px;
+	text-align: center;
+	border-right:1px solid var(--border-color);
+}
+.table ul li:last-child {
+	border-right:none;
+}
+
+.comment {
+	margin: 20px auto;
+	letter-spacing: 1px;
+}
+.comment .part {
+	margin: 15px 0;
+	padding: 15px;
+	color:#333;
+	position: relative;
+	background-color: aliceblue;
+}
+.comment .headImg {
+	content:"";
+	display: block;
+	position: absolute;
+	top:15px; left:15px;
+	width:50px;
+	height:50px;
+	background-size:100%;
+	border-radius: 50%;
+	border:5px solid #fff;
+}
+.comment .nickname {
+	margin-bottom: 10px;
+	line-height: 50px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-indent: 65px;
+	font-weight: bold;
+	color:indianred;
+	position: relative;
+}
+.comment img {
+	display: block;
+	margin: 15px auto;
+	max-width: 80%;
+}
+.comment .content {
+	text-indent: 2em;
+	color:#666;
+	line-height: 1.6em;
+}
+.comment .reply {
+	margin: 10px 0;
+	padding: 10px;
+}
+.comment .reply::before {
+	content: "商家回复：";
+	font-weight: bold;
+	color:indianred;
+	line-height: 1.6em;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.debugger {
+	position : absolute;
+	left : 50%;
+	top : 50%;
+	color : red;
+	background-color : #fff;
+	border : 3px solid #000;
+	opacity : 0.5;
+	font-size : 100px;
+	padding : 0 20px;
+	transform: translate(-50%, -50%);
+}
+.debugger:hover {
+	opacity: 0;
+}

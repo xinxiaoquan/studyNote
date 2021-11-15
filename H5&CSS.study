@@ -287,8 +287,8 @@ font-size定义字体大小
 	samll large 关键字定义
 	px单位定义
 	100%百分比定义（按照继承字体的百分比）
-	em单位，父元素相同样式值的倍数
-	rem 根元素相同样式值的倍数
+	em单位，父元素字体大小的单位
+	rem 根元素（html元素）字体大小的单位
 font-weight定义字体的粗细
 	normal默认值，定义标准字体
 	bold 定义粗体
@@ -1529,7 +1529,7 @@ CSS变量（自定义属性）
 		display:flex
 	将行内元素设置为容器
 		display:inline-flex
-	元素设置为容器后，项目的float/clear/vertical-align/text-align属性失效
+	元素设置为容器后，项目（子元素）的float/clear/vertical-align/text-align属性失效
 	项目可以修改尺寸
 	主轴的方向
 		flex-direction:row;
@@ -1590,9 +1590,15 @@ CSS变量（自定义属性）
 	flex:1;    ->  flex:1 1 0;
 	flex:0;   ->   flext:0 0 0;
 
-
-
-
+媒体查询：
+@media 媒体类型 关系运算符 (媒体特性) {
+	选择器 { 样式 }
+}
+媒体类型：all print screen
+关系运算符：and not only
+媒体特性：max-width min-width width
+根据不同的屏幕宽度引入不同的css资源
+	<link rel="stylesheet" media="screen and (min-width:1000px)" href="abc.css" />
 
 	
 		

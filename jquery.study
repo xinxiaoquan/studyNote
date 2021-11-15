@@ -1,13 +1,26 @@
-CDN：根据客户端网络状况和访问量，选择最优的服务器下载资源
 jquery通用规律：
 	1. 自带遍历
 	2. 链式操作
 	3. 一个API两用（没给新值就读取）
+CDN：根据客户端网络状况和访问量，选择最优的服务器下载资源
+等待dom加载完成之后执行代码：
+	$(function() {
+		……
+	});
+dom对象和jq对象互相转换：
+	dom转jq对象：$(dom)
+	jq对象转dom：$(dom)[0]或$(dom).get(0)
+修改css样式：
+	直接修改Css属性：$().css()
+	同时修改多个Css属性：$().css({"a":"b","c":"d"});
+	获取样式的值：$().css("font-szie")
 jq中的过滤器表示父元素下所有的子元素的过滤
 	基本过滤：
 		:first/:last
-		eq/gt/lt
-		only-child
+		索引从0开始
+			eq() 选择索引号的元素
+			gt() 选择大于索引号的元素
+			lt() 选择小于索引号的元素
 	内容过滤：
 		:parent //只要包含内容的任意父元素
 		:empty //没有内容的父元素
@@ -18,23 +31,15 @@ jq中的过滤器表示父元素下所有的子元素的过滤
 		:hidden（只能选择display:none和input type="hidden"）
 表单元素选择器：
 	:input //选择所有表单元素
-	根据type选择
-		:password :checkbox :radio :submit :reset :button :hidden :file :image
 	根据状态选择
 		:checked :disabled :enabled :selected
 按节点间的关系查找：
-	1. 父子：
-		$().parent()
-		$().children(selector) //获得直接子元素中符合selector条件的
-		$().find(selector) //查找所有子元素符合selector条件的
-		$().children().first() //第一个子元素
-		$().children().last() //最后一个子元素
-	2. 兄弟：
-		$().next(selector) //等于+selector
-		$().nextAll(selector) //等于~selector
-		$().prev(selector) //选择当前元素的前一个
-		$().prevAll(selector) //选择之前所有
-		$().siblings(selector) //选择除自己之外所有兄弟
+	$().parent() //获得子元素的父元素
+	$().next(selector) //等于+selector
+	$().nextAll(selector) //等于~selector
+	$().prev(selector) //选择当前元素的前一个
+	$().prevAll(selector) //选择之前所有
+	$().siblings(selector) //选择除自己之外所有兄弟
 修改：
 	属性：$().attr();
 		三大状态不属于attribute 不能用attr()操作
@@ -44,9 +49,6 @@ jq中的过滤器表示父元素下所有的子元素的过滤
 		$().text()	//textContent
 		$().val() //表单元素的值
 		$().empty() //清空元素的内容
-	样式：
-		直接修改Css属性：$().css()
-		同时修改多个Css属性：$().css({"a":"b","c":"d"});
 	修改class：
 		$().hasClass()
 		$().addClass()
@@ -131,6 +133,7 @@ jQuery中的类数组操作：
 	JQuery为类数组对象添加了如下和数组对等的操作：
 		$().each(function(i){}) //对结果集合中每个元素执行相同操作
 		$().index($()) //在结果集中查找指定元素的下标
+			//也可以找元素在父元素的索引号 $(this).index()
 		$().size() //获得结果集合中元素的个数（.length）
 		$().get(i) //获得结果集合中i位置的DOM元素
 jQuery UI：官方出的现成的UI效果功能集合

@@ -1,143 +1,143 @@
 响应式网页：
-	1. 必须声明viewport元标签
-		viewport 承载窗口的网页，可设置宽度
-		<!-自动适配设备宽度-->
-		<meta name="viewport" content="width=device-width">
-		<!-宽度：设备的宽，初始缩放比例100%-->
-		content="width=device-width, initial-scale=1.0"
-		<!-禁止用户缩放-->
-		content="user-scalable=no"
-	2. 容器使用相对的尺寸
-		width:80%;
-	3. 文字大小使用相对尺寸：
-		font-size:1.2em;
-	4. 图片使用相对尺寸
-		width:50%; max-width:50%;
-	5. 页面布局采用流式布局
-		float:left;  display:inline-block;
-	6. CSS Media Query技术
-		Media：浏览网页的设备：screen, tv, projection, print, tty, braille
-		Query：使用css自动获得浏览设备的特性
-		根据网页设备类型不同，特性不同，有选择性的执行css
-			1. 有选择性执行符合条件的外部css文件
-				<link media="screen and (min-width:900px)" rel="stylesheet" href="1.css">
-				也会请求不满足条件的css，拖慢网速
-			2. 有选择性的执行css中部分内容
-				@media screen and (min-width:900px) and (max-width:1200px) {
-					body { background:#ddd; }
-				}
+1. 必须声明viewport元标签
+	viewport 承载窗口的网页，可设置宽度
+	<!-自动适配设备宽度-->
+	<meta name="viewport" content="width=device-width">
+	<!-宽度：设备的宽，初始缩放比例100%-->
+	content="width=device-width, initial-scale=1.0"
+	<!-禁止用户缩放-->
+	content="user-scalable=no"
+2. 容器使用相对的尺寸
+	width:80%;
+3. 文字大小使用相对尺寸：
+	font-size:1.2em;
+4. 图片使用相对尺寸
+	width:50%; max-width:50%;
+5. 页面布局采用流式布局
+	float:left;  display:inline-block;
+6. CSS Media Query技术
+	Media：浏览网页的设备：screen, tv, projection, print, tty, braille
+	Query：使用css自动获得浏览设备的特性
+	根据网页设备类型不同，特性不同，有选择性的执行css
+		1. 有选择性执行符合条件的外部css文件
+			<link media="screen and (min-width:900px)" rel="stylesheet" href="1.css">
+			也会请求不满足条件的css，拖慢网速
+		2. 有选择性的执行css中部分内容
+			@media screen and (min-width:900px) and (max-width:1200px) {
+				body { background:#ddd; }
+			}
 bootstrap：
-	下载bootstrap包
-	引入bootstrap.css, jq.js, bootstrap.js文件
-	所有样式都是添加class
-	容器：
-		1. container 定宽容器，lg: 1170px, md: 970px, sm: 750px, xs: 100%
-		2. container-fluid 变宽容器，width:100%
-	按钮相关样式：
-		1. btn //默认按钮
-		2. btn btn-default //统一默认按钮
-		3. btn btn-danger //危险按钮 红
-		4. btn btn-warning //警告按钮 黄
-		5. btn btn-success //成功按钮 绿
-		6. btn btn-info //提示按钮 浅蓝
-		7. btn btn-primary //基础按钮 深蓝
-		8. btn btn-lg //大按钮
-		9. btn btn-sm //小按钮
-		10. btn btn-xs //超小按钮
-		11. btn btn-block //块级按钮
-	图片相关的样式：
-		1. img-rounded //圆角图片
-		2. img-circle //圆形图片
-		3. img-thumbnail //缩略图片
-		4. img-responsive //响应式图片
-	列表相关的样式：
-		1. list-unstyled //去提示符
-		2. list-inline //行内列表
-	文本相关的样式：
-		1. text-danger(五种字体颜色和btn一样)
-		2. bg-danger(五种背景颜色)
-	文本对齐的样式：
-		1. text-left
-		2. text-center
-		3. text-right
-		4. text-justify //两端对齐
-	文本转大小写：
-		1. text-uppercase //转大写
-		2. text-lowercase //转小写
-		3. text-capitalize //每个单词首字母大写
-	全局样式—辅助类：
-		.pull-left
-		.pull-right
-		.caret
-		.close
-		.center-block
-	全局CSS样式—表格：
-		基础表格：table
-		带边框的表格：table table-bordered
-		隔行变色表格：table table-striped
-		带鼠标悬停效果表格：table table-hover
-		响应式表格：table-responsive //放在父元素上
-	全局CSS样式—栅格系统：
-		1. 栅格系统父元素必须是：
-			<div class=container>
-				<div class=row> //声明行
-					<div class=col> // 声明列
-					</div>
-				</div>
+下载bootstrap包
+引入bootstrap.css, jq.js, bootstrap.js文件
+所有样式都是添加class
+
+按钮相关样式：
+1. btn //默认按钮
+2. btn btn-default //统一默认按钮
+3. btn btn-danger //危险按钮 红
+4. btn btn-warning //警告按钮 黄
+5. btn btn-success //成功按钮 绿
+6. btn btn-info //提示按钮 浅蓝
+7. btn btn-primary //基础按钮 深蓝
+8. btn btn-lg //大按钮
+9. btn btn-sm //小按钮
+10. btn btn-xs //超小按钮
+11. btn btn-block //块级按钮
+图片相关的样式：
+1. img-rounded //圆角图片
+2. img-circle //圆形图片
+3. img-thumbnail //缩略图片
+4. img-responsive //响应式图片
+列表相关的样式：
+1. list-unstyled //去提示符
+2. list-inline //行内列表
+文本相关的样式：
+1. text-danger(五种字体颜色和btn一样)
+2. bg-danger(五种背景颜色)
+文本对齐的样式：
+1. text-left
+2. text-center
+3. text-right
+4. text-justify //两端对齐
+文本转大小写：
+1. text-uppercase //转大写
+2. text-lowercase //转小写
+3. text-capitalize //每个单词首字母大写
+全局样式—辅助类：
+.pull-left
+.pull-right
+.caret
+.close
+.center-block
+全局CSS样式—表格：
+基础表格：table
+带边框的表格：table table-bordered
+隔行变色表格：table table-striped
+带鼠标悬停效果表格：table table-hover
+响应式表格：table-responsive //放在父元素上
+container 定宽容器，lg: 1170px, md: 970px, sm: 750px, xs: 100%
+container-fluid 变宽容器，width:100%
+全局CSS样式—栅格系统：
+1. 栅格系统父元素必须是：
+	<div class=container>
+		<div class=row> //声明行
+			<div class=col> // 声明列
 			</div>
-		2. 列根据不同的屏幕尺寸分为4组：
-			1). col-lg 大屏
-			2). col-md 中屏
-			3). col-sm 小屏
-			4). col-xs 超小屏
-		3. 一行分为12份，列要声明自己占几份
-			col-lg-1, col-lg-2 ……
-		4. 列可以向右偏移指定宽度
-			col-lg-offset-1 <div class="col-lg-offset-5 col-lg-1">
-		5. 不同屏幕宽度下列宽度占比适用于指定屏幕以及更大屏幕
-			col-xs 适用于xs/sm/md/lg
-		6. 一个列可以指定不同屏幕下不同宽度占比
-			<div class="col-xs-12 col-sm-9 col-6">
-		7. 指定列在特定屏幕下实现隐藏
-			hidden-lg hidden-md hidden-sm hidden-xs hidden
-	全局CSS样式—表单：
-		提供了3中形式的表单：
-		1. 默认表单
-			<form>
-				<div class="form-group">
-					<label class="control-label" for="uname">用户名：</label>
-					<input class="form-control" type=text id=uname />
-					<span class="help-block">用户名必须包含数字，字母</span>
-				</div>
-				<div class="form">
-					<div class="checkbox">
-						<label>
-							<input type=checkbox> 复选框
-						</label>
-					</div>
-				</div>
-			</form>
-		2. 行内表单
-			默认表单外，form加class为form-inline
-			sr-only 仅屏幕阅读器可见
-		3. 水平表单
-			form.form-horizontal 容器
-				form.form-group 小组（等于row）
-					div.col-xs-2
-	Bootstrap组件：
-		下拉菜单（必须三级结构）：
-			<div class=dropdown>
-				<div data-toggle=dropdown>触发元素</div>
-				<ul class=dropdown-menu>
-					<li><a href="#">内容</a></li>
-				</ul>
+		</div>
+	</div>
+2. 列根据不同的屏幕尺寸分为4组：
+	1). col-lg 大屏
+	2). col-md 中屏
+	3). col-sm 小屏
+	4). col-xs 超小屏
+3. 一行分为12份，列要声明自己占几份
+	col-lg-1, col-lg-2 ……
+4. 列可以向右偏移指定宽度
+	col-lg-offset-1 <div class="col-lg-offset-5 col-lg-1">
+5. 不同屏幕宽度下列宽度占比适用于指定屏幕以及更大屏幕
+	col-xs 适用于xs/sm/md/lg
+6. 一个列可以指定不同屏幕下不同宽度占比
+	<div class="col-xs-12 col-sm-9 col-6">
+7. 指定列在特定屏幕下实现隐藏
+	hidden-lg hidden-md hidden-sm hidden-xs hidden
+全局CSS样式—表单：
+提供了3中形式的表单：
+1. 默认表单
+	<form>
+		<div class="form-group">
+			<label class="control-label" for="uname">用户名：</label>
+			<input class="form-control" type=text id=uname />
+			<span class="help-block">用户名必须包含数字，字母</span>
+		</div>
+		<div class="form">
+			<div class="checkbox">
+				<label>
+					<input type=checkbox> 复选框
+				</label>
 			</div>
-		警告框：
-			<div class="alert alert-danger">
-				<span class=close data-dismiss=alert>&times;</span>
-				<h4>浏览器版本太低！</h4>
-				<p>请更新浏览器</p>
-			</div>
+		</div>
+	</form>
+2. 行内表单
+	默认表单外，form加class为form-inline
+	sr-only 仅屏幕阅读器可见
+3. 水平表单
+	form.form-horizontal 容器
+		form.form-group 小组（等于row）
+			div.col-xs-2
+Bootstrap组件：
+下拉菜单（必须三级结构）：
+	<div class=dropdown>
+		<div data-toggle=dropdown>触发元素</div>
+		<ul class=dropdown-menu>
+			<li><a href="#">内容</a></li>
+		</ul>
+	</div>
+警告框：
+	<div class="alert alert-danger">
+		<span class=close data-dismiss=alert>&times;</span>
+		<h4>浏览器版本太低！</h4>
+		<p>请更新浏览器</p>
+	</div>
 Bootlint：官方提供用于检查bootstrap的工具
 	(function(){var s=document.createElement("script");s.onload=function(){bootlint.showLintReportForCurrentDocument([]);};s.src="https://maxcdn.bootstrapcdn.com/bootlint/latest/bootlint.min.js";document.body.appendChild(s)})();
 	

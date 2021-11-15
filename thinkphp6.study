@@ -1,0 +1,127 @@
+读取配置文件中的信息（配置文件可以自定义）：
+	config("app.app_host"); //配置文件.配置项
+	也可以单独读取配置信息
+
+调试模式：根目录.env
+
+控制器类的定义：
+//在controller目录中定义
+namespace app\controller;
+use app\BaseController;
+//文件名和类名一致，命名规范是大驼峰
+class Hello() extends BaseController {
+	public function index() {
+		//默认的方法
+	}
+}
+多级控制器用.连接
+控制器不存在会自动访问Error控制器
+控制器方法不存在可以在控制器中添加一个__call方法
+公共的类或函数或常量（全局空间）存储在：app\common.php
+
+控制器（继承基础控制器）的属性和方法：
+
+json函数：
+json([1,2,3],200,[
+	"abc"=>123
+]) //输出json数据，可以指定状态码和响应头
+
+request函数：
+$r = request() 请求对象（下面用r表示）
+$r->param() 请求的传递参数（get和post都有）
+$r->get() get请求的参数
+$r->post() post请求的参数
+	获取参数的方法可以写参数名和默认值
+	比如 $r->param("name", "xiaoming") 获取name的值，没有就返回xiaoming
+			
+DB类操作数据库：
+	$db=app("db"); //用容器模式
+	获取上次的sql语句：
+		getLastSql()
+	字段限制：
+		field("id, name")
+	查询方法：
+		where()
+		whereRaw("原生sql条件语句")
+	结果集转数组：
+		toArray()
+	插入数据(可以结合field方法，写入二维索引数组)：
+		insert([
+			"字段名":"值"
+		])
+	更新数据：
+		update([
+			"字段名":"值"
+		])
+	删除数据：
+		delete()
+	排序方法：
+		order("id", "asc")
+	限制方法：
+		limit(0, 1)
+	分页方法：
+		page(1,1)
+		
+模型的定义：
+//在model目录中定义
+namespace app\Model;
+use think\Model;
+//名字采用大驼峰，对应着表名 比如ABC代表a_b_c表
+class Mytable extends Model {}
+模型的实例化的方法和Db类中操作数据的方法一样
+
+自定义异常：
+	在app\ExceptionHandle类的render方法中添加
+	比如 return $e->getMessage();
+	// $e->getStatusCode() 如果是http错误，可以获取响应状态码
+应用中自定义异常
+	在应用目录中建一个类，仿照ExceptionHandle.php
+	拷贝provider.php到应用目录，应用上这个类
+
+中间件：
+	配置中间件文件：middleware.php
+	中间件类的写法：
+	class Check {
+		public function handle($request, \Closure $next) {
+			$request->data=100;
+			return $next($request);
+		}
+	}
+
+路由：
+Route::rule("a/b", "aaa/bbb", "get");
+路由可以结合中间件
+Route::rule("a/b", "aaa/bbb", "get")->middleware(\a\b\Check);
+请求方式也可以使用 "get|post"
+
+视图：
+use think\facade\View;
+多应用可以创建view目录存放视图，否则去全局view目录中找
+调用视图文件：
+	View::fetch()
+	//到默认目录中找和控制器路径一样的文件
+
+验证码：
+	模板中获取默认验证码标签：{:captcha_img()}
+	模板中获取默认验证码链接：{:captcha_src()}
+自定义验证码：
+	在config/captcha.php中设置自定义验证码
+	选择一个生成验证码的控制器
+		use think\captcha\facade\Captcha;
+		Captcha::create("验证码名字");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
