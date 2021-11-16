@@ -109,8 +109,11 @@ use think\facade\View;
 	选择一个生成验证码的控制器
 		use think\captcha\facade\Captcha;
 		Captcha::create("验证码名字");
+验证是否输入正确：
+	captcha_check($captcha);
 
-
+session:
+session("key", "val"); //写入session
 
 
 

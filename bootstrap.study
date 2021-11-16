@@ -86,10 +86,10 @@ container-fluid 变宽容器，width:100%
 		</div>
 	</div>
 2. 列根据不同的屏幕尺寸分为4组：
-	1). col-lg 大屏
-	2). col-md 中屏
-	3). col-sm 小屏
-	4). col-xs 超小屏
+	1). col-lg 大屏 >=1200px
+	2). col-md 中屏 >=992px
+	3). col-sm 小屏 >=768px
+	4). col-xs 超小屏 <768px
 3. 一行分为12份，列要声明自己占几份
 	col-lg-1, col-lg-2 ……
 4. 列可以向右偏移指定宽度

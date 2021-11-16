@@ -74,61 +74,57 @@ jq中的过滤器表示父元素下所有的子元素的过滤
 	$().clone(); //只复制样式属性，不会复制事件
 		复制事件，加true
 事件：
-	jq中有几种事件绑定方式：
-		1. bind/unbind
-			$().bind("事件名",fn);
-			$().unbind("事件名",fn); //移除元素上指定事件绑定的指定函数fn
-				$().unbind("事件名"); //移除元素上指定事件绑定的所有函数
-				$().unbind(); //移除所有事件
-		2. $().one() //只执行一次
-		3. 简写：jq对常用事件的绑定提供简写的函数：
-			$().事件名(fn);
-			区分：mouseover/out 触发子元素冒泡到父元素
-								mouseenter/leave 触发子元素不会冒泡父元素
-		4. 利用冒泡：
-			$(parent).delegate("selector",事件名,函数)
-				//委托，把父元素的事件给子元素，里面的this自动是event.target
-			$().undelegate()
-		5. 终极简化：
-			$().on("事件名",fn) -> bind
-			$().on("事件名","selector",fn) -> delegate
-			$().on("事件名","selector",data,fn) //data是一个对象，传数据到event.data中
-			$().off()
-		模拟触发：用代码模拟触发某个元素上绑定事件处理函数
-			$().trigger("事件名")
-		页面加载后自动执行：
-			DOMContentLoaded：DOM内容加载完成触发：
-				HTML和JS加载完成后，就提前触发
-					$(document).ready(fn)
-					$().ready(fn)
-					$(fn)
-					把script标签放在body结尾就可以表示为DOM完成后执行
-			windown.onload：整个页面加载完成才触发：
-				HTML,CSS,JS,图片全部完成才触发
-		特殊事件：hover（相当于Menter和Mleave）	
-			$().hover(fn1,fn2);
+jq中有几种事件绑定方式：
+	2. $().one() //只执行一次
+	3. 简写：jq对常用事件的绑定提供简写的函数：
+		$().事件名(fn);
+		区分：mouseover/out 触发子元素冒泡到父元素
+							mouseenter/leave 触发子元素不会冒泡父元素
+	4. 利用冒泡：
+		$(parent).delegate("selector",事件名,函数)
+			//委托，把父元素的事件给子元素，里面的this自动是event.target
+		$().undelegate()
+	5. 终极简化：
+		$().on("事件名",fn) -> bind
+		$().on("事件名","selector",fn) -> delegate
+		$().on("事件名","selector",data,fn) //data是一个对象，传数据到event.data中
+		$().off() //删除事件
+	模拟触发：用代码模拟触发某个元素上绑定事件处理函数
+		$().trigger("事件名")
+	页面加载后自动执行：
+		DOMContentLoaded：DOM内容加载完成触发：
+			HTML和JS加载完成后，就提前触发
+				$(document).ready(fn)
+				$().ready(fn)
+				$(fn)
+				把script标签放在body结尾就可以表示为DOM完成后执行
+		windown.onload：整个页面加载完成才触发：
+			HTML,CSS,JS,图片全部完成才触发
+	特殊事件：hover（相当于Menter和Mleave）	
+		$().hover(fn1,fn2);
 动画：
-	简单动画：
-		1. 显示和隐藏
-			$().show/hide/toggle()
-			可给参数毫秒
-		2. 上滑和下滑
-			$().slideUP/slideDown/slideToggle()
-		3. 淡入和淡出
-			$().fadeIn/fadeOut/fadeToggle()
-		所有动画API都能指定回调函数，动画执行完就执行
-	自定义动画：
-		$().animate({
-			//动画截止状态的CSS样式
-		},时间,速率,fn)
-		强调：animate仅支持数值属性的渐变
-		动画：排队和并发
-			用链式操作多写animate实现排队
-			不同元素调用相同animate，实现排队
-			写在一起实现并发
-		停止动画：$().stop(true) //加true停止排队中的全部，否则只停止当前执行中的动画
-		:animated 匹配正在执行的动画
-		delay(ms) 延迟执行
+简单动画：
+	1. 显示和隐藏
+		$().show/hide/toggle()
+		可给参数毫秒和回调函数
+	2. 上滑和下滑
+		$().slideUP/slideDown/slideToggle()
+	3. 淡入和淡出
+		$().fadeIn/fadeOut/fadeToggle()
+	所有动画API都能指定回调函数，动画执行完就执行
+自定义动画：
+	$().animate({
+		//动画截止状态的CSS样式
+	},时间,速率,fn)
+	强调：animate仅支持数值属性的渐变
+	动画：排队和并发
+		用链式操作多写animate实现排队
+		不同元素调用相同animate，实现排队
+		写在一起实现并发
+	停止动画：$().stop(true)
+		//加true停止排队中的全部，否则只停止当前执行中的动画
+	:animated 匹配正在执行的动画
+	delay(ms) 延迟执行
 jQuery中的类数组操作：
 	JQuery为类数组对象添加了如下和数组对等的操作：
 		$().each(function(i){}) //对结果集合中每个元素执行相同操作
