@@ -111,6 +111,8 @@ jq中有几种事件绑定方式：
 		$().slideUP/slideDown/slideToggle()
 	3. 淡入和淡出
 		$().fadeIn/fadeOut/fadeToggle()
+	4. 修改不透明度
+		$().fadeTo(1000, 0.5) //速度，不透明度的值
 	所有动画API都能指定回调函数，动画执行完就执行
 自定义动画：
 	$().animate({

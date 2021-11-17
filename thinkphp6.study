@@ -33,6 +33,7 @@ $r->get() get请求的参数
 $r->post() post请求的参数
 	获取参数的方法可以写参数名和默认值
 	比如 $r->param("name", "xiaoming") 获取name的值，没有就返回xiaoming
+$r->ip() 获取请求的ip
 			
 DB类操作数据库：
 	$db=app("db"); //用容器模式
@@ -79,14 +80,18 @@ class Mytable extends Model {}
 	拷贝provider.php到应用目录，应用上这个类
 
 中间件：
-	配置中间件文件：middleware.php
-	中间件类的写法：
-	class Check {
-		public function handle($request, \Closure $next) {
-			$request->data=100;
-			return $next($request);
-		}
+配置中间件文件：middleware.php
+	定义局部把此文件复制到应用目录中
+中间件类的写法：
+class Check {
+	public function handle($request, \Closure $next) {
+		$request->data=100; //中间件传数据
+		//这里是前置中间件
+		$response=$next($request);
+		//这里是后置中间件
+		return $response;
 	}
+}
 
 路由：
 Route::rule("a/b", "aaa/bbb", "get");
@@ -114,6 +119,9 @@ use think\facade\View;
 
 session:
 session("key", "val"); //写入session
+session("key", null); //删除单条session
+session(null); //删除所有session
+
 
 
 
