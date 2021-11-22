@@ -80,8 +80,9 @@ container-fluid 变宽容器，width:100%
 全局CSS样式—栅格系统：
 1. 栅格系统父元素必须是：
 	<div class=container>
-		<div class=row> //声明行
-			<div class=col> // 声明列
+		<div class=row> <!--声明行-->
+			<div class=col> <!--声明列-->
+				<!--这里也可以嵌套行，行再嵌套列-->
 			</div>
 		</div>
 	</div>
@@ -98,8 +99,12 @@ container-fluid 变宽容器，width:100%
 	col-xs 适用于xs/sm/md/lg
 6. 一个列可以指定不同屏幕下不同宽度占比
 	<div class="col-xs-12 col-sm-9 col-6">
-7. 指定列在特定屏幕下实现隐藏
+7. 指定列在特定屏幕下实现隐藏（任何元素都可以加）
 	hidden-lg hidden-md hidden-sm hidden-xs hidden
+8. 推和拉（列排序）
+	col-lg-push-6 推
+	col-lg-pull-5 拉
+
 全局CSS样式—表单：
 提供了3中形式的表单：
 1. 默认表单
