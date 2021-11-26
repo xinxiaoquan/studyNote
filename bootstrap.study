@@ -101,6 +101,7 @@ container-fluid 变宽容器，width:100%
 	<div class="col-xs-12 col-sm-9 col-6">
 7. 指定列在特定屏幕下实现隐藏（任何元素都可以加）
 	hidden-lg hidden-md hidden-sm hidden-xs hidden
+	显示：visible
 8. 推和拉（列排序）
 	col-lg-push-6 推
 	col-lg-pull-5 拉

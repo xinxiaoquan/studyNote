@@ -5,6 +5,8 @@ function formatGET() {
         let tmp1 = str.split("&");
         for (let i = 0; i < tmp1.length; i++) {
             let tmp2 = tmp1[i].split("=");
+			if(!tmp2[0] || !tmp2[1])
+				continue;
             res[tmp2[0]] = tmp2[1];
         }
         return res;
@@ -16,6 +18,9 @@ function formatGET() {
         return res.substr(0, res.length - 1);
     }
     this.getHost = function() {
-        return location.href.slice(0, location.href.indexOf("?"));
+		let index=location.href.indexOf("?");
+		if(index == -1)
+			return location.href;
+        return location.href.slice(0, index);
     }
 }
