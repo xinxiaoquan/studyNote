@@ -1,4 +1,4 @@
 git add .
 git commit -m "submit"
-git push -f studyNote main
+git push -u studyNote main
 pause
